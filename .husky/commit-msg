@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+MSG="$1"
+
+if ! grep -qE "ECOMM-" "$MSG";then
+    cat "$MSG"
+    echo "Your commit message must contain the issue number 'ECOMM-XX'"
+    exit 1
+fi
