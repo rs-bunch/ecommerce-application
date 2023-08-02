@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, './src/index.js'),
+  entry: path.resolve(__dirname, './src/index.ts'),
   mode: 'development',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -10,6 +10,7 @@ module.exports = {
     assetModuleFilename: path.join('images', '[name][ext]'),
   },
   module: { rules: [
+    { test: /\.ts$/i, use: 'ts-loader' },
     {
       test: /\.html$/,
       loader: 'html-loader',
