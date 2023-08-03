@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development"
+    "start": "webpack-dev-server --mode development",
+    "prettier": "prettier -c ./src",
+    "format": "prettier -w ./src"
   },
   "author": "",
   "license": "ISC",
