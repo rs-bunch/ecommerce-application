@@ -8,7 +8,9 @@
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development",
     "prettier": "prettier -c ./src",
-    "format": "prettier -w ./src"
+    "format": "prettier -w ./src",
+    "lint": "eslint ./src",
+    "fix": "eslint --fix ./src"
   },
   "author": "",
   "license": "ISC",
