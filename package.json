@@ -10,7 +10,9 @@
     "prettier": "prettier -c ./src",
     "format": "prettier -w ./src",
     "lint": "eslint ./src",
-    "fix": "eslint --fix ./src"
+    "fix": "eslint --fix ./src",
+    "test": "jest",
+    "testchanges": "jest -o"
   },
   "author": "",
   "license": "ISC",
