@@ -6,7 +6,13 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development"
+    "start": "webpack-dev-server --mode development",
+    "prettier": "prettier -c src/",
+    "format": "prettier -w src/",
+    "lint": "eslint --ext .ts src/",
+    "fix": "eslint --fix --ext .ts src/",
+    "test": "jest",
+    "testchanges": "jest -o"
   },
   "author": "",
   "license": "ISC",
