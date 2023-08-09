@@ -86,5 +86,5 @@ git clone https://github.com/rs-bunch/ecommerce-application.git
 cd ecommerce-application
 
 # Setting dependencies
-npm install && npx husky install
+npm install
 ```
