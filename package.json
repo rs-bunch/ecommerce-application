@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "bootstrap": "^5.3.1",
     "redux": "^4.2.1",
     "webcomponents-redux": "^2.0.1"
   }
