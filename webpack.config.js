@@ -1,6 +1,7 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.ts'),
@@ -9,6 +10,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
     assetModuleFilename: path.join('images', '[name][ext]'),
+    publicPath: '/',
   },
   module: { rules: [
     { test: /\.ts$/i, use: 'ts-loader' },
@@ -53,5 +55,17 @@ module.exports = {
       filename: 'index.html',
     }),
     new Dotenv(),
+    new FileManagerPlugin({
+      events: {
+        onStart: { delete: ['dist'] },
+        onEnd: { copy: [
+          { source: path.join('public'), destination: path.join('dist', 'public') },
+        ] },
+      },
+    }),
   ],
+  devServer: {
+    hot: true,
+    historyApiFallback: true,
+  },
 };
