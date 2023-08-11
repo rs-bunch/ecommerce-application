@@ -23,9 +23,10 @@ class Router {
     });
 
     document.addEventListener('click', (e) => {
-      const target = e.composedPath()[0];
-      if (target instanceof HTMLAnchorElement) e.preventDefault();
-      if (target instanceof HTMLElement && target.dataset.href) {
+      const eventPathArr = e.composedPath();
+      if (eventPathArr.find((el) => el instanceof HTMLAnchorElement)) e.preventDefault();
+      const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
+      if (target instanceof HTMLElement) {
         window.history.pushState({}, '', String(target.dataset.href));
         this.handleLocation('CHANGE_LOCATION');
       }
