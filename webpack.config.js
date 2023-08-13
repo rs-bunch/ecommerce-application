@@ -20,11 +20,23 @@ module.exports = {
       options: { minimize: false },
     },
     {
-		  test: /\.(sc|sa|c)ss$/i,
+		  test: /^((?!module).)*(\.(sc|sa|c)ss)$/i,
       use: [
         'style-loader',
         'css-loader',
         'sass-loader',
+      ],
+    },
+    {
+		  test: /module\.(sc|sa|c)ss$/i,
+      use: [
+        {
+          loader: "css-loader",
+          options: {
+            modules: false,
+            exportType: "css-style-sheet",
+          }
+        },
       ],
     },
     {
