@@ -30,11 +30,9 @@ export default class CustomOverlay extends HTMLElement {
       switch (newValue) {
         case 'true':
           this.$element?.classList.add('active');
-          console.log('overlay added');
           break;
         case 'false':
           this.$element?.classList.remove('active');
-          console.log('overlay removed');
           break;
         default:
           break;

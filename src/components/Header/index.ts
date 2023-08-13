@@ -67,19 +67,19 @@ export default class ShopHeader extends HTMLElement {
   }
 
   private initButtons(): void {
-    const sideLinks = this.$element?.querySelectorAll('.side-link');
+    const sideLinks: NodeListOf<Element> | undefined = this.$element?.querySelectorAll('.side-link');
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
     this.$burgerBtn?.addEventListener('click', () => {
       const burger = this.$burgerBtn as HTMLElement;
       if (burger.classList.contains('open')) this.closeMenu();
       else this.openMenu();
     });
-    if (sideLinks) sideLinks.forEach((link) => link.addEventListener('click', this.closeMenu.bind(this)));
+    if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.closeMenu.bind(this)));
   }
 
   private initSizeChangeListener(): void {
-    const mediaQuerryBurger = window.matchMedia('(min-width: 1024px)');
-    const mediaQuerrySearch = window.matchMedia('(max-width: 768px)');
+    const mediaQuerryBurger: MediaQueryList = window.matchMedia('(min-width: 1024px)');
+    const mediaQuerrySearch: MediaQueryList = window.matchMedia('(max-width: 768px)');
     const handleBurger = (e: MediaQueryListEvent): void => {
       if (e.matches) this.closeMenu();
     };
@@ -93,8 +93,8 @@ export default class ShopHeader extends HTMLElement {
         this.$searchLine.classList.remove('search-aside');
       }
     };
-    mediaQuerryBurger.addListener(handleBurger);
-    mediaQuerrySearch.addListener(handleSearch);
+    mediaQuerryBurger.addEventListener('change', handleBurger);
+    mediaQuerrySearch.addEventListener('change', handleSearch);
   }
 
   private closeMenu(): void {
