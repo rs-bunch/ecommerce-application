@@ -20,11 +20,38 @@ module.exports = {
       options: { minimize: false },
     },
     {
-		  test: /\.(sc|sa|c)ss$/i,
+		  test: /^((?!module).)*(\.(sc|sa|c)ss)$/i,
       use: [
         'style-loader',
         'css-loader',
         'sass-loader',
+        {
+          loader: 'sass-resources-loader',
+          options: { resources: [
+            path.resolve(__dirname, 'src', 'styles', 'vars.scss'),
+            path.resolve(__dirname, 'src', 'styles', 'mixins.scss'),
+          ]},
+        },
+      ],
+    },
+    {
+		  test: /module\.(sc|sa|c)ss$/i,
+      use: [
+        {
+          loader: "css-loader",
+          options: {
+            modules: false,
+            exportType: "css-style-sheet",
+          }
+        },
+        'sass-loader',
+        {
+          loader: 'sass-resources-loader',
+          options: { resources: [
+            path.resolve(__dirname, 'src', 'styles', 'vars.scss'),
+            path.resolve(__dirname, 'src', 'styles', 'mixins.scss'),
+          ]},
+        },
       ],
     },
     {
