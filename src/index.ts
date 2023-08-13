@@ -4,12 +4,10 @@ import Router from './components/Router/Router';
 import ShopHeader from './components/Header';
 import CustomOverlay from './components/Overlay';
 
-const router = new Router(store);
-const header = new ShopHeader();
-const overlay = new CustomOverlay();
-const body = document.querySelector('body');
+const router: Router = new Router(store);
+const overlay: CustomOverlay = new CustomOverlay();
+const header: ShopHeader = new ShopHeader();
+const body = document.querySelector('body') as HTMLElement;
 
-if (body) {
-  if (overlay.$element) body.appendChild(overlay);
-  if (header.$element) body.appendChild(header);
-}
+if (overlay.$element) body.appendChild(overlay);
+if (header.$element) body.appendChild(header);
