@@ -29,13 +29,13 @@ export default class ShopHeader extends HTMLElement {
     this.node = createNodeFromHtml(ElementHTML);
     if (this.node?.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
     else this.$element = null;
-    this.$favBtn = this.$element?.querySelector('.button.fav');
-    this.$profileBtn = this.$element?.querySelector('.button.profile');
-    this.$cartBtn = this.$element?.querySelector('.button.cart');
-    this.$loginDropdown = this.$element?.querySelector('.login-dropdown');
-    this.$burgerBtn = this.$element?.querySelector('.burger-wrapper');
+    this.$favBtn = this.$element?.querySelector('.button.button__fav');
+    this.$profileBtn = this.$element?.querySelector('.button.button__profile');
+    this.$cartBtn = this.$element?.querySelector('.button.button__cart');
+    this.$loginDropdown = this.$element?.querySelector('.header__login');
+    this.$burgerBtn = this.$element?.querySelector('.header__burger');
     this.$sideBar = this.$element?.querySelector('.side-bar');
-    this.$searchLine = this.$element?.querySelector('.search-wrapper');
+    this.$searchLine = this.$element?.querySelector('.header__search');
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
@@ -65,7 +65,7 @@ export default class ShopHeader extends HTMLElement {
   }
 
   private initButtons(): void {
-    const sideLinks: NodeListOf<Element> | undefined = this.$element?.querySelectorAll('.side-link');
+    const sideLinks: NodeListOf<Element> | undefined = this.$element?.querySelectorAll('.link__side-bar');
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
     this.$burgerBtn?.addEventListener('click', () => {
       const burger = this.$burgerBtn as HTMLElement;
@@ -85,10 +85,10 @@ export default class ShopHeader extends HTMLElement {
       if (!this.$searchLine) return;
       if (e.matches) {
         this.$sideBar?.appendChild(this.$searchLine);
-        this.$searchLine.classList.add('search-aside');
+        this.$searchLine.classList.add('search_aside');
       } else {
         this.$element?.appendChild(this.$searchLine);
-        this.$searchLine.classList.remove('search-aside');
+        this.$searchLine.classList.remove('search_aside');
       }
     };
     mediaQuerryBurger.addEventListener('change', handleBurger);
