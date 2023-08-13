@@ -1,0 +1,15 @@
+<div class="overlay"></div>
+<style>
+  .overlay {
+    content: "";
+    display: none;
+    position: fixed;
+    height: 100vh;
+    width: 100vh;
+    background-color: rgba(0, 0, 0, 0.35);
+    z-index: 1;
+    &.active {
+      display: block;
+    }
+  }
+</style>
