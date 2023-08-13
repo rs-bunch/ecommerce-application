@@ -1,9 +1,7 @@
 import { Dispatch } from 'redux';
-import { connect } from 'webcomponents-redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { StateLocation } from '../../types';
-import store from '../Store/store';
 
 export default class CustomOverlay extends HTMLElement {
   public $element: HTMLElement | null;

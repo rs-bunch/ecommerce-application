@@ -1,8 +1,6 @@
-import { connect } from 'webcomponents-redux';
 import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import store from '../Store/store';
 import { StateLocation } from '../../types';
 
 export default class ShopHeader extends HTMLElement {
@@ -45,7 +43,7 @@ export default class ShopHeader extends HTMLElement {
 
   private connectedCallback(): void {
     this.attachShadow({ mode: 'open' });
-    if (this.$element && this.node) this.shadowRoot?.append(this.node);
+    if (this.node) this.shadowRoot?.append(this.node);
   }
 
   private disconnectedCallback(): void {}
