@@ -25,6 +25,13 @@ module.exports = {
         'style-loader',
         'css-loader',
         'sass-loader',
+        {
+          loader: 'sass-resources-loader',
+          options: { resources: [
+            path.resolve(__dirname, 'src', 'styles', 'vars.scss'),
+            path.resolve(__dirname, 'src', 'styles', 'mixins.scss'),
+          ]},
+        },
       ],
     },
     {
@@ -36,6 +43,14 @@ module.exports = {
             modules: false,
             exportType: "css-style-sheet",
           }
+        },
+        'sass-loader',
+        {
+          loader: 'sass-resources-loader',
+          options: { resources: [
+            path.resolve(__dirname, 'src', 'styles', 'vars.scss'),
+            path.resolve(__dirname, 'src', 'styles', 'mixins.scss'),
+          ]},
         },
       ],
     },
