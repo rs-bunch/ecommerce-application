@@ -5,6 +5,9 @@ const location: { [index: string]: string } = {
   '/': 'main',
   '/login': 'login',
   '/register': 'register',
+  '/cart': 'cart',
+  '/profile': 'profile',
+  '/saved-list': 'saved',
   '/404': 'error',
 };
 
