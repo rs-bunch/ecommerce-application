@@ -147,16 +147,16 @@
   .header__burger.open {
     & .burger__lines {
       background: none;
-    &::after {
-      transform: rotate(-45deg);
-    }
-    &::before {
-      transform: rotate(45deg);
+      &::after {
+        transform: rotate(-45deg);
+      }
+      &::before {
+        transform: rotate(45deg);
     }
     }
   }
-
-  .header__logo:hover {
+  
+  .header__logo {
     cursor: pointer;
   }
   
@@ -173,7 +173,8 @@
     line-height: 26px;
     color: #807D7E;
     transition: all ease-in-out .3s;
-    &:hover {
+    @media (hover: hover) {
+      &:hover {
       text-shadow:
       -0.25px -0.25px 0 #3C4242,
       0.25px -0.25px 0 #3C4242,
@@ -181,14 +182,17 @@
       0.25px 0.25px 0 #3C4242;
       color: #3C4242;
       cursor: pointer;
+      }
     }
   }
   .link__side-bar {
     order: 1;
     background-color: #F6F6F6;
     padding: 25px 0;
-    &:hover {
+    @media (hover: hover) {
+      &:hover {
       background-color: #f6f6f6b2;
+      }
     }
   }
 
@@ -271,8 +275,10 @@
     text-decoration: underline;
     cursor: pointer;
     transition: all ease-in-out .3s;
-    &:hover {
+    @media (hover: hover) {
+      &:hover {
       color: #8A33FD;
+      }
     }
   }
 
@@ -287,14 +293,16 @@
       border-bottom-left-radius: 8px;
       border-bottom-right-radius: 8px;
     }
-    &:hover {
+    @media (hover: hover) {
+      &:hover {
       background-color: #8A33FD;
       & .login__button-text {
         transition: all ease-in-out .3s;
         color: white;
-      }
+        }
       & svg path {
         stroke: white !important;
+        }
       }
     }
   }
@@ -315,10 +323,12 @@
     background-color: #F6F6F6;
     border-radius: 8px;
     transition: all ease-in-out .3s;
-    &:hover {
-      background-color: #8A33FD;
-      & svg path {
-        stroke: white !important;
+    @media (hover: hover) {
+      &:hover {
+        background-color: #8A33FD;
+        & svg path {
+          stroke: white !important;
+        }
       }
     }
   }
