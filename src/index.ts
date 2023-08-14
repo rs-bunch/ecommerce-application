@@ -1,3 +1,4 @@
+import './styles/typography.scss';
 import { bootstrap } from './styles/styles';
 import store from './components/Store/store';
 import Router from './components/Router/Router';
