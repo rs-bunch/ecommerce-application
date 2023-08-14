@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { StateLocation } from '../../types';
+import stylesheet from './styles.module.scss';
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -44,6 +45,7 @@ export default class ShopHeader extends HTMLElement {
   private connectedCallback(): void {
     this.attachShadow({ mode: 'open' });
     if (this.node) this.shadowRoot?.append(this.node);
+    if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [stylesheet];
   }
 
   private disconnectedCallback(): void {}
