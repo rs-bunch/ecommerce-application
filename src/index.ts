@@ -11,4 +11,4 @@ const router: Router = new Router(store);
 connect(CustomOverlay, store);
 connect(ShopHeader, store);
 window.customElements.define('custom-overlay', CustomOverlay);
-customElements.define('shop-header', ShopHeader);
+customElements.define('nav-element', ShopHeader);
