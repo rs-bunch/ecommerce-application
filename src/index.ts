@@ -1,5 +1,6 @@
 import './styles/typography.scss';
 import './styles/toastify.css';
+import './index.scss';
 import { connect } from 'webcomponents-redux';
 import { bootstrap } from './styles/styles';
 import store from './components/Store/store';
