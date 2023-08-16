@@ -1,4 +1,4 @@
-header {
+.header-container {
   position: relative;
   z-index: 1;
 }
@@ -140,6 +140,7 @@ header {
   border-radius: 8px;
   padding: 0 20px;
   &.search_aside {
+    display: none;
     flex-grow: 0;
     order: 0;
     max-height: 44px;
@@ -267,11 +268,20 @@ svg path {
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $laptop-width) {
   .header__shop-details {
     display: none;
   }
   .header__burger {
     display: flex;
+  }
+}
+
+@media screen and (max-width: $tablet-width) {
+  .header__search {
+    display: none;
+    &.search_aside {
+      display: flex;
+    }
   }
 }
