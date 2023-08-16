@@ -9,7 +9,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    assetModuleFilename: path.join('images', '[name][ext]'),
     publicPath: '/',
   },
   module: { rules: [
@@ -57,12 +56,15 @@ module.exports = {
     {
       test: /\.(png|svg|jpg|jpeg|gif)$/i,
       type: 'asset/resource',
+      generator: {
+        filename: 'assets/images/[name][ext]',
+      },
     },
     {
       test: /\.(woff2?|eot|ttf|otf)$/i,
       type: 'asset/resource',
       generator: {
-        filename: 'fonts/[name][ext]',
+        filename: 'assets/fonts/[name][ext]',
       },
     },
     {
