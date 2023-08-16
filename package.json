@@ -57,6 +57,8 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@commercetools/platform-sdk": "^5.0.0",
+    "@commercetools/sdk-client-v2": "^2.2.0",
     "@reduxjs/toolkit": "^1.9.5",
     "bootstrap": "^5.3.1",
     "redux": "^4.2.1",
