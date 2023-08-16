@@ -1,0 +1,29 @@
+login-form {
+  display: block;
+  box-sizing: border-box;
+  background-color: whitesmoke;
+
+  @include media-mobile{
+    width: 100vw;
+    padding: 20px 9.375vw;
+    font-size: 14px;
+  }
+
+  @include media-tablet{
+    width: 80vw;
+    padding: 60px 15.625vw;
+    font-size: 16px;
+  }
+
+  @include media-laptop{
+    width: 60vw;
+    padding: 50px 9.765vw;
+    font-size: 16px;
+  }
+
+  @include media-desktop{
+    width: 60vw;
+    padding: 50px 9.765vw;
+    font-size: 16px;
+  }
+}
