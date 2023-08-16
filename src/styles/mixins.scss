@@ -1,26 +1,35 @@
 @mixin media-mobile {
-	@media (min-width: $mobile-width) { @content; }
+  @media (min-width: $mobile-width) {
+    @content;
+  }
 }
 
 @mixin media-tablet {
-	@media (min-width: $tablet-width) { @content; }
+  @media (min-width: $tablet-width) {
+    @content;
+  }
 }
 
 @mixin media-laptop {
-	@media (min-width: $laptop-width) { @content; }
+  @media (min-width: $laptop-width) {
+    @content;
+  }
 }
 
 @mixin media-desktop {
-	@media (min-width: $desktop-width) { @content; }
+  @media (min-width: $desktop-width) {
+    @content;
+  }
 }
 
 @mixin font-face($font-family, $url, $weight) {
-	@font-face {
-		font-family: '#{$font-family}';
-		src: url('#{$url}.woff2') format ('woff2'),
-				 url('#{$url}.woff') format ('woff');
-		font-weight: #{$weight};
-		font-display: swap;
-		font-style: normal;
-	}
+  @font-face {
+    font-family: '#{$font-family}';
+    src:
+      url('#{$url}.woff2') format ('woff2'),
+      url('#{$url}.woff') format ('woff');
+    font-weight: #{$weight};
+    font-display: swap;
+    font-style: normal;
+  }
 } // HowToUse: @include font-face('Font-name', '../path/to/foldef', 600);

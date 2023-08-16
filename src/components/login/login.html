@@ -1,131 +1,32 @@
-<style>
-    .wrapper{
-        width: 60vw;
-        padding: 50px 100px;
-        box-sizing: border-box;
-        background-color: whitesmoke;
-    }
-
-    .sign-in{
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sign-in__sign{
-        margin-bottom: 50px;
-        color: #333;
-        font-family: Core Sans C;
-        font-size: 34px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: 0.68px;
-    }
-
-    .sign-in__google{
-        margin-bottom: 20px;
-    }
-
-    .sign-in__twitter{
-        margin-bottom: 50px;
-    }
-
-    .sign-in__or{
-        margin-bottom: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .sign-in__or::before{
-        content: '';
-        display:inline-block;
-        height: 1px;
-        width: 40%;
-        background: rgba(102, 102, 102, 0.25);
-    }
-
-    .sign-in__or::after{
-        content: '';
-        display:inline-block;
-        height: 1px;
-        width: 40%;
-        background: rgba(102, 102, 102, 0.25);
-    }
-
-    .sign-in__email{
-        margin-bottom: 30px;
-    }
-
-    .sign-in__password{
-        margin-bottom: 30px;
-    }
-
-    .sign-in__google,
-    .sign-in__twitter{
-        border-radius: 8px;
-        border: 1px solid #3C4242;
-        padding: 16px 20px;
-        background-color: white;
-        color: #8A33FD;
-        text-align: center;
-        font-family: Causten;
-        font-size: 22px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-    }
-
-    .sign-in__email,
-    .sign-in__password{
-        border-radius: 8px;
-        border: 1px solid #3C4242;
-        padding: 16px 20px;
-    }
-
-    .sign-in__submit{
-        display: flex;
-        width: 167px;
-        padding: 16px 20px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 8px;
-        background: #8A33FD;
-        color: white;
-    }
-
-    .sign-in__form{
-        display: flex;
-        flex-direction: column; 
-    }
-
-    .sign-in__google__content::before{
-        content: '';
-        background-image: url('../../assets/images/Google.svg');
-    }
-</style>
-<div class="wrapper">
-    <div class="sign-in">
-        <h3 class="sign-in__sign">Sign In Page</h3>
-        <!-- <button class="sign-in__google">Continue With Google</button> -->
-        <button class="sign-in__google">
-            <div class="sign-in__google__content">Continue With Google</div>
-        </button>
-        <button class="sign-in__twitter">Continue With Twitter</button>
-    
-        <div class="sign-in__or">OR</div>
-        
-        <form action="#" method="post" class="sign-in__form">
-            <label for="email">Email address</label>
-            <input 
-                type="email"
-                class="sign-in__email" 
-                name="email" 
-                required
-            >
-            <label for="password">Password</label>
-            <input type="password" class="sign-in__password" name="password" required minlength="8">
-            <input type="submit" class="sign-in__submit" value="Sign In">
-        </form>
-    </div>
+<div class="sign-in">
+    <h3 class="sign-in__sign">Sign In Page</h3>
+    <button class="sign-in__google">
+        <div class="sign-in__google__content">Continue With Google</div>
+    </button>
+    <button class="sign-in__twitter">
+        <div class="sign-in__twitter__content">Continue With Twitter</div>
+    </button>
+    <div class="sign-in__or">OR</div>
+    <form action="#" method="post" class="sign-in__form">
+        <label for="email" class="sign-in__email-field__label">Email address</label>
+        <input 
+            type="email"
+            class="sign-in__email" 
+            name="email" 
+            required
+        >
+        <label for="email" class="sign-in__email__tooltip"></label>
+        <label for="password" class="sign-in__password-field__label">
+            <div>Password</div>
+            <div class="sign-in__password-field__label__hide-btn">Hide</div>
+        </label>
+        <input type="password" class="sign-in__password" name="password" required minlength="8">
+        <label for="password" class="sign-in__password__tooltip"></label>
+        <label for="password" class="sign-in__forget-password">
+            <a href="#">Forget your password</a>
+        </label>
+        <input type="submit" class="sign-in__submit" value="Sign In" name="submit">
+        <label for="submit" class="sign-in__sign-up">Don't have an account? <a href="#">Sign up</a></label>
+    </form>
 </div>
+
