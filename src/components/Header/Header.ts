@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import { StateLocation } from '../../types';
+import { LocationState } from '../../types';
 import stylesheet from './styles.module.scss';
 
 export default class ShopHeader extends HTMLElement {
@@ -52,7 +52,7 @@ export default class ShopHeader extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string): void {}
 
-  private mapStateToProps(oldState: StateLocation, newState: StateLocation): void {}
+  private mapStateToProps(oldState: LocationState, newState: LocationState): void {}
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
     return {

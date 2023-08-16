@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { StateI } from '../../types';
-import initialState from './initialState';
+import type { LocationState } from '../../types';
 
 const locationSlice = createSlice({
   name: 'location',
-  initialState,
+  initialState: {
+    location: null,
+  },
   reducers: {
-    initLocation(state: StateI, action: PayloadAction<{ location: string }>) {
+    initLocation(state: LocationState, action: PayloadAction<{ location: string }>) {
       Object.assign(state, { location: action.payload.location });
     },
-    changeLocation(state: StateI, action: PayloadAction<{ location: string }>) {
+    changeLocation(state: LocationState, action: PayloadAction<{ location: string }>) {
       Object.assign(state, { location: action.payload.location });
     },
   },
