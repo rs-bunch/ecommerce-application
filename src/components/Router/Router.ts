@@ -8,6 +8,8 @@ const location: { [index: string]: string } = {
   '/cart': 'cart',
   '/profile': 'profile',
   '/saved-list': 'saved',
+  '/men': 'men',
+  '/women': 'women',
   '/404': 'error',
 };
 

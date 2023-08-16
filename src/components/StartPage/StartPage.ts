@@ -10,11 +10,17 @@ export default class StartPage extends HTMLElement {
 
   public $element: HTMLElement | null;
 
+  public $men: HTMLElement | null | undefined;
+
+  public $women: HTMLElement | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
     if (this.node?.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
     else this.$element = null;
+    this.$men = this.$element?.querySelector('.categories_men');
+    this.$women = this.$element?.querySelector('.categories_women');
   }
 
   private connectedCallback(): void {
@@ -25,11 +31,23 @@ export default class StartPage extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {}
+  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+    if (attributeName === 'location') {
+      console.log(this.$men, this.$women);
+      console.log(oldValue, newValue);
+      if (newValue) {
+        this.$men?.setAttribute('location', newValue);
+        this.$women?.setAttribute('location', newValue);
+      }
+    }
+  }
 
   // redux state change observer
   private mapStateToProps(oldState: StateLocation, newState: StateLocation): void {
-    this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+    console.log(oldState, newState);
+    if (!oldState) return;
+    if (oldState.location.location !== newState.location.location)
+      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
   }
 
   // redux dispath action

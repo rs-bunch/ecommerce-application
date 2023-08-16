@@ -28,6 +28,19 @@
   }
 }
 
+.categories_men,
+.categories_women {
+  display: none;
+}
+
+.categories_men[location="men"] {
+  display: block;
+}
+
+.categories_women[location="women"] {
+  display: block;
+}
+
 @media screen and (max-width: $tablet-width) {
 
   .offer-images {
