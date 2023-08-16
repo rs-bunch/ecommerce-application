@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import type { AuthState } from '../../types';
 import { createCustomer } from '../Api/auth';
-import { notifyInfo } from '../../utils/notify/notify';
+import { notifyError, notifyInfo } from '../../utils/notify/notify';
 
 const signup = createAsyncThunk('auth/signup', async (payload: { email: string; password: string }) => {
   return createCustomer(payload)
@@ -14,7 +14,9 @@ const signup = createAsyncThunk('auth/signup', async (payload: { email: string; 
       notifyInfo('New customer was created!').showToast();
       return response.body.customer.id;
     })
-    .catch();
+    .catch((error) => {
+      notifyError(String(error.message)).showToast();
+    });
 });
 
 const authSlice = createSlice({
