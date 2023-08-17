@@ -19,6 +19,7 @@ customElements.define('custom-overlay', CustomOverlay);
 connect(ShopHeader, store);
 customElements.define('nav-element', ShopHeader);
 
+connect(Login, store);
 customElements.define('login-form', Login);
 
 connect(StartPage, store);
