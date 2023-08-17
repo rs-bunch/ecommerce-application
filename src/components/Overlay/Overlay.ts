@@ -1,8 +1,8 @@
 import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import { LocationState } from '../../types';
 import stylesheet from './overlay.module.scss';
+import { RootState } from '../Store/store';
 
 export default class CustomOverlay extends HTMLElement {
   public $element: HTMLElement | null;
@@ -40,7 +40,7 @@ export default class CustomOverlay extends HTMLElement {
     }
   }
 
-  private mapStateToProps(oldState: LocationState, newState: LocationState): void {}
+  private mapStateToProps(oldState: RootState, newState: RootState): void {}
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
     return {

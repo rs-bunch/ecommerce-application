@@ -2,8 +2,8 @@ import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import stylesheet from './styles.module.scss';
 import { bootstrap } from '../../styles/styles';
-import { LocationState } from '../../types';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
+import { RootState } from '../Store/store';
 
 export default class FavouriteItems extends HTMLElement {
   public $element: HTMLElement | null;
@@ -32,10 +32,10 @@ export default class FavouriteItems extends HTMLElement {
   }
 
   // redux state change observer
-  private mapStateToProps(oldState: LocationState, newState: LocationState): void {
+  private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.location !== newState.location)
-      this.attributeChangedCallback('location', oldState.location, newState.location);
+    if (oldState.location.location !== newState.location.location)
+      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
   }
 
   // redux dispath action
