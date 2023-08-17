@@ -6,7 +6,7 @@ import ElementHTML from './login.html';
 import { createElementFromHTML } from '../../utils/create-element';
 import { validateEmail } from '../../utils/validation/validateEmail';
 import { validatePassword } from '../../utils/validation/validatePassword';
-import { StateLocation } from '../../types';
+import { LocationState } from '../../types';
 
 export default class Login extends HTMLElement {
   private $element: HTMLElement | null;
@@ -51,10 +51,10 @@ export default class Login extends HTMLElement {
     }
   }
 
-  private mapStateToProps(oldState: StateLocation, newState: StateLocation): void {
+  private mapStateToProps(oldState: LocationState, newState: LocationState): void {
     if (!oldState) return;
-    if (oldState.location.location !== newState.location.location)
-      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+    if (oldState.location !== newState.location)
+      this.attributeChangedCallback('location', oldState.location, newState.location);
   }
 
   // redux dispath action

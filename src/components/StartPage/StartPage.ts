@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import { StateLocation } from '../../types';
+import { LocationState } from '../../types';
 import stylesheet from './styles.module.scss';
 import { bootstrap } from '../../styles/styles';
 
@@ -42,10 +42,10 @@ export default class StartPage extends HTMLElement {
   }
 
   // redux state change observer
-  private mapStateToProps(oldState: StateLocation, newState: StateLocation): void {
+  private mapStateToProps(oldState: LocationState, newState: LocationState): void {
     if (!oldState) return;
-    if (oldState.location.location !== newState.location.location)
-      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+    if (oldState.location !== newState.location)
+      this.attributeChangedCallback('location', oldState.location, newState.location);
   }
 
   // redux dispath action

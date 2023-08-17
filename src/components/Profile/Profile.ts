@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import stylesheet from './styles.module.scss';
 import { bootstrap } from '../../styles/styles';
-import { StateLocation } from '../../types';
+import { LocationState } from '../../types';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 
 export default class MyAccount extends HTMLElement {
@@ -32,10 +32,10 @@ export default class MyAccount extends HTMLElement {
   }
 
   // redux state change observer
-  private mapStateToProps(oldState: StateLocation, newState: StateLocation): void {
+  private mapStateToProps(oldState: LocationState, newState: LocationState): void {
     if (!oldState) return;
-    if (oldState.location.location !== newState.location.location)
-      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+    if (oldState.location !== newState.location)
+      this.attributeChangedCallback('location', oldState.location, newState.location);
   }
 
   // redux dispath action

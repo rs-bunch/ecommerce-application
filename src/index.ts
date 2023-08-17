@@ -1,4 +1,6 @@
 import './styles/typography.scss';
+import './styles/toastify.css';
+import './index.scss';
 import { connect } from 'webcomponents-redux';
 import { bootstrap } from './styles/styles';
 import store from './components/Store/store';
@@ -12,6 +14,7 @@ import Cart from './components/Cart/Cart';
 import MyAccount from './components/Profile/Profile';
 
 document.adoptedStyleSheets = [bootstrap];
+
 const router: Router = new Router(store);
 
 connect(CustomOverlay, store);
