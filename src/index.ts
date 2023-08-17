@@ -9,6 +9,7 @@ import Login from './components/login/Login';
 import StartPage from './components/StartPage/StartPage';
 import FavouriteItems from './components/FavouriteItems/FavouriteItems';
 import Cart from './components/Cart/Cart';
+import MyAccount from './components/Profile/Profile';
 
 document.adoptedStyleSheets = [bootstrap];
 const router: Router = new Router(store);
@@ -30,3 +31,6 @@ customElements.define('favourite-items', FavouriteItems);
 
 connect(Cart, store);
 customElements.define('cart-element', Cart);
+
+connect(MyAccount, store);
+customElements.define('account-element', MyAccount);
