@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { StateLocation } from '../../types';
-import stylesheet from './StartPage.module.scss';
+import stylesheet from './styles.module.scss';
 import { bootstrap } from '../../styles/styles';
 
 export default class StartPage extends HTMLElement {
@@ -33,8 +33,6 @@ export default class StartPage extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
     if (attributeName === 'location') {
-      console.log(this.$men, this.$women);
-      console.log(oldValue, newValue);
       if (newValue) {
         this.$men?.setAttribute('location', newValue);
         this.$women?.setAttribute('location', newValue);
@@ -44,7 +42,6 @@ export default class StartPage extends HTMLElement {
 
   // redux state change observer
   private mapStateToProps(oldState: StateLocation, newState: StateLocation): void {
-    console.log(oldState, newState);
     if (!oldState) return;
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
