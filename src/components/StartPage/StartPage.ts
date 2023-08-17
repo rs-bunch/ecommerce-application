@@ -34,6 +34,7 @@ export default class StartPage extends HTMLElement {
   private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
     if (attributeName === 'location') {
       if (newValue) {
+        this.$element?.setAttribute('location', newValue);
         this.$men?.setAttribute('location', newValue);
         this.$women?.setAttribute('location', newValue);
       }

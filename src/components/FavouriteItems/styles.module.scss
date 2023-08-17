@@ -1,9 +1,13 @@
 .favourite-items {
   display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
 }
 
 .favourite-items[location ="favourites"] {
-  display: block;
+  display: flex;
 }
 
 .favourite-items__no-items {

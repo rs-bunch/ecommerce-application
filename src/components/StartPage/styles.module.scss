@@ -1,4 +1,14 @@
-.offer-images {
+.start-page {
+  display: none;
+}
+
+.start-page[location="main"],
+.start-page[location="men"],
+.start-page[location="women"] {
+  display: block;
+}
+
+.start-page__offer-images {
   display: flex;
   overflow: wrap;
   justify-content: center;
