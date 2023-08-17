@@ -1,0 +1,15 @@
+.favourite-items {
+  display: none;
+}
+
+.favourite-items[location ="favourites"] {
+  display: block;
+}
+
+.favourite-items__no-items {
+  text-align: center;
+}
+
+.no-items__title {
+  font-family: Core Sans C;
+}
