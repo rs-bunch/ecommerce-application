@@ -8,6 +8,7 @@ import ShopHeader from './components/Header/Header';
 import Login from './components/login/Login';
 import StartPage from './components/StartPage/StartPage';
 import FavouriteItems from './components/FavouriteItems/FavouriteItems';
+import Cart from './components/Cart/Cart';
 
 document.adoptedStyleSheets = [bootstrap];
 const router: Router = new Router(store);
@@ -25,3 +26,6 @@ customElements.define('start-page', StartPage);
 
 connect(FavouriteItems, store);
 customElements.define('favourite-items', FavouriteItems);
+
+connect(Cart, store);
+customElements.define('cart-element', Cart);

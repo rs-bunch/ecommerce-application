@@ -1,0 +1,19 @@
+.cart {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.cart[location ="cart"] {
+  display: flex;
+}
+
+.cart__no-items {
+  text-align: center;
+}
+
+.no-items__title {
+  font-family: Core Sans C;
+}
