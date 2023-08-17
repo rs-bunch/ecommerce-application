@@ -17,7 +17,7 @@
   position: absolute;
   top: 0;
   left: -380px;
-  width: 340px;
+  width: 320px;
   background-color: white;
   height: 100vh;
   gap: 15px;
@@ -71,20 +71,20 @@
 
 .header__burger.close {
   position: absolute;
-  right: -44px;
+  right: 2px;
   top: 1px;
-  border: solid 2px white;
+  border: solid 2px black;
   border-radius: 8px;
   & .burger__lines {
     height: 0;
     
     transform: translate(-12px, -1px);
     &::after {
-      background-color: white;
+      background-color: black;
       transform: rotate(-45deg);
     }
     &::before {
-      background-color: white;
+      background-color: black;
       transform: rotate(45deg);
   }
   }
