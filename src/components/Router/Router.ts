@@ -1,10 +1,10 @@
-import { StoreType } from '../Store/store';
+import type { Store } from '../Store/store';
 import { initLocation, changeLocation } from '../Store/locationSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
   '/login': 'login',
-  '/register': 'register',
+  '/signup': 'signup',
   '/cart': 'cart',
   '/profile': 'profile',
   '/saved-list': 'saved',
@@ -14,7 +14,7 @@ const location: { [index: string]: string } = {
 class Router {
   private store;
 
-  constructor(store: StoreType) {
+  constructor(store: Store) {
     this.store = store;
 
     window.addEventListener('DOMContentLoaded', () => {

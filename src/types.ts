@@ -1,11 +1,8 @@
-export interface StateI {
+export interface LocationState {
   location: string | null;
-  auth: {
-    active: boolean;
-    token: string | null;
-  };
 }
 
-export interface StateLocation {
-  location: StateI;
+export interface AuthState {
+  id: string | null;
+  inProgress: boolean;
 }

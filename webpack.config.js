@@ -3,6 +3,8 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 
+const mode = process.env.NODE_ENV || 'development';
+
 module.exports = {
   entry: path.resolve(__dirname, './src/index.ts'),
   mode: 'development',
@@ -97,4 +99,6 @@ module.exports = {
     hot: true,
     historyApiFallback: true,
   },
+  devtool: (mode === 'development') ? 'inline-source-map' : false,
+  mode: mode,
 };
