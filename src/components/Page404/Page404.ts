@@ -27,7 +27,6 @@ export default class Page404 extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
     if (attributeName === 'location') {
-      console.log(newValue);
       if (newValue) this.$element?.setAttribute('location', newValue);
     }
   }
@@ -37,8 +36,6 @@ export default class Page404 extends HTMLElement {
     if (!oldState) return;
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
-    console.log(newState);
-    console.log(newState.location);
   }
 
   // redux dispath action
