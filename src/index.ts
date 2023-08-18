@@ -7,7 +7,7 @@ import store from './components/Store/store';
 import Router from './components/Router/Router';
 import CustomOverlay from './components/Overlay/Overlay';
 import ShopHeader from './components/Header/Header';
-import Login from './components/login/Login';
+import Login from './components/Login/Login';
 
 document.adoptedStyleSheets = [bootstrap];
 
@@ -19,4 +19,5 @@ customElements.define('custom-overlay', CustomOverlay);
 connect(ShopHeader, store);
 customElements.define('nav-element', ShopHeader);
 
+connect(Login, store);
 customElements.define('login-form', Login);
