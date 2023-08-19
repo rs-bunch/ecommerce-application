@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import type { AuthState } from '../../types';
-import { createCustomer } from '../Api/auth';
+import { createCustomer, loginCustomer } from '../Api/auth';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
+import { Payload } from '../../dto/auth-payload';
 
-const signup = createAsyncThunk('auth/signup', async (payload: { email: string; password: string }) => {
+const signup = createAsyncThunk('auth/signup', async (payload: Payload) => {
   return createCustomer(payload)
     .then((response) => {
       if (response.statusCode !== 201) {
@@ -12,6 +13,22 @@ const signup = createAsyncThunk('auth/signup', async (payload: { email: string; 
         throw new Error(message);
       }
       notifyInfo('New customer was created!').showToast();
+      return response.body.customer.id;
+    })
+    .catch((error) => {
+      notifyError(String(error.message)).showToast();
+    });
+});
+
+const signin = createAsyncThunk('auth/signin', async (payload: Payload) => {
+  return loginCustomer(payload)
+    .then((response) => {
+      if (response.statusCode !== 200) {
+        let message = '';
+        if ('message' in response) message = String(response.message);
+        throw new Error(message);
+      }
+      notifyInfo('Successful login!').showToast();
       return response.body.customer.id;
     })
     .catch((error) => {
@@ -36,8 +53,17 @@ const authSlice = createSlice({
     [signup.rejected.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: false, id: null });
     },
+    [signin.pending.type]: (state: AuthState) => {
+      Object.assign(state, { inProgress: true });
+    },
+    [signin.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<string>) => {
+      Object.assign(state, { inProgress: false, id: payload });
+    },
+    [signin.rejected.type]: (state: AuthState) => {
+      Object.assign(state, { inProgress: false, id: null });
+    },
   },
 });
 
-export { signup };
+export { signup, signin };
 export default authSlice;

@@ -6,12 +6,15 @@ import { createElementFromHTML } from '../../utils/create-element';
 import { validateEmail } from '../../utils/validation/validateEmail';
 import { validatePassword } from '../../utils/validation/validatePassword';
 
+import { signin } from '../Store/authSlice';
+import type { RootState, AppDispatch } from '../Store/store';
+
 export default class Login extends HTMLElement {
   private $element: HTMLElement | null;
 
-  private $emailField: HTMLElement | null;
+  private $emailField: HTMLInputElement | null;
 
-  private $passwordField: HTMLElement | null;
+  private $passwordField: HTMLInputElement | null;
 
   private $hideBtn: HTMLElement | null;
 
@@ -19,16 +22,21 @@ export default class Login extends HTMLElement {
 
   private $passwordTootlip: HTMLElement | null;
 
+  private $submitBtn: HTMLInputElement | null;
+
+  private signin: ((payload: { [index: string]: string }) => void) | undefined;
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.$element = createElementFromHTML(ElementHTML);
-    this.$emailField = this.$element.querySelector('.sign-in__email');
-    this.$passwordField = this.$element.querySelector('.sign-in__password');
-    this.$hideBtn = this.$element.querySelector('.sign-in__password-field__label__hide-btn');
+    this.$emailField = this.$element.querySelector('#sign-in-email');
+    this.$passwordField = this.$element.querySelector('#sign-in-password');
+    this.$hideBtn = this.$element.querySelector('#password-hide-btn');
 
-    this.$emailTootlip = this.$element.querySelector('.sign-in__email__tooltip');
-    this.$passwordTootlip = this.$element.querySelector('.sign-in__password__tooltip');
+    this.$emailTootlip = this.$element.querySelector('#email-tooltip');
+    this.$passwordTootlip = this.$element.querySelector('#password-tooltip');
+    this.$submitBtn = this.$element.querySelector('#sign-in-submit');
   }
 
   public connectedCallback(): void {
@@ -41,6 +49,40 @@ export default class Login extends HTMLElement {
     this.$emailField?.addEventListener('input', () => this.validateEmail());
     this.$passwordField?.addEventListener('input', () => this.validatePassword());
     this.$hideBtn?.addEventListener('click', () => this.togglePassVisibility());
+    this.$submitBtn?.addEventListener('click', (e) => {
+      if (!this.$emailTootlip || !this.$passwordTootlip) return;
+      if (this.$emailTootlip.textContent || this.$passwordTootlip.textContent) return;
+      this.submitHandler();
+      e.preventDefault();
+    });
+  }
+
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
+    if (attributeName === 'location') {
+      this.style.display = newValue === 'signin' ? '' : 'none';
+    }
+  }
+
+  // redux state change observer
+  private mapStateToProps(oldState: RootState, newState: RootState): void {
+    const { location } = newState.location;
+    if (location !== undefined) {
+      this.attributeChangedCallback('location', '', String(location));
+    }
+  }
+
+  // redux dispath action
+  private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
+    return {
+      signin: (payload: { email: string; password: string }) => dispatch(signin(payload)),
+    };
+  }
+
+  private submitHandler(): void {
+    if (this.$emailField?.value && this.$passwordField?.value) {
+      const payload = { email: this.$emailField.value, password: this.$passwordField.value };
+      if (this.signin) this.signin(payload);
+    }
   }
 
   private validateEmail(): void {

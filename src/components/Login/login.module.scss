@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 
-.sign-in__sign {
+.sign-in__title {
   margin-bottom: 50px;
   color: #333;
   font-family: Core Sans C;
@@ -14,11 +14,11 @@
   letter-spacing: 0.68px;
 }
 
-.sign-in__google {
+.sign-in__google-btn {
   margin-bottom: 20px;
 }
 
-.sign-in__twitter {
+.sign-in__twitter-btn {
   margin-bottom: 50px;
 }
 
@@ -52,8 +52,8 @@
   }
 }
 
-.sign-in__google,
-.sign-in__twitter {
+.sign-in__google-btn,
+.sign-in__twitter-btn {
   border-radius: 8px;
   border: 1px solid #3c4242;
   padding: 16px 20px;
@@ -71,14 +71,14 @@
   justify-content: space-between;
 }
 
-.sign-in__google__content,
-.sign-in__twitter__content {
+.sign-in__google-btn-content,
+.sign-in__twitter-btn-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.sign-in__google__content::before {
+.sign-in__google-btn-content::before {
   content: '';
   display: inline-block;
   width: 20px;
@@ -87,7 +87,7 @@
   margin-right: 15px;
 }
 
-.sign-in__twitter__content::before {
+.sign-in__twitter-btn-content::before {
   content: '';
   display: inline-block;
   width: 20px;
@@ -121,7 +121,8 @@
   flex-direction: column;
 }
 
-.sign-in__password-field__label, .sign-in__email-field__label {
+.sign-in__password-field-label, 
+.sign-in__email-field-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -135,7 +136,7 @@
   letter-spacing: 0.36px;
 }
 
-.sign-in__password-field__label__hide-btn {
+.sign-in__password-hide-btn {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -167,8 +168,8 @@
   text-decoration-line: underline;
 }
 
-.sign-in__password__tooltip,
-.sign-in__email__tooltip {
+.sign-in__password-tooltip,
+.sign-in__email-tooltip {
   height: 30px;
   color: #EE1D52;
   font-family: Causten;

@@ -21,3 +21,5 @@ customElements.define('nav-element', ShopHeader);
 
 connect(Login, store);
 customElements.define('login-form', Login);
+
+document.body.append(document.createElement('login-form'));
