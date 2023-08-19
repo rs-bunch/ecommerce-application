@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './index.html';
+import ElementHTML from './start-page.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import stylesheet from './styles.module.scss';
+import stylesheet from './start-page.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { RootState } from '../Store/store';
 

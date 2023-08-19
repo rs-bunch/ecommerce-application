@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './index.html';
-import stylesheet from './styles.module.scss';
+import ElementHTML from './cart.html';
+import stylesheet from './cart.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { RootState } from '../Store/store';

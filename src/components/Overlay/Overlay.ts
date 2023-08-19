@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './index.html';
+import ElementHTML from './overlay.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './overlay.module.scss';
 import { RootState } from '../Store/store';

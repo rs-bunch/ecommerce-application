@@ -1,8 +1,8 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './index.html';
+import ElementHTML from './header.html';
 import SideBarHTML from './side-bar.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import stylesheet from './styles.module.scss';
+import stylesheet from './header.module.scss';
 import { RootState } from '../Store/store';
 
 export default class ShopHeader extends HTMLElement {
