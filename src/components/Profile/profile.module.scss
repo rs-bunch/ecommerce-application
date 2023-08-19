@@ -1,0 +1,15 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.profile__title {
+  text-align: center;
+}
+
+.profile__title {
+  font-family: Core Sans C;
+}

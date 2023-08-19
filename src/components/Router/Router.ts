@@ -7,7 +7,9 @@ const location: { [index: string]: string } = {
   '/signup': 'signup',
   '/cart': 'cart',
   '/profile': 'profile',
-  '/saved-list': 'saved',
+  '/favourites': 'favourites',
+  '/men': 'men',
+  '/women': 'women',
   '/404': 'error',
 };
 
