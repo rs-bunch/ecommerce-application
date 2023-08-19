@@ -1,13 +1,3 @@
-.start-page {
-  display: none;
-}
-
-.start-page[location="main"],
-.start-page[location="men"],
-.start-page[location="women"] {
-  display: block;
-}
-
 .start-page__offer-images {
   display: flex;
   overflow: wrap;
@@ -36,19 +26,6 @@
     border-radius: 10px;
     left: 5px;
   }
-}
-
-.categories_men,
-.categories_women {
-  display: none;
-}
-
-.categories_men[location="men"] {
-  display: block;
-}
-
-.categories_women[location="women"] {
-  display: block;
 }
 
 @media screen and (max-width: $tablet-width) {

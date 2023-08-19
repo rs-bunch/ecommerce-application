@@ -31,13 +31,12 @@ export default class StartPage extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {
-      if (newValue) {
-        this.$element?.setAttribute('location', newValue);
-        this.$men?.setAttribute('location', newValue);
-        this.$women?.setAttribute('location', newValue);
-      }
+      this.style.display = ['main', 'men', 'women'].includes(newValue) ? '' : 'none';
+      if (!this.$men || !this.$women) return;
+      this.$men.style.display = newValue === 'men' ? '' : 'none';
+      this.$women.style.display = newValue === 'women' ? '' : 'none';
     }
   }
 

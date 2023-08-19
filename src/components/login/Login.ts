@@ -45,7 +45,7 @@ export default class Login extends HTMLElement {
     this.$hideBtn?.addEventListener('click', () => this.togglePassVisibility());
   }
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {
       this.style.display = newValue === 'login' ? '' : 'none';
     }

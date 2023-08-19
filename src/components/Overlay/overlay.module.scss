@@ -1,6 +1,5 @@
 .overlay {
   content: "";
-  display: none;
   position: fixed;
   height: 100%;
   width: 100%;
@@ -10,7 +9,4 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.55);
   z-index: 2;
-  &.active {
-    display: block;
-  }
 }

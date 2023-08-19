@@ -25,9 +25,9 @@ export default class FavouriteItems extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {
-      if (newValue) this.$element?.setAttribute('location', newValue);
+      this.style.display = newValue === 'favourites' ? '' : 'none';
     }
   }
 

@@ -27,16 +27,7 @@ export default class CustomOverlay extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'active') {
-      switch (newValue) {
-        case 'true':
-          this.$element?.classList.add('active');
-          break;
-        case 'false':
-          this.$element?.classList.remove('active');
-          break;
-        default:
-          break;
-      }
+      this.style.display = newValue === 'true' ? '' : 'none';
     }
   }
 
