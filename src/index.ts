@@ -27,7 +27,6 @@ customElements.define('nav-element', ShopHeader);
 connect(Login, store);
 customElements.define('login-form', Login);
 
-
 connect(Page404, store);
 customElements.define('error-element', Page404);
 
