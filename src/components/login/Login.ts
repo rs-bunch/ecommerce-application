@@ -1,10 +1,12 @@
 import './login.scss';
+import { Dispatch } from 'redux';
 import { login, bootstrap } from '../../styles/styles';
 
 import ElementHTML from './login.html';
 import { createElementFromHTML } from '../../utils/create-element';
 import { validateEmail } from '../../utils/validation/validateEmail';
 import { validatePassword } from '../../utils/validation/validatePassword';
+import { RootState } from '../Store/store';
 
 export default class Login extends HTMLElement {
   private $element: HTMLElement | null;
@@ -41,6 +43,25 @@ export default class Login extends HTMLElement {
     this.$emailField?.addEventListener('input', () => this.validateEmail());
     this.$passwordField?.addEventListener('input', () => this.validatePassword());
     this.$hideBtn?.addEventListener('click', () => this.togglePassVisibility());
+  }
+
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
+    if (attributeName === 'location') {
+      this.style.display = newValue === 'login' ? '' : 'none';
+    }
+  }
+
+  private mapStateToProps(oldState: RootState, newState: RootState): void {
+    if (!oldState) return;
+    if (oldState.location.location !== newState.location.location)
+      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+  }
+
+  // redux dispath action
+  private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
+    return {
+      action: () => dispatch({ type: 'ACTION' }),
+    };
   }
 
   private validateEmail(): void {
