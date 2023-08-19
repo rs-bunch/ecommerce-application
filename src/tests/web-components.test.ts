@@ -13,6 +13,21 @@ import Login from '../components/login/Login';
 import TestUtils from './utils/test-utils';
 import Page404 from '../components/Page404/Page404';
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // Deprecated
+    removeListener: jest.fn(), // Deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
 customElements.define('custom-overlay', CustomOverlay);
 customElements.define('nav-element', ShopHeader);
 customElements.define('login-form', Login);
