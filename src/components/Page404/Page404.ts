@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './index.html';
-import stylesheet from './styles.module.scss';
+import ElementHTML from './page404.html';
+import stylesheet from './page404.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { RootState } from '../Store/store';
@@ -25,9 +25,9 @@ export default class Page404 extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {
-      if (newValue) this.$element?.setAttribute('location', newValue);
+      this.style.display = newValue === 'error' ? '' : 'none';
     }
   }
 

@@ -1,13 +1,9 @@
 .page404 {
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 400px;
-}
-
-.page404[location ="error"] {
-  display: flex;
 }
 
 .page404__button {
