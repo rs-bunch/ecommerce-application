@@ -4,7 +4,7 @@ export interface LocationState {
 
 export interface AuthState {
   id: string | null;
-  inProgress: boolean;
+  inProgress?: boolean;
 }
 
 export interface Payload {
