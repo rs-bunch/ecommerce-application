@@ -1,0 +1,109 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__title {
+  margin: 0;
+  padding: 0;
+  font: 34px normal bold 'Core Sans C';
+}
+
+.form__subtitle {
+  font: 16px medium 'Causten';
+  color: #777;
+}
+
+.form__address {
+  font: 20px normal bold 'Core Sans C';
+  color: #3C4242;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  margin-bottom: 25px;
+}
+
+.field__label {
+  font: 18px 'Causten';
+  color: #3C4242;
+}
+
+.field__input {
+  padding: 10px 20px;
+  height: 50px;
+  border-radius: 8px;
+  border: 1.5px solid #3C4242;
+
+  &.invalid {
+    border-color: #dc3545;
+  }
+
+  &.valid {
+    border-color: #3ddb28;
+  }
+
+  & + .invalid-tooltip {
+    display: none;
+  }
+
+  &.invalid + .invalid-tooltip {
+    display: block;
+  }
+}
+
+.invalid-tooltip {
+  top: 75px
+}
+
+.field__input::placeholder {
+  font: 14px 'Causten';
+  color: #807D7E;
+}
+
+
+
+.field__description {
+  margin: 0;
+  padding: 0;
+  font: 16px 'Causten';
+  color: #3C4242;
+}
+
+.field__button {
+  height: 55px;
+  width: 165px;
+  color: #FFF;
+  background-color: #8A33FD;
+  border-color: #8A33FD;
+  border-radius: 8px;
+  font: 18px 'Causten';
+
+  &:disabled {
+    cursor: auto;
+    color: #000;
+    background-color: #b781fe;
+    border-color: #b781fe;
+  }
+
+  @media (hover: hover) {    
+    &:hover {
+      cursor: pointer;
+      color: #000;
+      background-color: #b781fe;
+      border-color: #b781fe;
+      transition: all .3s ease;
+    }
+  }
+}
+
+.field__select {
+  border: 1px solid #000;
+  &:focus {
+    outline-color: #8A33FD;
+    transition: all .3s ease;
+  }
+}
