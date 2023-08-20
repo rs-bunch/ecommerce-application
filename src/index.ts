@@ -7,13 +7,13 @@ import store from './components/Store/store';
 import Router from './components/Router/Router';
 import CustomOverlay from './components/Overlay/Overlay';
 import ShopHeader from './components/Header/Header';
-
-import LoginForm from './components/Login/Login';
 import Page404 from './components/Page404/Page404';
 import StartPage from './components/StartPage/StartPage';
 import FavouriteItems from './components/FavouriteItems/FavouriteItems';
 import Cart from './components/Cart/Cart';
 import MyAccount from './components/Profile/Profile';
+import AuthPage from './components/AuthPage/AuthPage';
+import LoginForm from './components/Login/Login';
 
 document.adoptedStyleSheets = [bootstrap];
 
@@ -24,9 +24,6 @@ customElements.define('custom-overlay', CustomOverlay);
 
 connect(ShopHeader, store);
 customElements.define('nav-element', ShopHeader);
-
-connect(LoginForm, store);
-customElements.define('login-form', LoginForm);
 
 connect(Page404, store);
 customElements.define('error-element', Page404);
@@ -42,3 +39,9 @@ customElements.define('cart-element', Cart);
 
 connect(MyAccount, store);
 customElements.define('account-element', MyAccount);
+
+connect(AuthPage, store);
+customElements.define('auth-page', AuthPage);
+
+connect(LoginForm, store);
+customElements.define('login-form', LoginForm);
