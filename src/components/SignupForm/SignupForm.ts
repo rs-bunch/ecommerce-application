@@ -4,6 +4,15 @@ import ElementHTML from './signup-form.html';
 import signupStyleSheet from './signup-form.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { signup } from '../Store/authSlice';
+import {
+  validateEmail,
+  validatePassword,
+  validateName,
+  validateStreet,
+  validateYearOld,
+  validateZipCode,
+} from '../../utils/validation/textValidation';
+import { notifyError } from '../../utils/notify/notify';
 
 export default class extends HTMLElement {
   private signup: ((payload: { [index: string]: string }) => void) | undefined;
@@ -55,6 +64,15 @@ export default class extends HTMLElement {
     this.$zipField = this.$element.querySelector('#zip-field');
     this.$country = this.$element.querySelector('#country');
 
+    this.$emailField?.addEventListener('input', () => this.validateTextInput(this.$emailField, validateEmail));
+    this.$password?.addEventListener('input', () => this.validateTextInput(this.$passwordField, validatePassword));
+    this.$firstNameField?.addEventListener('input', () => this.validateTextInput(this.$firstNameField, validateName));
+    this.$lastNameField?.addEventListener('input', () => this.validateTextInput(this.$lastNameField, validateName));
+    this.$dateField?.addEventListener('input', () => this.validateTextInput(this.$dateField, validateYearOld));
+    this.$streetField?.addEventListener('input', () => this.validateTextInput(this.$streetField, validateStreet));
+    this.$cityField?.addEventListener('input', () => this.validateTextInput(this.$cityField, validateName));
+    this.$zipField?.addEventListener('input', () => this.validateTextInput(this.$zipField, validateZipCode));
+
     this.$form?.addEventListener('submit', (e) => this.submitHandler(e));
   }
 
@@ -66,6 +84,8 @@ export default class extends HTMLElement {
       if (isValid) {
         const formData = new FormData(this.$form);
         const payload = Object.fromEntries([...formData.entries(), ['country', this.$country?.value]]);
+      } else {
+        notifyError('Please provide correct data!').showToast();
       }
     }
   }
@@ -74,6 +94,24 @@ export default class extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [bootstrap, signupStyleSheet];
     if (this.$element) this.shadowRoot?.appendChild(this.$element);
+  }
+
+  private validateTextInput(field: HTMLElement | null, validator: (value: string) => Error | void): void {
+    if (field) {
+      const input = field.querySelector('input');
+      const invalidTooltip = field.querySelector('.invalid-tooltip');
+      try {
+        validator(input?.value || '');
+        if (input) input.classList.remove('invalid');
+        if (input) input.classList.add('valid');
+      } catch (error) {
+        if (input && invalidTooltip && error instanceof Error) {
+          invalidTooltip.innerHTML = error.message;
+          if (input) input.classList.remove('valid');
+          if (input) input.classList.add('invalid');
+        }
+      }
+    }
   }
 
   private disconnectedCallback(): void {}
