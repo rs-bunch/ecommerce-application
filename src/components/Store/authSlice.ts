@@ -42,7 +42,11 @@ const authSlice = createSlice({
     id: null,
     inProgress: false,
   },
-  reducers: {},
+  reducers: {
+    changeAuthStatus(state: AuthState, action: PayloadAction<{ id: string | null }>) {
+      Object.assign(state, { id: action.payload.id });
+    },
+  },
   extraReducers: {
     [signup.pending.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: true });
@@ -66,4 +70,5 @@ const authSlice = createSlice({
 });
 
 export { signup, signin };
+export const { changeAuthStatus } = authSlice.actions;
 export default authSlice;
