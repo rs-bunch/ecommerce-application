@@ -5,6 +5,7 @@ import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
 import { logout } from '../Store/authSlice';
+import { getCustomerNameById } from '../Api/customersActions';
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -75,12 +76,20 @@ export default class ShopHeader extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+  private async attributeChangedCallback(
+    attributeName: string,
+    oldValue: string | null,
+    newValue: string | null
+  ): Promise<void> {
     if (attributeName === 'id' && this.$logOutBtn && this.$loginGreetText && this.$signInBtn && this.$joinBtn) {
       this.$logOutBtn.style.display = newValue === null ? 'none' : '';
       this.$loginGreetText.style.display = newValue === null ? 'none' : '';
       this.$signInBtn.style.display = newValue === null ? '' : 'none';
       this.$joinBtn.style.display = newValue === null ? '' : 'none';
+      if (newValue) {
+        const name = await getCustomerNameById(newValue);
+        this.$loginGreetText.textContent = name;
+      }
     }
   }
 
