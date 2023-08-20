@@ -3,7 +3,7 @@ import { initLocation, changeLocation } from '../Store/locationSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
-  '/signin': 'signin',
+  '/login': 'login',
   '/signup': 'signup',
   '/cart': 'cart',
   '/profile': 'profile',
