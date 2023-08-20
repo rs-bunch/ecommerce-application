@@ -1,8 +1,9 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './index.html';
+import ElementHTML from './header.html';
+import SideBarHTML from './side-bar.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import { LocationState } from '../../dto/types';
-import stylesheet from './styles.module.scss';
+import stylesheet from './header.module.scss';
+import { RootState } from '../Store/store';
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -25,26 +26,37 @@ export default class ShopHeader extends HTMLElement {
 
   public bindedCloseMenu: () => void;
 
+  public $burgerCloseBtn: Element | null | undefined;
+
+  public $elementWrapper: HTMLElement | null | undefined;
+
+  public $searchLineSide: Element | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
     if (this.node?.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
     else this.$element = null;
+    this.$sideBar = createNodeFromHtml(SideBarHTML)?.firstChild as HTMLElement;
+    this.$elementWrapper = this.$element?.querySelector('.wrapper');
     this.$favBtn = this.$element?.querySelector('.button.button__fav');
     this.$profileBtn = this.$element?.querySelector('.button.button__profile');
     this.$cartBtn = this.$element?.querySelector('.button.button__cart');
     this.$loginDropdown = this.$element?.querySelector('.header__login');
     this.$burgerBtn = this.$element?.querySelector('.header__burger');
-    this.$sideBar = this.$element?.querySelector('.side-bar');
+    this.$burgerCloseBtn = this.$sideBar.querySelector('.header__burger.close');
     this.$searchLine = this.$element?.querySelector('.header__search');
+    this.$searchLineSide = this.$sideBar.querySelector('.header__search.search_aside');
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
+    this.initSearchListen();
   }
 
   private connectedCallback(): void {
     this.attachShadow({ mode: 'open' });
     if (this.node) this.shadowRoot?.append(this.node);
+    if (this.$sideBar) this.shadowRoot?.append(this.$sideBar);
     if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [stylesheet];
   }
 
@@ -52,7 +64,7 @@ export default class ShopHeader extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string): void {}
 
-  private mapStateToProps(oldState: LocationState, newState: LocationState): void {}
+  private mapStateToProps(oldState: RootState, newState: RootState): void {}
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
     return {
@@ -67,40 +79,37 @@ export default class ShopHeader extends HTMLElement {
   }
 
   private initButtons(): void {
-    const sideLinks: NodeListOf<Element> | undefined = this.$element?.querySelectorAll('.link__side-bar');
+    const sideLinks: NodeListOf<Element> | undefined = this.$sideBar?.querySelectorAll('.link__side-bar');
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
-    this.$burgerBtn?.addEventListener('click', () => {
-      const burger = this.$burgerBtn as HTMLElement;
-      if (burger.classList.contains('open')) this.closeMenu();
-      else this.openMenu();
-    });
-    if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.closeMenu.bind(this)));
+    this.$burgerBtn?.addEventListener('click', () => this.openMenu());
+    this.$burgerCloseBtn?.addEventListener('click', this.bindedCloseMenu);
+    if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
   }
 
   private initSizeChangeListener(): void {
     const mediaQuerryBurger: MediaQueryList = window.matchMedia('(min-width: 1024px)');
-    const mediaQuerrySearch: MediaQueryList = window.matchMedia('(max-width: 768px)');
     const handleBurger = (e: MediaQueryListEvent): void => {
       if (e.matches) this.closeMenu();
     };
-    const handleSearch = (e: MediaQueryListEvent): void => {
-      if (!this.$searchLine) return;
-      if (e.matches) {
-        this.$sideBar?.appendChild(this.$searchLine);
-        this.$searchLine.classList.add('search_aside');
-      } else {
-        this.$element?.appendChild(this.$searchLine);
-        this.$searchLine.classList.remove('search_aside');
-      }
-    };
     mediaQuerryBurger.addEventListener('change', handleBurger);
-    mediaQuerrySearch.addEventListener('change', handleSearch);
+  }
+
+  private initSearchListen(): void {
+    const $input = this.$searchLine?.querySelector('#header__search');
+    const $inputSide = this.$searchLineSide?.querySelector('#header__search');
+    if (!($input instanceof HTMLInputElement) || !($inputSide instanceof HTMLInputElement)) return;
+    $input?.addEventListener('input', () => {
+      const { value } = $input;
+      $inputSide.value = value;
+    });
+    $inputSide?.addEventListener('input', () => {
+      const { value } = $inputSide;
+      $input.value = value;
+    });
   }
 
   private closeMenu(): void {
     const overlay: HTMLElement | null = document.querySelector('custom-overlay');
-    const burger = this.$burgerBtn as HTMLElement;
-    burger.classList.remove('open');
     this.$sideBar?.classList.remove('open');
     overlay?.removeEventListener('click', this.bindedCloseMenu);
     overlay?.setAttribute('active', 'false');
@@ -108,8 +117,6 @@ export default class ShopHeader extends HTMLElement {
 
   private openMenu(): void {
     const overlay: HTMLElement | null = document.querySelector('custom-overlay');
-    const burger = this.$burgerBtn as HTMLElement;
-    burger.classList.add('open');
     this.$sideBar?.classList.add('open');
     overlay?.addEventListener('click', this.bindedCloseMenu, { once: true });
     overlay?.setAttribute('active', 'true');
