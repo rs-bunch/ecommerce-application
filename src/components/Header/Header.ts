@@ -103,7 +103,7 @@ export default class ShopHeader extends HTMLElement {
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
     return {
-      action: () => dispatch({ type: 'ACTION' }),
+      logout: () => dispatch(logout()),
     };
   }
 
