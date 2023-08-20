@@ -109,7 +109,7 @@ export default class ShopHeader extends HTMLElement {
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
     this.$burgerBtn?.addEventListener('click', () => this.openMenu());
     this.$burgerCloseBtn?.addEventListener('click', this.bindedCloseMenu);
-    this.$logOutBtn?.addEventListener('click', () => store.dispatch(logout({ id: null })));
+    this.$logOutBtn?.addEventListener('click', () => store.dispatch(logout()));
     if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
   }
 
