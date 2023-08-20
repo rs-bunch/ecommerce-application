@@ -88,7 +88,7 @@ export default class ShopHeader extends HTMLElement {
       this.$joinBtn.style.display = newValue === null ? '' : 'none';
       if (newValue) {
         const name = await getCustomerNameById(newValue);
-        this.$loginGreetText.textContent = name;
+        this.$loginGreetText.textContent = `Hello, ${name}!`;
       }
     }
   }
