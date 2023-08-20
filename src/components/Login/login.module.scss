@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 
-.sign-in__sign {
+.sign-in__title {
   margin-bottom: 50px;
   color: #333;
   font-family: Core Sans C;
@@ -12,88 +12,6 @@
   font-weight: 600;
   line-height: normal;
   letter-spacing: 0.68px;
-}
-
-.sign-in__google {
-  margin-bottom: 20px;
-}
-
-.sign-in__twitter {
-  margin-bottom: 50px;
-}
-
-.sign-in__or {
-  margin-bottom: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  color: #666;
-  font-family: Core Sans C;
-  font-size: 1.125em;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-
-  &::before{
-    content: '';
-    display: inline-block;
-    height: 1px;
-    width: 40%;
-    background: rgba(102, 102, 102, 0.25);
-  }
-
-  &::after{
-    content: '';
-    display: inline-block;
-    height: 1px;
-    width: 40%;
-    background: rgba(102, 102, 102, 0.25);
-  }
-}
-
-.sign-in__google,
-.sign-in__twitter {
-  border-radius: 8px;
-  border: 1px solid #3c4242;
-  padding: 16px 20px;
-  background-color: white;
-  color: #8a33fd;
-  text-align: center;
-  font-family: Causten;
-  font-size: 1.375em;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sign-in__google__content,
-.sign-in__twitter__content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sign-in__google__content::before {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url('../../assets/images/google.svg');
-  margin-right: 15px;
-}
-
-.sign-in__twitter__content::before {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url('../../assets/images/twitter.svg');
-  margin-right: 15px;
 }
 
 .sign-in__email,
@@ -121,7 +39,8 @@
   flex-direction: column;
 }
 
-.sign-in__password-field__label, .sign-in__email-field__label {
+.sign-in__password-field-label, 
+.sign-in__email-field-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -135,7 +54,7 @@
   letter-spacing: 0.36px;
 }
 
-.sign-in__password-field__label__hide-btn {
+.sign-in__password-hide-btn {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -167,8 +86,8 @@
   text-decoration-line: underline;
 }
 
-.sign-in__password__tooltip,
-.sign-in__email__tooltip {
+.sign-in__password-tooltip,
+.sign-in__email-tooltip {
   height: 30px;
   color: #EE1D52;
   font-family: Causten;
@@ -188,4 +107,33 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.wrapper {
+  display: block;
+  box-sizing: border-box;
+
+  @include media-mobile{
+    width: 100vw;
+    padding: 20px 9.375vw;
+    font-size: 14px;
+  }
+
+  @include media-tablet{
+    width: 80vw;
+    padding: 60px 15.625vw;
+    font-size: 16px;
+  }
+
+  @include media-laptop{
+    width: 60vw;
+    padding: 50px 9.765vw;
+    font-size: 16px;
+  }
+
+  @include media-desktop{
+    width: 60vw;
+    padding: 50px 9.765vw;
+    font-size: 16px;
+  }
 }

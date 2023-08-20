@@ -7,7 +7,8 @@ import store from './components/Store/store';
 import Router from './components/Router/Router';
 import CustomOverlay from './components/Overlay/Overlay';
 import ShopHeader from './components/Header/Header';
-import Login from './components/login/Login';
+
+import LoginForm from './components/Login/Login';
 import Page404 from './components/Page404/Page404';
 import StartPage from './components/StartPage/StartPage';
 import FavouriteItems from './components/FavouriteItems/FavouriteItems';
@@ -24,8 +25,8 @@ customElements.define('custom-overlay', CustomOverlay);
 connect(ShopHeader, store);
 customElements.define('nav-element', ShopHeader);
 
-connect(Login, store);
-customElements.define('login-form', Login);
+connect(LoginForm, store);
+customElements.define('login-form', LoginForm);
 
 connect(Page404, store);
 customElements.define('error-element', Page404);
