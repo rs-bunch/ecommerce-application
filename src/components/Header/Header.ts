@@ -4,7 +4,7 @@ import SideBarHTML from './side-bar.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
-import { changeAuthStatus } from '../Store/authSlice';
+import { logout } from '../Store/authSlice';
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -109,7 +109,7 @@ export default class ShopHeader extends HTMLElement {
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
     this.$burgerBtn?.addEventListener('click', () => this.openMenu());
     this.$burgerCloseBtn?.addEventListener('click', this.bindedCloseMenu);
-    this.$logOutBtn?.addEventListener('click', () => store.dispatch(changeAuthStatus({ id: null })));
+    this.$logOutBtn?.addEventListener('click', () => store.dispatch(logout({ id: null })));
     if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
   }
 

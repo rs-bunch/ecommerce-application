@@ -43,7 +43,7 @@ const authSlice = createSlice({
     inProgress: false,
   },
   reducers: {
-    changeAuthStatus(state: AuthState, action: PayloadAction<{ id: string | null }>) {
+    logout(state: AuthState, action: PayloadAction<{ id: string | null }>) {
       Object.assign(state, { id: action.payload.id });
     },
   },
@@ -70,5 +70,5 @@ const authSlice = createSlice({
 });
 
 export { signup, signin };
-export const { changeAuthStatus } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice;
