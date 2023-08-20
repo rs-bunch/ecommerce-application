@@ -1,0 +1,114 @@
+<form id="form" class="form needs-validation" action="#" novalidate>
+  <h1 class="form__title">Sign Up</h1>
+  <p class="form__subtitle">Sign up for free to access to in any of our products </p>
+
+  <div id="email-field" class="form__field field">
+    <label class="field__label" for="email">
+      Email Address
+    </label>
+    <input class="form-control field__input" type="email" name="email" id="email" placeholder="user@example.com" required>
+    <div class="invalid-tooltip"></div>
+  </div>
+
+  <div id="password-field" class="form__field field">
+    <label class="field__label" for="password">
+      Password
+    </label>
+    <input class="form-control field__input" type="password" name="password" id="password" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      Use 8 or more characters with a mix of letters, numbers & symbols
+    </p>
+  </div>
+
+  <div id="firstname-field" class="form__field field">
+    <label class="field__label" for="first-name">
+      First name
+    </label>
+    <input class="form-control field__input" type="text" name="first-name" id="first-name" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      Minimum one character without special characters or numbers
+    </p>
+  </div>
+
+  <div id="lastname-field" class="form__field field">
+    <label class="field__label" for="last-name">
+      Last name
+    </label>
+    <input class="form-control field__input" type="text" name="last-name" id="last-name" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      Minimum one character without special characters or numbers
+    </p>
+  </div>
+
+  <div id="date-field" class="form__field field">
+    <label class="field__label" for="date">
+      Date of birth
+    </label>
+    <input class="form-control field__input" type="date" name="date" id="date" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      A valid birthday date of user 13 years old or older
+    </p>
+  </div>
+
+  <h4 class="form__address">Address fields:</h4>
+
+  <div id="street-field" class="form__field field">
+    <label class="field__label" for="street">
+      Street
+    </label>
+    <input class="form-control field__input" type="text" name="street" id="street" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      Must contain at least one character
+    </p>
+  </div>
+
+  <div id="city-field" class="form__field field">
+    <label class="field__label" for="city">
+      City
+    </label>
+    <input class="form-control field__input" type="text" name="city" id="city" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      Minimum one character without special characters or numbers
+    </p>
+  </div>
+
+  <div id="zip-field" class="form__field field">
+    <label class="field__label" for="zip">
+      Postal code
+    </label>
+    <input class="form-control field__input" type="text" name="zip" id="zip" required>
+    <div class="invalid-tooltip"></div>
+    <p class="field__description">
+      Format 12345 for the U.S. or A1B2C3 for the Canada
+    </p>
+  </div>
+
+  <div id="country-field class="form__field field">
+    <label class="field__label" for="last-name">
+      Country
+    </label>
+    
+    <select id="country" class="form-control form-control-lg field__select valid" required>
+      <option>U.S.A</option>
+      <option>Canada</option>
+    </select>
+    <p class="field__description">
+      Must be a valid country
+    </p>
+  </div>
+
+  <div class="form__field field">
+    <button id="form-submit" type="submit" class="field__button ">Sign Up</button>
+    <p class="field__description">
+      Already have an  account?
+      <a href="#" data-href="#">Log in</a>
+    </p>
+  </div>
+</form>
+
