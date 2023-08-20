@@ -1,6 +1,5 @@
 import { login, bootstrap } from '../../styles/styles';
-
-import ElementHTML from './login.html';
+import ElementHTML from './login-form.html';
 import { createElementFromHTML } from '../../utils/create-element';
 import { validateEmail } from '../../utils/validation/validateEmail';
 import { validatePassword } from '../../utils/validation/validatePassword';
@@ -58,7 +57,7 @@ export default class LoginForm extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {
-      this.style.display = newValue === 'signin' ? '' : 'none';
+      this.style.display = newValue === 'login' ? '' : 'none';
     }
   }
 

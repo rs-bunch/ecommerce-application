@@ -2,6 +2,8 @@ import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { RootState } from '../Store/store';
 import ElementHTML from './auth-page.html';
 import authStyleSheet from './auth-page.module.scss';
+import '../../assets/images/signup-promo.png';
+import '../../assets/images/login-promo.png';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;

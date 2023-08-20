@@ -12,9 +12,9 @@ import StartPage from './components/StartPage/StartPage';
 import FavouriteItems from './components/FavouriteItems/FavouriteItems';
 import Cart from './components/Cart/Cart';
 import MyAccount from './components/Profile/Profile';
-import SignupForm from './components/SignupForm/SignupForm';
 import AuthPage from './components/AuthPage/AuthPage';
-import LoginForm from './components/Login/Login';
+import SignupForm from './components/SignupForm/SignupForm';
+import LoginForm from './components/LoginForm/LoginForm';
 
 document.adoptedStyleSheets = [bootstrap];
 
