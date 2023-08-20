@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import type { AuthState } from '../../types';
+import type { AuthState } from '../../dto/types';
 import { createCustomer, loginCustomer } from '../Api/auth';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
-import { Payload } from '../../dto/auth-payload';
+import { Payload } from '../../dto/types';
 
 const signup = createAsyncThunk('auth/signup', async (payload: Payload) => {
   return createCustomer(payload)

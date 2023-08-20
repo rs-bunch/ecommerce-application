@@ -1,4 +1,3 @@
-import './login.scss';
 import { login, bootstrap } from '../../styles/styles';
 
 import ElementHTML from './login.html';
@@ -9,7 +8,7 @@ import { validatePassword } from '../../utils/validation/validatePassword';
 import { signin } from '../Store/authSlice';
 import type { RootState, AppDispatch } from '../Store/store';
 
-export default class Login extends HTMLElement {
+export default class LoginForm extends HTMLElement {
   private $element: HTMLElement | null;
 
   private $emailField: HTMLInputElement | null;
@@ -37,9 +36,7 @@ export default class Login extends HTMLElement {
     this.$emailTootlip = this.$element.querySelector('#email-tooltip');
     this.$passwordTootlip = this.$element.querySelector('#password-tooltip');
     this.$submitBtn = this.$element.querySelector('#sign-in-submit');
-  }
 
-  public connectedCallback(): void {
     if (!this.shadowRoot) return;
     if (this.$element) {
       this.shadowRoot?.appendChild(this.$element);
@@ -56,6 +53,8 @@ export default class Login extends HTMLElement {
       e.preventDefault();
     });
   }
+
+  public connectedCallback(): void {}
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {

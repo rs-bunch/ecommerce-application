@@ -5,7 +5,7 @@ import {
   type CustomerSignInResult,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from './apiRoot';
-import { Payload } from '../../dto/auth-payload';
+import { Payload } from '../../dto/types';
 
 // Request Flow: request -> execute -> then -> catch
 // Examples: https://docs.commercetools.com/sdk/sdk-example-code

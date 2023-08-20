@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import ElementHTML from './index.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
-import { LocationState } from '../../types';
+import { LocationState } from '../../dto/types';
 import stylesheet from './overlay.module.scss';
 
 export default class CustomOverlay extends HTMLElement {

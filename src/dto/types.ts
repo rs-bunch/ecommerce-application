@@ -6,3 +6,8 @@ export interface AuthState {
   id: string | null;
   inProgress: boolean;
 }
+
+export interface Payload {
+  email: string;
+  password: string;
+}
