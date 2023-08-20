@@ -32,6 +32,14 @@ export default class ShopHeader extends HTMLElement {
 
   public $searchLineSide: Element | null | undefined;
 
+  public $joinBtn: HTMLElement | null | undefined;
+
+  public $signInBtn: HTMLElement | null | undefined;
+
+  public $loginGreetText: HTMLElement | null | undefined;
+
+  public $logOutBtn: HTMLElement | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -47,6 +55,10 @@ export default class ShopHeader extends HTMLElement {
     this.$burgerCloseBtn = this.$sideBar.querySelector('.header__burger.close');
     this.$searchLine = this.$element?.querySelector('.header__search');
     this.$searchLineSide = this.$sideBar.querySelector('.header__search.search_aside');
+    this.$joinBtn = this.$element?.querySelector('.login__link_signup');
+    this.$signInBtn = this.$element?.querySelector('.login__link_login');
+    this.$loginGreetText = this.$element?.querySelector('.login__hello');
+    this.$logOutBtn = this.$element?.querySelector('.login__link_logout');
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
@@ -62,9 +74,22 @@ export default class ShopHeader extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string): void {}
+  private attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null): void {
+    if (attributeName === 'id' && this.$logOutBtn && this.$loginGreetText && this.$signInBtn && this.$joinBtn) {
+      this.$logOutBtn.style.display = newValue === null ? 'none' : '';
+      this.$loginGreetText.style.display = newValue === null ? 'none' : '';
+      this.$signInBtn.style.display = newValue === null ? '' : 'none';
+      this.$joinBtn.style.display = newValue === null ? '' : 'none';
+    }
+  }
 
-  private mapStateToProps(oldState: RootState, newState: RootState): void {}
+  private mapStateToProps(oldState: RootState, newState: RootState): void {
+    if (!oldState) {
+      this.attributeChangedCallback('id', null, null);
+      return;
+    }
+    if (oldState.auth.id !== newState.auth.id) this.attributeChangedCallback('id', oldState.auth.id, newState.auth.id);
+  }
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
     return {
