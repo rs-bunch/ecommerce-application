@@ -90,7 +90,7 @@ module.exports = {
       events: {
         onStart: { delete: ['dist'] },
         onEnd: { copy: [
-          { source: path.join('public'), destination: path.join('dist', 'public') },
+          { source: path.join('public'), destination: path.join('dist') },
         ] },
       },
     }),
