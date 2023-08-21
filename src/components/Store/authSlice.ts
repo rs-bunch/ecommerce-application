@@ -41,6 +41,7 @@ const authSlice = createSlice({
   initialState: {
     id: null,
     inProgress: false,
+    firstName: null,
   },
   reducers: {
     initAuth(state: AuthState, action: PayloadAction<AuthState>) {
@@ -48,7 +49,7 @@ const authSlice = createSlice({
     },
 
     logout(state: AuthState) {
-      Object.assign(state, { id: null });
+      Object.assign(state, { id: null, firstName: null });
     },
   },
   extraReducers: {

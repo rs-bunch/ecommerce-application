@@ -86,10 +86,9 @@ export default class ShopHeader extends HTMLElement {
       this.$loginGreetText.style.display = newValue === null ? 'none' : '';
       this.$signInBtn.style.display = newValue === null ? '' : 'none';
       this.$joinBtn.style.display = newValue === null ? '' : 'none';
-      if (newValue) {
-        const name = await getCustomerNameById(newValue);
-        this.$loginGreetText.textContent = `Hello, ${name}!`;
-      }
+    }
+    if (attributeName === 'firstName' && this.$loginGreetText) {
+      this.$loginGreetText.textContent = newValue === null ? '' : `Hello, ${newValue}`;
     }
   }
 
@@ -99,6 +98,8 @@ export default class ShopHeader extends HTMLElement {
       return;
     }
     if (oldState.auth.id !== newState.auth.id) this.attributeChangedCallback('id', oldState.auth.id, newState.auth.id);
+    if (oldState.auth.firstName !== newState.auth.firstName)
+      this.attributeChangedCallback('firstName', oldState.auth.firstName, newState.auth.firstName);
   }
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
