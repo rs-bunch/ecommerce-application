@@ -128,7 +128,6 @@ export default class extends HTMLElement {
         ? '.block_initial input, select'
         : 'input, select';
       const formInputList = this.$form?.querySelectorAll(selectorQueryString);
-      console.log(formInputList);
       const checkQueryString = this.$defultBillAddressCheckbox?.checked
         ? '.block_initial input.valid, select'
         : '.valid';
@@ -160,7 +159,6 @@ export default class extends HTMLElement {
           Object.assign(payload, { addresses: [...payload.addresses, billingAddress] }, { defaultBillingAddress: 1 });
         }
 
-        console.log(payload);
         if (this.signup) this.signup(payload);
       } else {
         notifyError('Please provide correct data!').showToast();
