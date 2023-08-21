@@ -5,7 +5,6 @@ import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
 import { logout } from '../Store/authSlice';
-import { getCustomerNameById } from '../Api/customersActions';
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
