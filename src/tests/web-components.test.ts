@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+import 'whatwg-fetch';
 import '../styles/vars.scss';
 import '../styles/mixins.scss';
 import Cart from '../components/Cart/Cart';
