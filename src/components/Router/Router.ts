@@ -1,5 +1,7 @@
 import type { Store } from '../Store/store';
 import { initLocation, changeLocation } from '../Store/locationSlice';
+import { initAuth } from '../Store/authSlice';
+import type LocalStorage from '../LocalStorage/LocalStorage';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -16,10 +18,12 @@ const location: { [index: string]: string } = {
 class Router {
   private store;
 
-  constructor(store: Store) {
+  constructor(store: Store, localStorage: LocalStorage) {
     this.store = store;
 
     window.addEventListener('DOMContentLoaded', () => {
+      const localState = localStorage.loadState();
+      if (localState) this.store.dispatch(initAuth(localState.auth));
       this.handleLocation('INIT_LOCATION');
     });
 

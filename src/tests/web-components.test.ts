@@ -9,9 +9,9 @@ import ShopHeader from '../components/Header/Header';
 import CustomOverlay from '../components/Overlay/Overlay';
 import MyAccount from '../components/Profile/Profile';
 import StartPage from '../components/StartPage/StartPage';
+import LoginForm from '../components/LoginForm/LoginForm';
 import TestUtils from './utils/test-utils';
 import Page404 from '../components/Page404/Page404';
-import LoginForm from '../components/LoginForm/LoginForm';
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
