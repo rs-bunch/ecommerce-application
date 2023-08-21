@@ -124,8 +124,15 @@ export default class extends HTMLElement {
   private submitHandler(event: SubmitEvent): void {
     event.preventDefault();
     if (this.$form) {
-      const formInputList = this.$form?.querySelectorAll('input, select');
-      const isValid = formInputList?.length === this.$form?.querySelectorAll('.valid').length;
+      const selectorQueryString = this.$defultBillAddressCheckbox?.checked
+        ? '.block_initial input, select'
+        : 'input, select';
+      const formInputList = this.$form?.querySelectorAll(selectorQueryString);
+      console.log(formInputList);
+      const checkQueryString = this.$defultBillAddressCheckbox?.checked
+        ? '.block_initial input.valid, select'
+        : '.valid';
+      const isValid = formInputList?.length === this.$form?.querySelectorAll(checkQueryString).length;
       if (isValid) {
         let payload = { email: '', addresses: [] };
 
