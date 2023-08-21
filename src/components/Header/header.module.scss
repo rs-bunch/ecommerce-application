@@ -205,10 +205,16 @@ a {
 
 .login__links {
   display: flex;
+  align-items: center;
 }
 
 .login__links > * {
   padding: 5px 10px;
+}
+
+.login__hello {
+  max-width: 50%;
+  overflow: hidden;
 }
 
 .login__link {
