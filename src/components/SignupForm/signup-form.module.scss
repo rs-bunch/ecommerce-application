@@ -6,12 +6,13 @@
 .form__title {
   margin: 0;
   padding: 0;
-  font: 34px normal bold 'Core Sans C';
+  font: normal bold 34px 'Core Sans C';
 }
 
 .form__subtitle {
-  font: 16px medium 'Causten';
+  font: medium 16px 'Causten';
   color: #777;
+  margin-bottom: 20px;
 }
 
 .form__block {
@@ -108,6 +109,6 @@
 }
 
 .block__title {
-  font: 20px normal bold 'Core Sans C';
+  font: normal bold 20px 'Core Sans C';
   color: #3C4242;
 }
