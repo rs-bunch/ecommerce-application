@@ -1,3 +1,4 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { RootState, AppDispatch } from '../Store/store';
 import ElementHTML from './signup-form.html';
@@ -16,7 +17,7 @@ import {
 import { notifyError } from '../../utils/notify/notify';
 
 export default class extends HTMLElement {
-  private signup: ((payload: { [index: string]: string }) => void) | undefined;
+  private signup: ((payload: CustomerDraft) => void) | undefined;
 
   private changeLocation: (() => void) | undefined;
 
@@ -126,7 +127,7 @@ export default class extends HTMLElement {
       const formInputList = this.$form?.querySelectorAll('input, select');
       const isValid = formInputList?.length === this.$form?.querySelectorAll('.valid').length;
       if (isValid) {
-        let payload = {};
+        let payload = { email: '', addresses: [] };
 
         const formDataObj = Object.fromEntries(new FormData(this.$form).entries());
         if (this.$country) Object.assign(formDataObj, { country: this.$country.value });
@@ -137,7 +138,7 @@ export default class extends HTMLElement {
         const addressFields = ['country', 'city', 'streetName', 'postalCode'];
         const address = Object.fromEntries(addressFields.map((el) => [el, formDataObj[el] || '']));
 
-        payload = Object.assign(pesonal, { addresses: [address] });
+        payload = Object.assign(payload, pesonal, { addresses: [address] });
 
         if (this.$defultShipAddressCheckbox?.checked) Object.assign(payload, { defaultShippingAddress: 0 });
         if (this.$defultBillAddressCheckbox?.checked) Object.assign(payload, { defaultBillingAddress: 0 });
@@ -149,8 +150,11 @@ export default class extends HTMLElement {
             postalCode: formDataObj.billingPostalCode || '',
             country: this.$billingCountry?.value || '',
           };
-          Object.assign(payload, { billingAddresses: [billingAddress] });
+          Object.assign(payload, { addresses: [...payload.addresses, billingAddress] }, { defaultBillingAddress: 1 });
         }
+
+        console.log(payload);
+        if (this.signup) this.signup(payload);
       } else {
         notifyError('Please provide correct data!').showToast();
       }

@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import type { Customer, CustomerDraft } from '@commercetools/platform-sdk';
 import type { AuthState } from '../../dto/types';
 import { createCustomer, loginCustomer } from '../Api/auth';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
-import { Payload } from '../../dto/types';
+import { AuthPayload } from '../../dto/types';
 
-const signup = createAsyncThunk('auth/signup', async (payload: Payload) => {
+const signup = createAsyncThunk('auth/signup', async (payload: CustomerDraft) => {
   return createCustomer(payload)
     .then((response) => {
       if (response.statusCode !== 201) {
@@ -13,14 +14,14 @@ const signup = createAsyncThunk('auth/signup', async (payload: Payload) => {
         throw new Error(message);
       }
       notifyInfo('New customer was created!').showToast();
-      return response.body.customer.id;
+      return response.body.customer;
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
     });
 });
 
-const signin = createAsyncThunk('auth/signin', async (payload: Payload) => {
+const signin = createAsyncThunk('auth/signin', async (payload: AuthPayload) => {
   return loginCustomer(payload)
     .then((response) => {
       if (response.statusCode !== 200) {
@@ -29,7 +30,7 @@ const signin = createAsyncThunk('auth/signin', async (payload: Payload) => {
         throw new Error(message);
       }
       notifyInfo('Successful login!').showToast();
-      return response.body.customer.id;
+      return response.body.customer;
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
@@ -56,8 +57,8 @@ const authSlice = createSlice({
     [signup.pending.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: true });
     },
-    [signup.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<string>) => {
-      Object.assign(state, { inProgress: false, id: payload });
+    [signup.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<Customer>) => {
+      Object.assign(state, { inProgress: false }, payload);
     },
     [signup.rejected.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: false, id: null });
@@ -65,8 +66,8 @@ const authSlice = createSlice({
     [signin.pending.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: true });
     },
-    [signin.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<string>) => {
-      Object.assign(state, { inProgress: false, id: payload });
+    [signin.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<Customer>) => {
+      Object.assign(state, { inProgress: false }, payload);
     },
     [signin.rejected.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: false, id: null });
