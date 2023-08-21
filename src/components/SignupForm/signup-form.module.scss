@@ -14,10 +14,9 @@
   color: #777;
 }
 
-.form__address {
-  font: 20px normal bold 'Core Sans C';
-  color: #3C4242;
-}
+// .form__block {
+//   display: block;
+// }
 
 .field {
   position: relative;
@@ -106,4 +105,9 @@
     outline-color: #8A33FD;
     transition: all .3s ease;
   }
+}
+
+.block__title {
+  font: 20px normal bold 'Core Sans C';
+  color: #3C4242;
 }

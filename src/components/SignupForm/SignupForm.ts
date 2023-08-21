@@ -46,6 +46,20 @@ export default class extends HTMLElement {
 
   private $country: HTMLSelectElement | null;
 
+  private $defultShipAddressCheckbox: HTMLInputElement | null;
+
+  private $defultBillAddressCheckbox: HTMLInputElement | null;
+
+  private $billingAddressBlock: HTMLElement | null;
+
+  private $billingStreetField: HTMLElement | null;
+
+  private $billingCityField: HTMLElement | null;
+
+  private $billingZipField: HTMLElement | null;
+
+  private $billingCountry: HTMLSelectElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -67,16 +81,43 @@ export default class extends HTMLElement {
     this.$zipField = this.$element.querySelector('#zip-field');
     this.$country = this.$element.querySelector('#country');
 
+    this.$defultShipAddressCheckbox = this.$element.querySelector('#default-shipping');
+    this.$defultBillAddressCheckbox = this.$element.querySelector('#default-billing');
+
+    this.$billingAddressBlock = this.$element.querySelector('#billing-address-block');
+    this.$billingStreetField = this.$element.querySelector('#billing-street-field');
+    this.$billingCityField = this.$element.querySelector('#billing-city-field');
+    this.$billingZipField = this.$element.querySelector('#billing-zip-field');
+    this.$billingCountry = this.$element.querySelector('#billing-country');
+
     this.$emailField?.addEventListener('input', () => this.validateTextInput(this.$emailField, validateEmail));
     this.$password?.addEventListener('input', () => this.validateTextInput(this.$passwordField, validatePassword));
     this.$firstNameField?.addEventListener('input', () => this.validateTextInput(this.$firstNameField, validateName));
     this.$lastNameField?.addEventListener('input', () => this.validateTextInput(this.$lastNameField, validateName));
     this.$dateField?.addEventListener('input', () => this.validateTextInput(this.$dateField, validateYearOld));
+
     this.$streetField?.addEventListener('input', () => this.validateTextInput(this.$streetField, validateStreet));
     this.$cityField?.addEventListener('input', () => this.validateTextInput(this.$cityField, validateName));
     this.$zipField?.addEventListener('input', () => this.validateTextInput(this.$zipField, validateZipCode));
 
+    this.$billingStreetField?.addEventListener('input', () =>
+      this.validateTextInput(this.$billingStreetField, validateStreet)
+    );
+    this.$billingCityField?.addEventListener('input', () =>
+      this.validateTextInput(this.$billingCityField, validateName)
+    );
+    this.$billingZipField?.addEventListener('input', () =>
+      this.validateTextInput(this.$billingZipField, validateZipCode)
+    );
+
     this.$form?.addEventListener('submit', (e) => this.submitHandler(e));
+    this.$defultBillAddressCheckbox?.addEventListener('click', () => this.defaultShipHahler());
+  }
+
+  private defaultShipHahler(): void {
+    if (this.$billingAddressBlock) {
+      this.$billingAddressBlock.style.display = this.$defultBillAddressCheckbox?.checked ? 'none' : '';
+    }
   }
 
   private submitHandler(event: SubmitEvent): void {
@@ -88,7 +129,10 @@ export default class extends HTMLElement {
         const formData = new FormData(this.$form);
         const payload = Object.fromEntries([...formData.entries(), ['country', this.$country?.value]]);
       } else {
+        const formData = new FormData(this.$form);
+        const payload = Object.fromEntries([...formData.entries(), ['country', this.$country?.value]]);
         notifyError('Please provide correct data!').showToast();
+        console.log(payload);
       }
     }
   }
