@@ -126,13 +126,33 @@ export default class extends HTMLElement {
       const formInputList = this.$form?.querySelectorAll('input, select');
       const isValid = formInputList?.length === this.$form?.querySelectorAll('.valid').length;
       if (isValid) {
-        const formData = new FormData(this.$form);
-        const payload = Object.fromEntries([...formData.entries(), ['country', this.$country?.value]]);
+        let payload = {};
+
+        const formDataObj = Object.fromEntries(new FormData(this.$form).entries());
+        if (this.$country) Object.assign(formDataObj, { country: this.$country.value });
+
+        const personalFields = ['email', 'password', 'firstName', 'lastName', 'dateOfBirth'];
+        const pesonal = Object.fromEntries(personalFields.map((el) => [el, formDataObj[el] || '']));
+
+        const addressFields = ['country', 'city', 'streetName', 'postalCode'];
+        const address = Object.fromEntries(addressFields.map((el) => [el, formDataObj[el] || '']));
+
+        payload = Object.assign(pesonal, { addresses: [address] });
+
+        if (this.$defultShipAddressCheckbox?.checked) Object.assign(payload, { defaultShippingAddress: 0 });
+        if (this.$defultBillAddressCheckbox?.checked) Object.assign(payload, { defaultBillingAddress: 0 });
+
+        if (!this.$defultBillAddressCheckbox?.checked) {
+          const billingAddress = {
+            city: formDataObj.billingCity || '',
+            streetName: formDataObj.billingStreetName || '',
+            postalCode: formDataObj.billingPostalCode || '',
+            country: this.$billingCountry?.value || '',
+          };
+          Object.assign(payload, { billingAddresses: [billingAddress] });
+        }
       } else {
-        const formData = new FormData(this.$form);
-        const payload = Object.fromEntries([...formData.entries(), ['country', this.$country?.value]]);
         notifyError('Please provide correct data!').showToast();
-        console.log(payload);
       }
     }
   }

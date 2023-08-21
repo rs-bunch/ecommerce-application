@@ -28,7 +28,7 @@
       <label class="field__label" for="first-name">
         First name
       </label>
-      <input class="form-control field__input" type="text" name="first-name" id="first-name" required>
+      <input class="form-control field__input" type="text" name="firstName" id="first-name" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         Minimum one character without special characters or numbers
@@ -39,7 +39,7 @@
       <label class="field__label" for="last-name">
         Last name
       </label>
-      <input class="form-control field__input" type="text" name="last-name" id="last-name" required>
+      <input class="form-control field__input" type="text" name="lastName" id="last-name" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         Minimum one character without special characters or numbers
@@ -50,7 +50,7 @@
       <label class="field__label" for="date">
         Date of birth
       </label>
-      <input class="form-control field__input" type="date" name="date" id="date" required>
+      <input class="form-control field__input" type="date" name="dateOfBirth" id="date" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         A valid birthday date of user 13 years old or older
@@ -66,7 +66,7 @@
       <label class="field__label" for="street">
         Street
       </label>
-      <input class="form-control field__input" type="text" name="street" id="street" required>
+      <input class="form-control field__input" type="text" name="streetName" id="street" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         Must contain at least one character
@@ -88,7 +88,7 @@
       <label class="field__label" for="zip">
         Postal code
       </label>
-      <input class="form-control field__input" type="text" name="zip" id="zip" required>
+      <input class="form-control field__input" type="text" name="postalCode" id="zip" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         Format 12345 for the U.S. or A1B2C3 for the Canada
@@ -99,29 +99,28 @@
       <label class="field__label" for="country">
         Country
       </label>
-      
-      <select id="billing-country" class="form-control form-control-lg field__select valid" required>
-        <option>U.S.A</option>
-        <option>Canada</option>
+      <select id="country" class="form-control form-control-lg field__select valid" required>
+        <option value="US">United States of America</option>
+        <option value="CA">Canada</option>
       </select>
       <p class="field__description">
         Must be a valid country
       </p>
     </div>
-  </div>
 
-  <div id="" class="form__field field">
-    <div class="custom-control custom-checkbox">
-      <label class="custom-control-label" for="default-shipping">
-        <input type="checkbox" class="custom-control-input valid" id="default-shipping">
-        Set address as default shipping address
-      </label>
-    </div>
-    <div class="custom-control custom-checkbox">
-      <label class="custom-control-label" for="default-billing">
-        <input type="checkbox" class="custom-control-input valid" id="default-billing">
-        Set address as billing address
-      </label>
+    <div id="" class="form__field field">
+      <div class="custom-control custom-checkbox">
+        <label class="custom-control-label" for="default-shipping">
+          <input type="checkbox" class="custom-control-input valid" id="default-shipping">
+          Set address as default shipping address
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox">
+        <label class="custom-control-label" for="default-billing">
+          <input type="checkbox" class="custom-control-input valid" id="default-billing">
+          Set address as billing address
+        </label>
+      </div>
     </div>
   </div>
 
@@ -132,7 +131,7 @@
       <label class="field__label" for="billing-street">
         Street
       </label>
-      <input class="form-control field__input" type="text" name="billingStreet" id="billing-street" required>
+      <input class="form-control field__input" type="text" name="billingStreetName" id="billing-street" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         Must contain at least one character
@@ -154,7 +153,7 @@
       <label class="field__label" for="zip">
         Postal code
       </label>
-      <input class="form-control field__input" type="text" name="billingZip" id="billing-zip" required>
+      <input class="form-control field__input" type="text" name="billingPostalCode" id="billing-zip" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
         Format 12345 for the U.S. or A1B2C3 for the Canada
@@ -165,10 +164,9 @@
       <label class="field__label" for="billing-country">
         Country
       </label>
-      
       <select id="billing-country" class="form-control form-control-lg field__select valid" required>
-        <option>U.S.A</option>
-        <option>Canada</option>
+        <option value="US">United States of America</option>
+        <option value="CA">Canada</option>
       </select>
       <p class="field__description">
         Must be a valid country
