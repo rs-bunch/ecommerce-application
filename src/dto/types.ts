@@ -8,7 +8,7 @@ export interface AuthState {
   firstName: string | null;
 }
 
-export interface Payload {
+export interface AuthPayload {
   email: string;
   password: string;
 }

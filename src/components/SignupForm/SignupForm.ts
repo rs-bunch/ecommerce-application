@@ -1,3 +1,4 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { RootState, AppDispatch } from '../Store/store';
 import ElementHTML from './signup-form.html';
@@ -16,7 +17,7 @@ import {
 import { notifyError } from '../../utils/notify/notify';
 
 export default class extends HTMLElement {
-  private signup: ((payload: { [index: string]: string }) => void) | undefined;
+  private signup: ((payload: CustomerDraft) => void) | undefined;
 
   private changeLocation: (() => void) | undefined;
 
@@ -46,6 +47,20 @@ export default class extends HTMLElement {
 
   private $country: HTMLSelectElement | null;
 
+  private $defultShipAddressCheckbox: HTMLInputElement | null;
+
+  private $defultBillAddressCheckbox: HTMLInputElement | null;
+
+  private $billingAddressBlock: HTMLElement | null;
+
+  private $billingStreetField: HTMLElement | null;
+
+  private $billingCityField: HTMLElement | null;
+
+  private $billingZipField: HTMLElement | null;
+
+  private $billingCountry: HTMLSelectElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -67,26 +82,84 @@ export default class extends HTMLElement {
     this.$zipField = this.$element.querySelector('#zip-field');
     this.$country = this.$element.querySelector('#country');
 
+    this.$defultShipAddressCheckbox = this.$element.querySelector('#default-shipping');
+    this.$defultBillAddressCheckbox = this.$element.querySelector('#default-billing');
+
+    this.$billingAddressBlock = this.$element.querySelector('#billing-address-block');
+    this.$billingStreetField = this.$element.querySelector('#billing-street-field');
+    this.$billingCityField = this.$element.querySelector('#billing-city-field');
+    this.$billingZipField = this.$element.querySelector('#billing-zip-field');
+    this.$billingCountry = this.$element.querySelector('#billing-country');
+
     this.$emailField?.addEventListener('input', () => this.validateTextInput(this.$emailField, validateEmail));
     this.$password?.addEventListener('input', () => this.validateTextInput(this.$passwordField, validatePassword));
     this.$firstNameField?.addEventListener('input', () => this.validateTextInput(this.$firstNameField, validateName));
     this.$lastNameField?.addEventListener('input', () => this.validateTextInput(this.$lastNameField, validateName));
     this.$dateField?.addEventListener('input', () => this.validateTextInput(this.$dateField, validateYearOld));
+
     this.$streetField?.addEventListener('input', () => this.validateTextInput(this.$streetField, validateStreet));
     this.$cityField?.addEventListener('input', () => this.validateTextInput(this.$cityField, validateName));
     this.$zipField?.addEventListener('input', () => this.validateTextInput(this.$zipField, validateZipCode));
 
+    this.$billingStreetField?.addEventListener('input', () =>
+      this.validateTextInput(this.$billingStreetField, validateStreet)
+    );
+    this.$billingCityField?.addEventListener('input', () =>
+      this.validateTextInput(this.$billingCityField, validateName)
+    );
+    this.$billingZipField?.addEventListener('input', () =>
+      this.validateTextInput(this.$billingZipField, validateZipCode)
+    );
+
     this.$form?.addEventListener('submit', (e) => this.submitHandler(e));
+    this.$defultBillAddressCheckbox?.addEventListener('click', () => this.defaultShipHahler());
+  }
+
+  private defaultShipHahler(): void {
+    if (this.$billingAddressBlock) {
+      this.$billingAddressBlock.style.display = this.$defultBillAddressCheckbox?.checked ? 'none' : '';
+    }
   }
 
   private submitHandler(event: SubmitEvent): void {
     event.preventDefault();
     if (this.$form) {
-      const formInputList = this.$form?.querySelectorAll('input, select');
-      const isValid = formInputList?.length === this.$form?.querySelectorAll('.valid').length;
+      const selectorQueryString = this.$defultBillAddressCheckbox?.checked
+        ? '.block_initial input, select'
+        : 'input, select';
+      const formInputList = this.$form?.querySelectorAll(selectorQueryString);
+      const checkQueryString = this.$defultBillAddressCheckbox?.checked
+        ? '.block_initial input.valid, select'
+        : '.valid';
+      const isValid = formInputList?.length === this.$form?.querySelectorAll(checkQueryString).length;
       if (isValid) {
-        const formData = new FormData(this.$form);
-        const payload = Object.fromEntries([...formData.entries(), ['country', this.$country?.value]]);
+        let payload = { email: '', addresses: [] };
+
+        const formDataObj = Object.fromEntries(new FormData(this.$form).entries());
+        if (this.$country) Object.assign(formDataObj, { country: this.$country.value });
+
+        const personalFields = ['email', 'password', 'firstName', 'lastName', 'dateOfBirth'];
+        const pesonal = Object.fromEntries(personalFields.map((el) => [el, formDataObj[el] || '']));
+
+        const addressFields = ['country', 'city', 'streetName', 'postalCode'];
+        const address = Object.fromEntries(addressFields.map((el) => [el, formDataObj[el] || '']));
+
+        payload = Object.assign(payload, pesonal, { addresses: [address] });
+
+        if (this.$defultShipAddressCheckbox?.checked) Object.assign(payload, { defaultShippingAddress: 0 });
+        if (this.$defultBillAddressCheckbox?.checked) Object.assign(payload, { defaultBillingAddress: 0 });
+
+        if (!this.$defultBillAddressCheckbox?.checked) {
+          const billingAddress = {
+            city: formDataObj.billingCity || '',
+            streetName: formDataObj.billingStreetName || '',
+            postalCode: formDataObj.billingPostalCode || '',
+            country: this.$billingCountry?.value || '',
+          };
+          Object.assign(payload, { addresses: [...payload.addresses, billingAddress] }, { defaultBillingAddress: 1 });
+        }
+
+        if (this.signup) this.signup(payload);
       } else {
         notifyError('Please provide correct data!').showToast();
       }
