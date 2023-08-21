@@ -84,7 +84,7 @@ export default class LoginForm extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       signin: (payload: { email: string; password: string }) => dispatch(signin(payload)),
-      changeLocation: () => dispatch(changeLocation({ location: '/' })),
+      changeLocation: () => dispatch(changeLocation({ location: 'main' })),
     };
   }
 
