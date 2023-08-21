@@ -1,8 +1,12 @@
 export function validateEmail(emailInput: string): string {
-  const email = emailInput.trim(); // Remove leading/trailing whitespace
+  const email = emailInput;
 
   if (email === '') {
     return '';
+  }
+
+  if (email !== email.trim()) {
+    return 'Must NOT start and end witespaces';
   }
 
   // Check if email contains '@' symbol
@@ -21,6 +25,10 @@ export function validateEmail(emailInput: string): string {
   // Check if domain contains a period
   if (!domain.includes('.')) {
     return 'Email address domain must contain a period.';
+  }
+
+  if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email)) {
+    return 'Must include a domain name';
   }
 
   return '';
