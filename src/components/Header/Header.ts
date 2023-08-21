@@ -5,6 +5,7 @@ import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
 import { logout } from '../Store/authSlice';
+import { changeLocation } from '../Store/locationSlice';
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -104,6 +105,7 @@ export default class ShopHeader extends HTMLElement {
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
     return {
       logout: () => dispatch(logout()),
+      changeLocation: () => dispatch(changeLocation({ location: 'main' })),
     };
   }
 
@@ -118,7 +120,11 @@ export default class ShopHeader extends HTMLElement {
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
     this.$burgerBtn?.addEventListener('click', () => this.openMenu());
     this.$burgerCloseBtn?.addEventListener('click', this.bindedCloseMenu);
-    this.$logOutBtn?.addEventListener('click', () => store.dispatch(logout()));
+    this.$logOutBtn?.addEventListener('click', () => {
+      store.dispatch(logout());
+      store.dispatch(changeLocation({ location: 'main' }));
+      window.history.pushState({}, '', String('/'));
+    });
     if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
   }
 
