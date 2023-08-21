@@ -7,6 +7,8 @@ import { validatePassword } from '../../utils/validation/validatePassword';
 import { signin } from '../Store/authSlice';
 import type { RootState, AppDispatch } from '../Store/store';
 
+import { changeLocation } from '../Store/locationSlice';
+
 export default class LoginForm extends HTMLElement {
   private $element: HTMLElement | null;
 
@@ -23,6 +25,8 @@ export default class LoginForm extends HTMLElement {
   private $submitBtn: HTMLInputElement | null;
 
   private signin: ((payload: { [index: string]: string }) => void) | undefined;
+
+  private changeLocation: (() => void) | undefined;
 
   constructor() {
     super();
@@ -64,8 +68,15 @@ export default class LoginForm extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     const { location } = newState.location;
+    const { id } = newState.auth;
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));
+    }
+    if (id && location === 'login') {
+      window.history.pushState({}, '', String('/'));
+      if (this.changeLocation) {
+        this.changeLocation();
+      }
     }
   }
 
@@ -73,6 +84,7 @@ export default class LoginForm extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       signin: (payload: { email: string; password: string }) => dispatch(signin(payload)),
+      changeLocation: () => dispatch(changeLocation({ location: 'main' })),
     };
   }
 

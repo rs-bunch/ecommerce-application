@@ -143,7 +143,7 @@ export default class extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       signup: (payload: { email: string; password: string }) => dispatch(signup(payload)),
-      changeLocation: () => dispatch(changeLocation({ location: '/' })),
+      changeLocation: () => dispatch(changeLocation({ location: 'main' })),
     };
   }
 
