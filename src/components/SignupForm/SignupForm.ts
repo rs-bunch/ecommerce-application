@@ -4,6 +4,7 @@ import ElementHTML from './signup-form.html';
 import signupStyleSheet from './signup-form.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { signup } from '../Store/authSlice';
+import { changeLocation } from '../Store/locationSlice';
 import {
   validateEmail,
   validatePassword,
@@ -16,6 +17,8 @@ import { notifyError } from '../../utils/notify/notify';
 
 export default class extends HTMLElement {
   private signup: ((payload: { [index: string]: string }) => void) | undefined;
+
+  private changeLocation: (() => void) | undefined;
 
   private $element: DocumentFragment;
 
@@ -125,9 +128,14 @@ export default class extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     const { location } = newState.location;
+    const { id } = newState.auth;
     if (location !== undefined) {
       // this.$form?.querySelectorAll('input, select, button').forEach((el) => el.setAttribute('disabled', ''));
       this.attributeChangedCallback('location', '', String(location));
+    }
+    if (id && location === 'signup') {
+      window.history.pushState({}, '', '/');
+      if (this.changeLocation) this.changeLocation();
     }
   }
 
@@ -135,6 +143,7 @@ export default class extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       signup: (payload: { email: string; password: string }) => dispatch(signup(payload)),
+      changeLocation: () => dispatch(changeLocation({ location: '/' })),
     };
   }
 

@@ -9,7 +9,7 @@ import ShopHeader from '../components/Header/Header';
 import CustomOverlay from '../components/Overlay/Overlay';
 import MyAccount from '../components/Profile/Profile';
 import StartPage from '../components/StartPage/StartPage';
-import Login from '../components/login/Login';
+import LoginForm from '../components/LoginForm/LoginForm';
 import TestUtils from './utils/test-utils';
 import Page404 from '../components/Page404/Page404';
 
@@ -30,7 +30,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 customElements.define('custom-overlay', CustomOverlay);
 customElements.define('nav-element', ShopHeader);
-customElements.define('login-form', Login);
+customElements.define('login-form', LoginForm);
 customElements.define('start-page', StartPage);
 customElements.define('favourite-items', FavouriteItems);
 customElements.define('cart-element', Cart);

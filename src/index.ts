@@ -15,10 +15,16 @@ import MyAccount from './components/Profile/Profile';
 import AuthPage from './components/AuthPage/AuthPage';
 import SignupForm from './components/SignupForm/SignupForm';
 import LoginForm from './components/LoginForm/LoginForm';
+import LocalStorage from './components/LocalStorage/LocalStorage';
 
 document.adoptedStyleSheets = [bootstrap];
 
-const router: Router = new Router(store);
+const localStoarge = new LocalStorage();
+const router: Router = new Router(store, localStoarge);
+
+window.addEventListener('beforeunload', () => {
+  localStoarge.saveState(store.getState());
+});
 
 connect(CustomOverlay, store);
 customElements.define('custom-overlay', CustomOverlay);
