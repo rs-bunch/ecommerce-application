@@ -1,0 +1,35 @@
+<div class="wrapper">
+    <div class="sign-in">
+        <h3 class="sign-in__title">Sign In Page</h3>
+        <form action="#" method="post" class="sign-in__form">
+            <label for="email" class="sign-in__email-field-label">Email address</label>
+            <input 
+                type="email"
+                class="sign-in__email" 
+                id="sign-in-email"
+                name="email" 
+                required
+            >
+            <label for="email" class="sign-in__email-tooltip" id="email-tooltip"></label>
+            <label for="password" class="sign-in__password-field-label">
+                <div>Password</div>
+                <div class="sign-in__password-hide-btn" id="password-hide-btn">Hide</div>
+            </label>
+            <input 
+                type="password" 
+                class="sign-in__password" 
+                name="password" 
+                required minlength="8" 
+                id="sign-in-password"
+            >
+            <label for="password" class="sign-in__password-tooltip" id="password-tooltip"></label>
+            <label for="password" class="sign-in__forget-password">
+                <a href="#">Forget your password</a>
+            </label>
+            <input type="submit" class="sign-in__submit" value="Sign In" name="submit" id="sign-in-submit">
+            <label for="submit" class="sign-in__sign-up">Don't have an account? 
+                <a href="#" data-href="/signup">Sign up</a>
+            </label>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+.auth {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  overflow: hidden;
+
+  @include media-laptop {
+    flex-direction: row;
+  }
+}
+
+.auth__image {
+  display: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  @include media-laptop {
+    width: 50%;
+    min-height: 100%;
+    background-position: top;
+  }
+
+  @include media-tablet {
+    display: block;
+    height: 400px;
+  }
+}
+
+.auth__content {
+  width: 100%;
+  overflow-y: scroll;
+
+  @include media-laptop {
+    width: 50%;
+  }
+
+  @include media-tablet {
+    overflow-y: auto;
+  }
+}
+
+.auth__form {
+  padding: 20px;
+
+  @include media-laptop {
+    padding: 30px;
+  }
+
+  @include media-tablet {
+    padding: 60px;
+  }
+}

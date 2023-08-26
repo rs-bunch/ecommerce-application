@@ -1,0 +1,132 @@
+.sign-in {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in__title {
+  margin-bottom: 50px;
+  color: #333;
+  font-family: Core Sans C;
+  font-size: 2.125em;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.68px;
+}
+
+.sign-in__email,
+.sign-in__password {
+  border-radius: 8px;
+  border: 1px solid #3c4242;
+  padding: 16px 20px;
+}
+
+.sign-in__submit {
+  display: flex;
+  width: 167px;
+  padding: 16px 20px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: #8a33fd;
+  color: white;
+
+  margin-bottom: 10px;
+}
+
+.sign-in__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in__password-field-label, 
+.sign-in__email-field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  color: #3C4242;
+  font-family: Causten;
+  font-size: 1.125em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.36px;
+}
+
+.sign-in__password-hide-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &::before{
+    content: '';
+    width: 18px;
+    height: 16px;
+    display: inline-block;
+    background-image: url('../../assets/images/hide.svg');
+    margin-right: 5px;
+  }
+}
+
+.sign-in__forget-password {
+  align-self: flex-end;
+  margin-bottom: 30px;
+}
+
+.sign-in__forget-password, 
+.sign-in__forget-password *{
+  color: #3C4242;
+  text-align: right;
+  font-family: Causten;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration-line: underline;
+}
+
+.sign-in__password-tooltip,
+.sign-in__email-tooltip {
+  height: 30px;
+  color: #EE1D52;
+  font-family: Causten;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  padding: 5px;
+}
+
+.sign-in__sign-up,
+.sign-in__sign-up *{
+  color: #3C4242;
+  font-family: Causten;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.wrapper {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+
+  @include media-mobile{
+    font-size: 14px;
+  }
+
+  @include media-tablet{
+    font-size: 16px;
+  }
+
+  @include media-laptop{
+    font-size: 16px;
+  }
+
+  @include media-desktop{
+    font-size: 16px;
+  }
+}

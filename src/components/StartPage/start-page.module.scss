@@ -1,0 +1,42 @@
+.start-page__offer-images {
+  display: flex;
+  overflow: wrap;
+  justify-content: center;
+  padding: 20px 0;
+  cursor: pointer;
+}
+
+.offer-images__image {
+  width: 50%;
+}
+
+.categories {
+  padding: 20px 22px;
+  position: relative;
+  font-weight: 600;
+  font-size: 34px;
+  font-family: 'Core Sans C';
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: $color-brand-main;
+    width: 6px;
+    height: 30px;
+    border-radius: 10px;
+    left: 5px;
+  }
+}
+
+@media screen and (max-width: $tablet-width) {
+
+  .start-page__offer-images {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .offer-images__image {
+    width: 70%;
+  }
+
+}
