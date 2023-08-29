@@ -1,13 +1,24 @@
-import { ClientResponse, DiscountedPrice, Price, Product, TypedMoney } from '@commercetools/platform-sdk';
+import { ClientResponse, DiscountedPrice, Image, Price, Product } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { RootState } from '../Store/store';
 import ElementHTML from './product-details.html';
+import carouselBtnHTML from './carousel-buttons.html';
 import stylesheet from './product-details.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { getProductDetails } from '../Api/product';
+import { removeAllChildNodes } from '../../utils/removeAllChildNodes';
+import { createElement } from '../../utils/createElement';
 
 export default class ProductDetails extends HTMLElement {
   private $element: DocumentFragment;
+
+  private $carouselBtns: DocumentFragment;
+
+  private $carousel: Element | null;
+
+  private $carouselIndicators: HTMLElement;
+
+  private $carouselInner: HTMLElement;
 
   private productData: Promise<ClientResponse<Product>>;
 
@@ -34,6 +45,10 @@ export default class ProductDetails extends HTMLElement {
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
+    this.$carouselBtns = createFragmentFromHTML(carouselBtnHTML);
+    this.$carousel = this.$element.querySelector('#product-carousel');
+    this.$carouselIndicators = createElement('div', 'carousel-indicators', []) as HTMLElement;
+    this.$carouselInner = createElement('div', 'carousel-inner', []) as HTMLElement;
     this.$productPath = this.$element.querySelector('.details-layout__path');
     this.$productName = this.$element.querySelector('.details-layout__product-name');
     this.$productDescr = this.$element.querySelector('.descr-section__descr-text');
@@ -78,10 +93,12 @@ export default class ProductDetails extends HTMLElement {
     const name: string = productDet.name['en-US'];
     const descr: string | null = productDet.description ? productDet.description['en-US'] : null;
     const prices: Price | null = productDet.masterVariant.prices ? productDet.masterVariant.prices[0] : null;
+    const { images } = productDet.masterVariant;
 
     if (this.$productName) this.$productName.textContent = name;
     if (this.$productDescr && descr) this.$productDescr.textContent = descr;
     if (prices) this.updatePrice(prices, prices.discounted);
+    if (images) this.updateImages(images);
   }
 
   private updatePrice(prices: Price, discount?: DiscountedPrice | undefined): void {
@@ -104,6 +121,41 @@ export default class ProductDetails extends HTMLElement {
     } else {
       this.$productPriceSale.classList.remove('active');
       this.$productPrice.classList.remove('inactive');
+    }
+  }
+
+  private updateImages(images: Image[]): void {
+    const multipleImg = images.length > 1;
+    if (!this.$carousel) return;
+    removeAllChildNodes(this.$carousel);
+    removeAllChildNodes(this.$carouselInner);
+    removeAllChildNodes(this.$carouselIndicators);
+
+    this.$carousel.append(this.$carouselIndicators, this.$carouselInner);
+    if (multipleImg) this.$carousel.append(this.$carouselBtns);
+
+    for (let i = 0; i < images.length; i += 1) {
+      const { url } = images[i];
+      const img = createElement('img', 'd-block w-100', [
+        ['src', url],
+        ['alt', `Image ${i + 1}`],
+      ]) as HTMLImageElement;
+      const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
+      carouselItem.appendChild(img);
+      this.$carouselInner.appendChild(carouselItem);
+      if (multipleImg) {
+        const indicator = createElement('button', '', [
+          ['bsTarget', '#product-carousel'],
+          ['data-bs-slide-to', `${i}`],
+          ['aria-label', `Slide ${i + 1}`],
+        ]) as HTMLButtonElement;
+        this.$carouselIndicators.appendChild(indicator);
+      }
+    }
+    if (this.$carouselInner.firstChild instanceof HTMLElement) this.$carouselInner.firstChild.classList.add('active');
+    if (this.$carouselIndicators.firstChild instanceof HTMLElement) {
+      this.$carouselIndicators.firstChild.classList.add('active');
+      this.$carouselIndicators.firstChild.setAttribute('aria-current', 'true');
     }
   }
 }
