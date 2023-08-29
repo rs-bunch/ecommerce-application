@@ -16,6 +16,7 @@ import AuthPage from './components/AuthPage/AuthPage';
 import SignupForm from './components/SignupForm/SignupForm';
 import LoginForm from './components/LoginForm/LoginForm';
 import LocalStorage from './components/LocalStorage/LocalStorage';
+import ProductDetails from './components/ProductDetails/ProductDetails';
 
 document.adoptedStyleSheets = [bootstrap];
 
@@ -55,3 +56,6 @@ customElements.define('login-form', LoginForm);
 
 connect(SignupForm, store);
 customElements.define('signup-form', SignupForm);
+
+connect(ProductDetails, store);
+customElements.define('product-details', ProductDetails);

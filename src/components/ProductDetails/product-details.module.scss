@@ -1,0 +1,205 @@
+.product-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5%;
+  width: 100%;
+  justify-content: center;
+}
+
+.product-page__content-gallery {
+  width: 45%;
+}
+
+.details-layout {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+.product-page__descr-section {
+  width: 95%;
+}
+
+.details-layout__path {
+  font-family: Causten;
+  color: $color-light;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 15px 0;
+}
+
+.details-layout__product-name {
+  color: $color-dark;
+  font-family: Core Sans C;
+  font-weight: 600;
+}
+
+.size-select__text {
+  font-family: Causten;
+  color: $color-dark;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.size-select__buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.size-select__button {
+  box-sizing: border-box;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: solid 2px $color-light-l;
+  background: none;
+  font-family: Causten;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  &.selected {
+    background-color: $color-dark;
+    color: white;
+    border-color: $color-dark;
+  }
+}
+
+.prices {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.prices__to-cart {
+  order: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 50px;
+  width: 200px;
+  color: #FFF;
+  background-color: $color-brand-main;
+  border-color: $color-brand-main;
+  border-radius: 8px;
+  font: 18px 'Causten';
+  @media (hover: hover) {    
+    &:hover {
+      cursor: pointer;
+      color: #000;
+      background-color: $color-brand-main-l;
+      border-color: $color-brand-main-l;
+      transition: all .3s ease;
+    }
+  }
+}
+
+.to-cart__icon-cart {
+  display: inline-block;
+  background-image: url(../../assets/images/cart.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50px;
+  width: 20px;
+  height: 20px;
+}
+
+.prices__price {
+  box-sizing: border-box;
+  font-family: Causten;
+  font-weight: 700;
+  font-size: 18px;
+  color: $color-dark;
+  &.active {
+    order: 1;
+    border-radius: 8px;
+    text-align: center;
+    color: $color-sale;
+  }
+  &.inactive {
+    text-decoration: line-through;
+    font-weight: 300;
+  }
+}
+
+.prices__price_sale {
+  &.inactive {
+    display: none;
+  }
+}
+
+.details-layout__service-features {
+  position: relative;
+  padding-top: 30px;
+  &::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: $color-light-l;
+    top: 15px;
+    position: absolute;
+  }
+}
+
+.service-feaures__row {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+
+.service-feaures__feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.service-features__icon {
+  display: inline-block;
+  background-color: $color-light-xl;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50px;
+  width: 44px;
+  height: 44px;
+}
+
+.icon_card {
+  background-image: url('../../assets/images/credit\ card.svg');
+}
+
+.icon_shipping {
+  background-image: url('../../assets/images/truck.svg');
+}
+
+.icon_fit {
+  background-image: url('../../assets/images/Size\ &\ Fit.svg');
+}
+
+.icon_returns {
+  background-image: url('../../assets/images/Free\ Shipping\ &\ Returns.svg');
+}
+
+.descr-section__descr-title {
+  padding: 20px 22px;
+  position: relative;
+  font-family: 'Core Sans C';
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: $color-brand-main;
+    width: 6px;
+    height: 30px;
+    border-radius: 10px;
+    left: 5px;
+  }
+}
+
+.descr-section__descr-text {
+  color: $color-light;
+  font-family: Causten;
+  font-weight: 400;
+  font-size: 16px;
+}
