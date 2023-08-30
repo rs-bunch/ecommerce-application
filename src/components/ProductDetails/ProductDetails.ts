@@ -93,7 +93,7 @@ export default class ProductDetails extends HTMLElement {
           oldValue.id === 1
             ? oldValue.product?.masterVariant
             : oldValue.product?.variants.find((e) => e.id === oldValue.id);
-        if (data && data.price) this.updatePrice(data.price);
+        if (data && data.price) this.updatePrices(data.price);
         if (data && !this.checkForSameUrls(oldData?.images, data.images)) this.updateImages(data.images);
       }
     }
@@ -120,12 +120,12 @@ export default class ProductDetails extends HTMLElement {
 
     if (this.$productName) this.$productName.textContent = name;
     if (this.$productDescr && descr) this.$productDescr.textContent = descr;
-    if (prices) this.updatePrice(prices, prices.discounted);
+    if (prices) this.updatePrices(prices, prices.discounted);
     if (images) this.updateImages(images);
-    this.updateSizes(data);
+    this.initSizes(data);
   }
 
-  private updatePrice(prices: Price, discount?: DiscountedPrice | undefined): void {
+  private updatePrices(prices: Price, discount?: DiscountedPrice | undefined): void {
     if (!this.$productPrice || !this.$productPriceSale) return;
 
     const priceString = (prices.value.centAmount / 10 ** prices.value.fractionDigits).toLocaleString('en-US', {
@@ -157,19 +157,9 @@ export default class ProductDetails extends HTMLElement {
 
   private updateImages(images: Image[] | undefined): void {
     if (!this.$carousel) return;
-    removeAllChildNodes(this.$carousel);
-    removeAllChildNodes(this.$carouselInner);
-    removeAllChildNodes(this.$carouselIndicators);
-    this.$carousel.append(this.$carouselIndicators, this.$carouselInner);
-
+    this.resetCarousel();
     if (!images) {
-      const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
-      const img = createElement('img', 'd-block w-100', [
-        ['src', 'https://placehold.jp/569x1200.png?text=No%20Image'],
-        ['alt', `Image 1`],
-      ]) as HTMLImageElement;
-      carouselItem.appendChild(img);
-      this.$carouselInner.appendChild(carouselItem);
+      this.putPlaceholderImage();
       return;
     }
 
@@ -201,7 +191,26 @@ export default class ProductDetails extends HTMLElement {
     }
   }
 
-  private updateSizes(data: ProductData): void {
+  private resetCarousel(): void {
+    if (!this.$carousel) return;
+    removeAllChildNodes(this.$carousel);
+    removeAllChildNodes(this.$carouselInner);
+    removeAllChildNodes(this.$carouselIndicators);
+    this.$carousel.append(this.$carouselIndicators, this.$carouselInner);
+  }
+
+  private putPlaceholderImage(): void {
+    const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
+    const img = createElement('img', 'd-block w-100', [
+      ['src', 'https://placehold.jp/569x1200.png?text=No%20Image'],
+      ['alt', `Image 1`],
+    ]) as HTMLImageElement;
+    carouselItem.appendChild(img);
+    this.$carouselInner.appendChild(carouselItem);
+  }
+
+  private initSizes(data: ProductData): void {
+    this.resetSizeBtns();
     data.variants.forEach((variant: ProductVariant) => {
       variant.attributes?.forEach((attr: { name: string; value: string }) => {
         if (attr.name === 'Size') {
@@ -221,6 +230,17 @@ export default class ProductDetails extends HTMLElement {
         Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
         if (event.target instanceof HTMLElement) event.target.classList.add('selected');
       });
+    });
+  }
+
+  private resetSizeBtns(): void {
+    if (this.$sizeBtns) removeAllChildNodes(this.$sizeBtns);
+    Object.entries(this.sizeBtns).forEach(([key, el]) => {
+      const copy = el?.cloneNode(true);
+      if (copy instanceof Element) {
+        this.sizeBtns[key] = copy;
+        this.$sizeBtns?.appendChild(copy);
+      }
     });
   }
 }
