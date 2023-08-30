@@ -165,7 +165,7 @@ export default class ProductDetails extends HTMLElement {
     if (!images) {
       const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
       const img = createElement('img', 'd-block w-100', [
-        ['src', 'http://via.placeholder.com/569x1200'],
+        ['src', 'https://placehold.jp/569x1200.png?text=No%20Image'],
         ['alt', `Image 1`],
       ]) as HTMLImageElement;
       carouselItem.appendChild(img);
