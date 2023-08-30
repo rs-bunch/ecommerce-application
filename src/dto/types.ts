@@ -1,3 +1,5 @@
+import { ProductData } from '@commercetools/platform-sdk';
+
 export interface LocationState {
   location: string | null;
 }
@@ -11,4 +13,9 @@ export interface AuthState {
 export interface AuthPayload {
   email: string;
   password: string;
+}
+
+export interface ProductState {
+  product: ProductData | null;
+  id: number | null;
 }

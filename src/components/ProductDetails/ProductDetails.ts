@@ -1,23 +1,15 @@
-import {
-  Attribute,
-  ClientResponse,
-  DiscountedPrice,
-  Image,
-  Price,
-  Product,
-  ProductData,
-  ProductVariant,
-} from '@commercetools/platform-sdk';
+import { DiscountedPrice, Image, Price, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { RootState } from '../Store/store';
 import ElementHTML from './product-details.html';
 import carouselBtnHTML from './carousel-buttons.html';
 import stylesheet from './product-details.module.scss';
 import { bootstrap } from '../../styles/styles';
-import { getProductDetails } from '../Api/product';
 import { removeAllChildNodes } from '../../utils/removeAllChildNodes';
 import { createElement } from '../../utils/createElement';
-import { notifyError } from '../../utils/notify/notify';
+import { ProductState } from '../../dto/types';
+import store from '../Store/store';
+import { selectProductVariant } from '../Store/productSlice';
 
 export default class ProductDetails extends HTMLElement {
   private $element: DocumentFragment;
@@ -39,6 +31,8 @@ export default class ProductDetails extends HTMLElement {
   private $productPrice: Element | null;
 
   private $productPriceSale: Element | null;
+
+  private $sizeBtns: Element | null;
 
   private $btnSizeXS: Element | null;
 
@@ -64,6 +58,7 @@ export default class ProductDetails extends HTMLElement {
     this.$productDescr = this.$element.querySelector('.descr-section__descr-text');
     this.$productPrice = this.$element.querySelector('.prices__price');
     this.$productPriceSale = this.$element.querySelector('.prices__price_sale');
+    this.$sizeBtns = this.$element.querySelector('.size-select__buttons');
     this.$btnSizeXS = this.$element.querySelector('.size-select__button_xs');
     this.$btnSizeS = this.$element.querySelector('.size-select__button_s');
     this.$btnSizeM = this.$element.querySelector('.size-select__button_m');
@@ -76,7 +71,6 @@ export default class ProductDetails extends HTMLElement {
       L: this.$btnSizeL,
       XL: this.$btnSizeXL,
     };
-    this.updateProductDetails();
   }
 
   private connectedCallback(): void {
@@ -87,41 +81,48 @@ export default class ProductDetails extends HTMLElement {
 
   private disconnectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
-    if (attributeName === 'location') {
-      this.style.display = newValue === 'test' ? '' : 'none';
+  private attributeChangedCallback(attributeName: string, oldValue: ProductState, newValue: ProductState): void {
+    if (attributeName === 'product') {
+      if (newValue.product && oldValue.product !== newValue.product) this.updateProductDetails(newValue.product);
+      else if (newValue.id && oldValue.id !== newValue.id) {
+        const data =
+          newValue.id === 1
+            ? newValue.product?.masterVariant
+            : newValue.product?.variants.find((e) => e.id === newValue.id);
+        const oldData =
+          oldValue.id === 1
+            ? oldValue.product?.masterVariant
+            : oldValue.product?.variants.find((e) => e.id === oldValue.id);
+        if (data && data.price) this.updatePrice(data.price);
+        if (data && !this.checkForSameUrls(oldData?.images, data.images)) this.updateImages(data.images);
+      }
     }
   }
 
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.location.location !== newState.location.location)
-      this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+    if (oldState.product !== newState.product)
+      this.attributeChangedCallback('product', oldState.product, newState.product);
+    if (oldState.location !== newState.location)
+      this.style.display = newState.location.location === 'test' ? '' : 'none';
   }
 
   private static get observedAttributes(): string[] {
-    return ['name', 'location'];
+    return ['location', 'product'];
   }
 
-  private async updateProductDetails(): Promise<void> {
-    getProductDetails('jg-1')
-      .then((response) => {
-        const productDat = response.body.masterData.current;
-        const name: string = productDat.name['en-US'];
-        const descr: string | null = productDat.description ? productDat.description['en-US'] : null;
-        const prices: Price | null = productDat.masterVariant.prices ? productDat.masterVariant.prices[0] : null;
-        const { images } = productDat.masterVariant;
+  private async updateProductDetails(data: ProductData): Promise<void> {
+    const name: string = data.name['en-US'];
+    const descr: string | null = data.description ? data.description['en-US'] : null;
+    const prices: Price | null = data.masterVariant.prices ? data.masterVariant.prices[0] : null;
+    const { images } = data.masterVariant;
 
-        if (this.$productName) this.$productName.textContent = name;
-        if (this.$productDescr && descr) this.$productDescr.textContent = descr;
-        if (prices) this.updatePrice(prices, prices.discounted);
-        if (images) this.updateImages(images);
-        this.updateSizes(productDat);
-      })
-      .catch((error) => {
-        notifyError(String(error.message)).showToast();
-      });
+    if (this.$productName) this.$productName.textContent = name;
+    if (this.$productDescr && descr) this.$productDescr.textContent = descr;
+    if (prices) this.updatePrice(prices, prices.discounted);
+    if (images) this.updateImages(images);
+    this.updateSizes(data);
   }
 
   private updatePrice(prices: Price, discount?: DiscountedPrice | undefined): void {
@@ -147,14 +148,32 @@ export default class ProductDetails extends HTMLElement {
     }
   }
 
-  private updateImages(images: Image[]): void {
-    const multipleImg = images.length > 1;
+  private checkForSameUrls(oldimages: Image[] | undefined, newimages: Image[] | undefined): boolean {
+    if (!oldimages || !newimages) return false;
+    if (oldimages.length !== newimages.length) return false;
+    if (oldimages.every((element, index) => element.url === newimages[index].url)) return true;
+    return false;
+  }
+
+  private updateImages(images: Image[] | undefined): void {
     if (!this.$carousel) return;
     removeAllChildNodes(this.$carousel);
     removeAllChildNodes(this.$carouselInner);
     removeAllChildNodes(this.$carouselIndicators);
-
     this.$carousel.append(this.$carouselIndicators, this.$carouselInner);
+
+    if (!images) {
+      const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
+      const img = createElement('img', 'd-block w-100', [
+        ['src', 'http://via.placeholder.com/569x1200'],
+        ['alt', `Image 1`],
+      ]) as HTMLImageElement;
+      carouselItem.appendChild(img);
+      this.$carouselInner.appendChild(carouselItem);
+      return;
+    }
+
+    const multipleImg = images.length > 1;
     if (multipleImg) this.$carousel.append(this.$carouselBtns);
 
     for (let i = 0; i < images.length; i += 1) {
@@ -182,14 +201,26 @@ export default class ProductDetails extends HTMLElement {
     }
   }
 
-  private updateSizes(productDat: ProductData): void {
-    productDat.variants.forEach((variant: ProductVariant) => {
+  private updateSizes(data: ProductData): void {
+    data.variants.forEach((variant: ProductVariant) => {
       variant.attributes?.forEach((attr: { name: string; value: string }) => {
-        if (attr.name === 'Size') this.sizeBtns[attr.value]?.classList.add('shown');
+        if (attr.name === 'Size') {
+          this.sizeBtns[attr.value]?.classList.add('shown');
+          this.sizeBtns[attr.value]?.addEventListener('click', (event: Event) => {
+            store.dispatch(selectProductVariant({ id: variant.id }));
+            Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
+            if (event.target instanceof HTMLElement) event.target.classList.add('selected');
+          });
+        }
       });
     });
-    productDat.masterVariant.attributes?.forEach((attr: { name: string; value: string }) => {
+    data.masterVariant.attributes?.forEach((attr: { name: string; value: string }) => {
       if (attr.name === 'Size') this.sizeBtns[attr.value]?.classList.add('shown', 'selected');
+      this.sizeBtns[attr.value]?.addEventListener('click', (event: Event) => {
+        store.dispatch(selectProductVariant({ id: data.masterVariant.id }));
+        Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
+        if (event.target instanceof HTMLElement) event.target.classList.add('selected');
+      });
     });
   }
 }
