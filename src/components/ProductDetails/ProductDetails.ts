@@ -1,4 +1,13 @@
-import { ClientResponse, DiscountedPrice, Image, Price, Product } from '@commercetools/platform-sdk';
+import {
+  Attribute,
+  ClientResponse,
+  DiscountedPrice,
+  Image,
+  Price,
+  Product,
+  ProductData,
+  ProductVariant,
+} from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { RootState } from '../Store/store';
 import ElementHTML from './product-details.html';
@@ -42,6 +51,8 @@ export default class ProductDetails extends HTMLElement {
 
   private $btnSizeXL: Element | null;
 
+  private sizeBtns: { [key: string]: Element | null };
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -54,11 +65,18 @@ export default class ProductDetails extends HTMLElement {
     this.$productDescr = this.$element.querySelector('.descr-section__descr-text');
     this.$productPrice = this.$element.querySelector('.prices__price');
     this.$productPriceSale = this.$element.querySelector('.prices__price_sale');
-    this.$btnSizeXS = this.$element.querySelector('.size-select__button size-select__button_xs');
-    this.$btnSizeS = this.$element.querySelector('.size-select__button size-select__button_s');
-    this.$btnSizeM = this.$element.querySelector('.size-select__button size-select__button_m');
-    this.$btnSizeL = this.$element.querySelector('.size-select__button size-select__button_l');
-    this.$btnSizeXL = this.$element.querySelector('.size-select__button size-select__button_xl');
+    this.$btnSizeXS = this.$element.querySelector('.size-select__button_xs');
+    this.$btnSizeS = this.$element.querySelector('.size-select__button_s');
+    this.$btnSizeM = this.$element.querySelector('.size-select__button_m');
+    this.$btnSizeL = this.$element.querySelector('.size-select__button_l');
+    this.$btnSizeXL = this.$element.querySelector('.size-select__button_xl');
+    this.sizeBtns = {
+      XS: this.$btnSizeXS,
+      S: this.$btnSizeS,
+      M: this.$btnSizeM,
+      L: this.$btnSizeL,
+      XL: this.$btnSizeXL,
+    };
     this.productData = getProductDetails('jg-1');
     this.updateProductDetails();
   }
@@ -89,16 +107,17 @@ export default class ProductDetails extends HTMLElement {
   }
 
   private async updateProductDetails(): Promise<void> {
-    const productDet = (await this.productData).body.masterData.current;
-    const name: string = productDet.name['en-US'];
-    const descr: string | null = productDet.description ? productDet.description['en-US'] : null;
-    const prices: Price | null = productDet.masterVariant.prices ? productDet.masterVariant.prices[0] : null;
-    const { images } = productDet.masterVariant;
+    const productDat = (await this.productData).body.masterData.current;
+    const name: string = productDat.name['en-US'];
+    const descr: string | null = productDat.description ? productDat.description['en-US'] : null;
+    const prices: Price | null = productDat.masterVariant.prices ? productDat.masterVariant.prices[0] : null;
+    const { images } = productDat.masterVariant;
 
     if (this.$productName) this.$productName.textContent = name;
     if (this.$productDescr && descr) this.$productDescr.textContent = descr;
     if (prices) this.updatePrice(prices, prices.discounted);
     if (images) this.updateImages(images);
+    this.updateSizes(productDat);
   }
 
   private updatePrice(prices: Price, discount?: DiscountedPrice | undefined): void {
@@ -157,5 +176,16 @@ export default class ProductDetails extends HTMLElement {
       this.$carouselIndicators.firstChild.classList.add('active');
       this.$carouselIndicators.firstChild.setAttribute('aria-current', 'true');
     }
+  }
+
+  private updateSizes(productDat: ProductData): void {
+    productDat.variants.forEach((variant: ProductVariant) => {
+      variant.attributes?.forEach((attr: { name: string; value: string }) => {
+        if (attr.name === 'Size') this.sizeBtns[attr.value]?.classList.add('shown');
+      });
+    });
+    productDat.masterVariant.attributes?.forEach((attr: { name: string; value: string }) => {
+      if (attr.name === 'Size') this.sizeBtns[attr.value]?.classList.add('shown', 'selected');
+    });
   }
 }
