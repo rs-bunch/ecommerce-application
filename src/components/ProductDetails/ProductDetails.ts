@@ -17,6 +17,7 @@ import { bootstrap } from '../../styles/styles';
 import { getProductDetails } from '../Api/product';
 import { removeAllChildNodes } from '../../utils/removeAllChildNodes';
 import { createElement } from '../../utils/createElement';
+import { notifyError } from '../../utils/notify/notify';
 
 export default class ProductDetails extends HTMLElement {
   private $element: DocumentFragment;
@@ -28,8 +29,6 @@ export default class ProductDetails extends HTMLElement {
   private $carouselIndicators: HTMLElement;
 
   private $carouselInner: HTMLElement;
-
-  private productData: Promise<ClientResponse<Product>>;
 
   private $productPath: Element | null;
 
@@ -77,7 +76,6 @@ export default class ProductDetails extends HTMLElement {
       L: this.$btnSizeL,
       XL: this.$btnSizeXL,
     };
-    this.productData = getProductDetails('jg-1');
     this.updateProductDetails();
   }
 
@@ -107,17 +105,23 @@ export default class ProductDetails extends HTMLElement {
   }
 
   private async updateProductDetails(): Promise<void> {
-    const productDat = (await this.productData).body.masterData.current;
-    const name: string = productDat.name['en-US'];
-    const descr: string | null = productDat.description ? productDat.description['en-US'] : null;
-    const prices: Price | null = productDat.masterVariant.prices ? productDat.masterVariant.prices[0] : null;
-    const { images } = productDat.masterVariant;
+    getProductDetails('jg-1')
+      .then((response) => {
+        const productDat = response.body.masterData.current;
+        const name: string = productDat.name['en-US'];
+        const descr: string | null = productDat.description ? productDat.description['en-US'] : null;
+        const prices: Price | null = productDat.masterVariant.prices ? productDat.masterVariant.prices[0] : null;
+        const { images } = productDat.masterVariant;
 
-    if (this.$productName) this.$productName.textContent = name;
-    if (this.$productDescr && descr) this.$productDescr.textContent = descr;
-    if (prices) this.updatePrice(prices, prices.discounted);
-    if (images) this.updateImages(images);
-    this.updateSizes(productDat);
+        if (this.$productName) this.$productName.textContent = name;
+        if (this.$productDescr && descr) this.$productDescr.textContent = descr;
+        if (prices) this.updatePrice(prices, prices.discounted);
+        if (images) this.updateImages(images);
+        this.updateSizes(productDat);
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
   }
 
   private updatePrice(prices: Price, discount?: DiscountedPrice | undefined): void {
