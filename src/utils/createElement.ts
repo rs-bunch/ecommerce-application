@@ -7,7 +7,9 @@ export const createElement = (el: string, classNames: string, dataAttr: [string,
   if (dataAttr.length) {
     dataAttr.forEach(([attrName, attrValue]: [string, string]) => {
       if (!attrValue) element.setAttribute(attrName, '');
-      if (attrName.match(/value|id|placeholder|cols|rows|autocorrect|spellcheck|contenteditable|src|alt|aria-label/)) {
+      if (
+        attrName.match(/value|id|placeholder|cols|rows|autocorrect|spellcheck|contenteditable|src|alt|type|aria-label/)
+      ) {
         element.setAttribute(attrName, attrValue);
       } else {
         element.dataset[attrName] = attrValue;

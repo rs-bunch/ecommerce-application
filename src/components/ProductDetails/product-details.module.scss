@@ -18,14 +18,18 @@
 }
 
 .content-gallery__carousel-container {
-  max-width: 220px;
+  width: 220px;
   @include media-tablet{
-    max-width: 300px;
+    width: 250px;
   }
 }
 
-.carousel__img {
-  max-height: 780px;
+.carousel-item img {
+  object-fit: contain;
+  @include media-tablet{
+    height: 500px;
+  }
+  height: 440px;
 }
 
 .details-layout {

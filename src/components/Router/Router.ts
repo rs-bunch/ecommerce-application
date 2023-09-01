@@ -58,14 +58,12 @@ class Router {
         const response = await getProductDetailsById(pathParts[2]).catch((error) =>
           notifyError(String(error.message)).showToast()
         );
-        console.log('response complete');
         if (response && response.statusCode === 200) {
           payload.location = 'product';
           this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
         }
       }
     }
-    console.log('changin location');
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
   }
