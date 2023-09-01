@@ -137,13 +137,11 @@ export default class Carousel extends HTMLElement {
   private initIndicators(slidesElement: Element, indicatorElement: Element): void {
     const slides = slidesElement.querySelectorAll('.carousel-item');
     const indicators = indicatorElement.querySelectorAll('button');
-    console.log(slides, indicators);
     indicators.forEach((indicator) =>
       indicator.addEventListener('click', (event: Event) => {
         if (event.target instanceof HTMLElement) {
           const slideNumber = event.target.dataset.bsSlideTo;
           if (!Number.isNaN(Number(slideNumber))) {
-            console.log('a');
             slidesElement.querySelector('.active')?.classList.remove('active');
             const currIndicator = indicatorElement.querySelector('.active');
             currIndicator?.classList.remove('active');

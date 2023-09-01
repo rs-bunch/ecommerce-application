@@ -16,7 +16,6 @@ const location: { [index: string]: string } = {
   '/men': 'men',
   '/women': 'women',
   '/404': 'error',
-  '/test': 'test',
 };
 
 class Router {
