@@ -105,7 +105,7 @@ export default class ProductDetails extends HTMLElement {
     if (oldState.product !== newState.product)
       this.attributeChangedCallback('product', oldState.product, newState.product);
     if (oldState.location !== newState.location)
-      this.style.display = newState.location.location === 'test' ? '' : 'none';
+      this.style.display = newState.location.location === 'product' ? '' : 'none';
   }
 
   private static get observedAttributes(): string[] {
