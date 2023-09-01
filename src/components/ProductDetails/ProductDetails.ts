@@ -94,7 +94,7 @@ export default class ProductDetails extends HTMLElement {
           oldValue.id === 1
             ? oldValue.product?.masterVariant
             : oldValue.product?.variants.find((e) => e.id === oldValue.id);
-        if (data && data.price) this.updatePrices(data.price);
+        if (data && data.prices) this.updatePrices(data.prices[0], data.prices[0].discounted);
         if (data && !this.checkForSameUrls(oldData?.images, data.images)) this.carousel?.updateImages(data.images);
       }
     }
