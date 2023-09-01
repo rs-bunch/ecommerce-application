@@ -10,6 +10,7 @@ import { ProductState } from '../../dto/types';
 import store from '../Store/store';
 import { selectProductVariant } from '../Store/productSlice';
 import Carousel from './Carousel/Carousel';
+import { getCategoriesById } from '../Api/product';
 
 export default class ProductDetails extends HTMLElement {
   private $element: DocumentFragment;
@@ -124,6 +125,9 @@ export default class ProductDetails extends HTMLElement {
     if (prices) this.updatePrices(prices, prices.discounted);
     if (images) this.carousel?.updateImages(images);
     this.initSizes(data);
+    this.updateCategoriesPath(data.categories[0].id).then((path) => {
+      if (this.$productPath) this.$productPath.textContent = path;
+    });
   }
 
   private updatePrices(prices: Price, discount?: DiscountedPrice | undefined): void {
@@ -189,5 +193,16 @@ export default class ProductDetails extends HTMLElement {
         this.$sizeBtns?.appendChild(copy);
       }
     });
+  }
+
+  private async updateCategoriesPath(id: string): Promise<string> {
+    const path: string[] = [];
+    const getParentCategory = async (categoryId: string): Promise<void> => {
+      const category = (await getCategoriesById(categoryId)).body;
+      path.push(category.name['en-US']);
+      if (category.parent) await getParentCategory(category.parent.id);
+    };
+    await getParentCategory(id);
+    return path.reverse().join(' > ');
   }
 }
