@@ -12,6 +12,8 @@ import { selectProductVariant } from '../Store/productSlice';
 import Carousel from './Carousel/Carousel';
 import { getCategoriesById } from '../Api/product';
 
+const LOCALE_STRING = 'en-US';
+
 export default class ProductDetails extends HTMLElement {
   private $element: DocumentFragment;
 
@@ -115,8 +117,8 @@ export default class ProductDetails extends HTMLElement {
   }
 
   private async updateProductDetails(data: ProductData): Promise<void> {
-    const name: string = data.name['en-US'];
-    const descr: string | null = data.description ? data.description['en-US'] : null;
+    const name: string = data.name[LOCALE_STRING];
+    const descr: string | null = data.description ? data.description[LOCALE_STRING] : null;
     const prices: Price | null = data.masterVariant.prices ? data.masterVariant.prices[0] : null;
     const { images } = data.masterVariant;
 
@@ -133,17 +135,20 @@ export default class ProductDetails extends HTMLElement {
   private updatePrices(prices: Price, discount?: DiscountedPrice | undefined): void {
     if (!this.$productPrice || !this.$productPriceSale) return;
 
-    const priceString = (prices.value.centAmount / 10 ** prices.value.fractionDigits).toLocaleString('en-US', {
+    const priceString = (prices.value.centAmount / 10 ** prices.value.fractionDigits).toLocaleString(LOCALE_STRING, {
       style: 'currency',
       currency: prices.value.currencyCode,
     });
     this.$productPrice.textContent = priceString;
 
     if (discount) {
-      const discountString = (discount.value.centAmount / 10 ** discount.value.fractionDigits).toLocaleString('en-US', {
-        style: 'currency',
-        currency: prices.value.currencyCode,
-      });
+      const discountString = (discount.value.centAmount / 10 ** discount.value.fractionDigits).toLocaleString(
+        LOCALE_STRING,
+        {
+          style: 'currency',
+          currency: prices.value.currencyCode,
+        }
+      );
       this.$productPriceSale.textContent = discountString;
       this.$productPriceSale.classList.add('active');
       this.$productPrice.classList.add('inactive');
@@ -199,7 +204,7 @@ export default class ProductDetails extends HTMLElement {
     const path: string[] = [];
     const getParentCategory = async (categoryId: string): Promise<void> => {
       const category = (await getCategoriesById(categoryId)).body;
-      path.push(category.name['en-US']);
+      path.push(category.name[LOCALE_STRING]);
       if (category.parent) await getParentCategory(category.parent.id);
     };
     await getParentCategory(id);
