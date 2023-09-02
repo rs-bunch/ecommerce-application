@@ -1,0 +1,51 @@
+.contact { }
+.contact__line { }
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  align-items: first baseline;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #EDEEF2;
+  font: 600 18px 'Causten';
+  color: #3C4242;
+}
+
+.line__info {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.line__title {
+  color: #807D7E;
+}
+
+.line__content {
+  height: 24px;
+}
+
+.line__input {
+  display: none;
+  height: 24px;
+}
+
+.line__edit, .line__save {
+  border: none;
+  background: none;
+  font: 600 18px 'Causten';
+
+  @media (hover: hover) {
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+      color: #8A33FD;
+      transition: .3 ease;
+    }
+  }
+}
+
+.line__save {
+  display: none;
+}
