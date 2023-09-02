@@ -19,3 +19,5 @@ export interface ProductState {
   product: ProductData | null;
   id: number | null;
 }
+
+export type TextValidator = (value: string, payload?: string | number) => Error | void;

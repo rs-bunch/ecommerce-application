@@ -15,6 +15,9 @@ import {
   validateZipCode,
 } from '../../utils/validation/textValidation';
 import { notifyError } from '../../utils/notify/notify';
+import type { TextValidator } from '../../dto/types';
+
+const ALLOWED_YEARS_OLD = 13;
 
 export default class extends HTMLElement {
   private signup: ((payload: CustomerDraft) => void) | undefined;
@@ -61,6 +64,8 @@ export default class extends HTMLElement {
 
   private $billingCountry: HTMLSelectElement | null;
 
+  private $billAddressAsDefaultCheckbox: HTMLInputElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -91,15 +96,22 @@ export default class extends HTMLElement {
     this.$billingZipField = this.$element.querySelector('#billing-zip-field');
     this.$billingCountry = this.$element.querySelector('#billing-country');
 
+    this.$billAddressAsDefaultCheckbox = this.$element.querySelector('#billing-as-default');
+
     this.$emailField?.addEventListener('input', () => this.validateTextInput(this.$emailField, validateEmail));
     this.$password?.addEventListener('input', () => this.validateTextInput(this.$passwordField, validatePassword));
     this.$firstNameField?.addEventListener('input', () => this.validateTextInput(this.$firstNameField, validateName));
     this.$lastNameField?.addEventListener('input', () => this.validateTextInput(this.$lastNameField, validateName));
-    this.$dateField?.addEventListener('input', () => this.validateTextInput(this.$dateField, validateYearOld));
+    this.$dateField?.addEventListener('input', () =>
+      this.validateTextInput(this.$dateField, validateYearOld, ALLOWED_YEARS_OLD)
+    );
 
     this.$streetField?.addEventListener('input', () => this.validateTextInput(this.$streetField, validateStreet));
     this.$cityField?.addEventListener('input', () => this.validateTextInput(this.$cityField, validateName));
-    this.$zipField?.addEventListener('input', () => this.validateTextInput(this.$zipField, validateZipCode));
+    this.$zipField?.addEventListener('input', () => {
+      const payload = this.$country?.value || '';
+      this.validateTextInput(this.$zipField, validateZipCode, payload);
+    });
 
     this.$billingStreetField?.addEventListener('input', () =>
       this.validateTextInput(this.$billingStreetField, validateStreet)
@@ -107,17 +119,31 @@ export default class extends HTMLElement {
     this.$billingCityField?.addEventListener('input', () =>
       this.validateTextInput(this.$billingCityField, validateName)
     );
-    this.$billingZipField?.addEventListener('input', () =>
-      this.validateTextInput(this.$billingZipField, validateZipCode)
-    );
+    this.$billingZipField?.addEventListener('input', () => {
+      const payload = this.$billingCountry?.value || '';
+      this.validateTextInput(this.$billingZipField, validateZipCode, payload);
+    });
 
     this.$form?.addEventListener('submit', (e) => this.submitHandler(e));
     this.$defultBillAddressCheckbox?.addEventListener('click', () => this.defaultShipHahler());
+    this.$billAddressAsDefaultCheckbox?.addEventListener('click', () => {
+      if (this.$defultBillAddressCheckbox) this.$defultBillAddressCheckbox.checked = false;
+    });
+
+    this.$country?.addEventListener('change', () => {
+      const payload = this.$country?.value || '';
+      this.validateTextInput(this.$zipField, validateZipCode, payload);
+    });
+    this.$billingCountry?.addEventListener('change', () => {
+      const payload = this.$billingCountry?.value || '';
+      this.validateTextInput(this.$billingZipField, validateZipCode, payload);
+    });
   }
 
   private defaultShipHahler(): void {
     if (this.$billingAddressBlock) {
       this.$billingAddressBlock.style.display = this.$defultBillAddressCheckbox?.checked ? 'none' : '';
+      if (this.$billAddressAsDefaultCheckbox) this.$billAddressAsDefaultCheckbox.checked = false;
     }
   }
 
@@ -144,19 +170,27 @@ export default class extends HTMLElement {
         const addressFields = ['country', 'city', 'streetName', 'postalCode'];
         const address = Object.fromEntries(addressFields.map((el) => [el, formDataObj[el] || '']));
 
-        payload = Object.assign(payload, pesonal, { addresses: [address] });
+        payload = Object.assign(payload, pesonal, { addresses: [address], shippingAddresses: [0] });
 
         if (this.$defultShipAddressCheckbox?.checked) Object.assign(payload, { defaultShippingAddress: 0 });
-        if (this.$defultBillAddressCheckbox?.checked) Object.assign(payload, { defaultBillingAddress: 0 });
+        if (this.$defultBillAddressCheckbox?.checked) {
+          Object.assign(payload, { billingAddresses: [0], defaultBillingAddress: 0 });
+        }
 
         if (!this.$defultBillAddressCheckbox?.checked) {
           const billingAddress = {
+            country: this.$billingCountry?.value || '',
             city: formDataObj.billingCity || '',
             streetName: formDataObj.billingStreetName || '',
             postalCode: formDataObj.billingPostalCode || '',
-            country: this.$billingCountry?.value || '',
           };
-          Object.assign(payload, { addresses: [...payload.addresses, billingAddress] }, { defaultBillingAddress: 1 });
+          if (JSON.stringify(billingAddress) === JSON.stringify(payload.addresses[0])) {
+            Object.assign(payload, { billingAddresses: [0] });
+            if (this.$billAddressAsDefaultCheckbox?.checked) Object.assign(payload, { defaultBillingAddress: 0 });
+          } else {
+            Object.assign(payload, { addresses: [...payload.addresses, billingAddress] }, { billingAddresses: [1] });
+            if (this.$billAddressAsDefaultCheckbox?.checked) Object.assign(payload, { defaultBillingAddress: 1 });
+          }
         }
 
         if (this.signup) this.signup(payload);
@@ -172,12 +206,12 @@ export default class extends HTMLElement {
     if (this.$element) this.shadowRoot?.appendChild(this.$element);
   }
 
-  private validateTextInput(field: HTMLElement | null, validator: (value: string) => Error | void): void {
+  private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
     if (field) {
       const input = field.querySelector('input');
       const invalidTooltip = field.querySelector('.invalid-tooltip');
       try {
-        validator(input?.value || '');
+        validator(input?.value || '', payload);
         if (input) input.classList.remove('invalid');
         if (input) input.classList.add('valid');
       } catch (error) {
