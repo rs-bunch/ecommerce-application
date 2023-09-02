@@ -21,7 +21,7 @@ const signup = createAsyncThunk('auth/signup', async (payload: CustomerDraft) =>
     });
 });
 
-const signin = createAsyncThunk('auth/signin', async (payload: AuthPayload) => {
+const login = createAsyncThunk('auth/login', async (payload: AuthPayload) => {
   return loginCustomer(payload)
     .then((response) => {
       if (response.statusCode !== 200) {
@@ -63,18 +63,18 @@ const authSlice = createSlice({
     [signup.rejected.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: false, id: null });
     },
-    [signin.pending.type]: (state: AuthState) => {
+    [login.pending.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: true });
     },
-    [signin.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<Customer>) => {
+    [login.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<Customer>) => {
       Object.assign(state, { inProgress: false }, payload);
     },
-    [signin.rejected.type]: (state: AuthState) => {
+    [login.rejected.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: false, id: null });
     },
   },
 });
 
-export { signup, signin };
+export { signup, login };
 export const { initAuth, logout } = authSlice.actions;
 export default authSlice;
