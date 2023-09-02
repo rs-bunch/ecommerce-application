@@ -82,13 +82,13 @@ export default class ShopHeader extends HTMLElement {
     newValue: string | null
   ): Promise<void> {
     if (attributeName === 'id' && this.$logOutBtn && this.$loginGreetText && this.$signInBtn && this.$joinBtn) {
-      this.$logOutBtn.style.display = newValue === null ? 'none' : '';
-      this.$loginGreetText.style.display = newValue === null ? 'none' : '';
-      this.$signInBtn.style.display = newValue === null ? '' : 'none';
-      this.$joinBtn.style.display = newValue === null ? '' : 'none';
+      this.$logOutBtn.style.display = newValue ? '' : 'none';
+      this.$loginGreetText.style.display = newValue ? '' : 'none';
+      this.$signInBtn.style.display = newValue ? 'none' : '';
+      this.$joinBtn.style.display = newValue ? 'none' : '';
     }
     if (attributeName === 'firstName' && this.$loginGreetText) {
-      this.$loginGreetText.textContent = newValue === null ? '' : `Hello, ${newValue}`;
+      this.$loginGreetText.textContent = newValue ? `Hello, ${newValue}` : '';
     }
   }
 
@@ -99,7 +99,7 @@ export default class ShopHeader extends HTMLElement {
     }
     if (oldState.auth.id !== newState.auth.id) this.attributeChangedCallback('id', oldState.auth.id, newState.auth.id);
     if (oldState.auth.firstName !== newState.auth.firstName)
-      this.attributeChangedCallback('firstName', oldState.auth.firstName, newState.auth.firstName);
+      this.attributeChangedCallback('firstName', oldState.auth.firstName || null, newState.auth.firstName || null);
   }
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {

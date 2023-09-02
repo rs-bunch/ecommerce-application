@@ -37,20 +37,28 @@ const login = createAsyncThunk('auth/login', async (payload: AuthPayload) => {
     });
 });
 
+const initialState: AuthState = {
+  id: '',
+  version: 0,
+  createdAt: '',
+  lastModifiedAt: '',
+  email: '',
+  addresses: [],
+  isEmailVerified: false,
+  authenticationMode: '',
+  inProgress: false,
+};
+
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    id: null,
-    inProgress: false,
-    firstName: null,
-  },
+  initialState,
   reducers: {
     initAuth(state: AuthState, action: PayloadAction<AuthState>) {
       Object.assign(state, { ...action.payload });
     },
 
     logout(state: AuthState) {
-      Object.assign(state, { id: null, firstName: null });
+      Object.assign(state, initialState);
     },
   },
   extraReducers: {
@@ -61,7 +69,7 @@ const authSlice = createSlice({
       Object.assign(state, { inProgress: false }, payload);
     },
     [signup.rejected.type]: (state: AuthState) => {
-      Object.assign(state, { inProgress: false, id: null });
+      Object.assign(state, initialState);
     },
     [login.pending.type]: (state: AuthState) => {
       Object.assign(state, { inProgress: true });
@@ -70,7 +78,7 @@ const authSlice = createSlice({
       Object.assign(state, { inProgress: false }, payload);
     },
     [login.rejected.type]: (state: AuthState) => {
-      Object.assign(state, { inProgress: false, id: null });
+      Object.assign(state, initialState);
     },
   },
 });
