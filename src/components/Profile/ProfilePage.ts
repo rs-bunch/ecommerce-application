@@ -9,7 +9,6 @@ import AddressCard from './AddressCard';
 import ContactCard from './ContactCard';
 import AddressModal from './AddressModal';
 import { changeLocation } from '../Store/locationSlice';
-import { CountryCodes } from '../../dto/types';
 
 customElements.define('menu-card', MenuCard);
 customElements.define('address-card', AddressCard);
@@ -97,6 +96,8 @@ export default class extends HTMLElement {
       $contact.setAttribute('first-name', customer.firstName || 'Default');
       $contact.setAttribute('last-name', customer.lastName || 'Default');
       $contact.setAttribute('birth-date', customer.dateOfBirth || 'Default');
+      $contact.setAttribute('customer-id', `${customer.id}`);
+      $contact.setAttribute('customer-version', `${customer.version}`);
       this.$contacts.appendChild($contact);
     }
 
@@ -109,6 +110,8 @@ export default class extends HTMLElement {
         $address.setAttribute('country', `${address.country}`);
         $address.setAttribute('city', `${address.city}`);
         $address.setAttribute('street', `${address.streetName}`);
+        $address.setAttribute('customer-id', `${customer.id}`);
+        $address.setAttribute('customer-version', `${customer.version}`);
 
         if (customer.shippingAddressIds?.find((id) => id === address.id)) {
           $address.setAttribute('type', 'shipping');

@@ -1,7 +1,10 @@
+import { CustomerUpdate } from '@commercetools/platform-sdk';
 import ElementHTML from './contact-card.html';
 import stylesheet from './contact-card.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
+import { updateBindAction } from '../Store/store';
+import createCustomerUpdateAction from '../../utils/createCustomerUpdateAction';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;
@@ -60,6 +63,7 @@ export default class extends HTMLElement {
       const $editButton = e.target.closest('.line')?.querySelector('.line__edit');
       const $lineContent = e.target.closest('.line')?.querySelector('.line__content');
       const $lineInput = e.target.closest('.line')?.querySelector('.line__input');
+
       if (e.target.classList.contains('line__edit')) {
         if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'none';
         if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = 'inline';
@@ -73,11 +77,30 @@ export default class extends HTMLElement {
         if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
         if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
+          if ($lineContent.innerHTML !== $lineInput.value) {
+            this.updateHandle($lineInput.name, $lineInput.value);
+          }
           $lineContent.innerHTML = $lineInput.value;
           $lineContent.style.display = '';
           $lineInput.style.display = 'none';
         }
       }
+    }
+  }
+
+  private updateHandle(attrName: string, attrValue: string): void {
+    const id = String(this.getAttribute('customer-id'));
+    const version = Number(this.getAttribute('customer-version'));
+    const customerUpdateAction = createCustomerUpdateAction(attrName, attrValue);
+    const query: CustomerUpdate = {
+      version,
+      actions: [],
+    };
+    if (customerUpdateAction) query.actions.push(customerUpdateAction);
+    const payload = { id, query };
+    if (payload) {
+      console.log(payload);
+      updateBindAction(payload);
     }
   }
 }
