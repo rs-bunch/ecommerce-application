@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { createElementFromHTML } from '../utils/create-element';
+import { createElementFromHTML } from '../utils/createElementFromHTML';
 import createNodeFromHtml from '../utils/createNodeFromHtml';
 
 describe('Testing createNodeFromHTML', () => {

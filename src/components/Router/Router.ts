@@ -2,6 +2,9 @@ import type { Store } from '../Store/store';
 import { initLocation, changeLocation } from '../Store/locationSlice';
 import { initAuth } from '../Store/authSlice';
 import type LocalStorage from '../LocalStorage/LocalStorage';
+import { getProductDetailsById } from '../Api/product';
+import { notifyError } from '../../utils/notify/notify';
+import { selectProduct } from '../Store/productSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -42,12 +45,24 @@ class Router {
     });
   }
 
-  private handleLocation(type: string): void {
+  private async handleLocation(type: string): Promise<void> {
     const path = window.location.pathname;
     const payload = {
       location: location[path] || location['/404'],
     };
 
+    if (payload.location === 'error') {
+      const pathParts = path.split('/');
+      if (pathParts[1] === 'product' && pathParts[2]) {
+        const response = await getProductDetailsById(pathParts[2]).catch((error) =>
+          notifyError(String(error.message)).showToast()
+        );
+        if (response && response.statusCode === 200) {
+          payload.location = 'product';
+          this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
+        }
+      }
+    }
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
   }

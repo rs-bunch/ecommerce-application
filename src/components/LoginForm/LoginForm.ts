@@ -1,6 +1,6 @@
 import { login, bootstrap } from '../../styles/styles';
 import ElementHTML from './login-form.html';
-import { createElementFromHTML } from '../../utils/create-element';
+import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import { validateEmail } from '../../utils/validation/validateEmail';
 import { validatePassword } from '../../utils/validation/validatePassword';
 
