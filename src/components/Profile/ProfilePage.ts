@@ -67,6 +67,9 @@ export default class extends HTMLElement {
       window.history.pushState({}, '', String('/'));
       this.changeLocation({ location: 'main' });
     }
+    if (newState.location.location === 'profile' && oldState.auth.version !== newState.auth.version) {
+      this.render(newState.auth);
+    }
   }
 
   // redux dispath action

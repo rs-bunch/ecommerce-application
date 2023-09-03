@@ -80,9 +80,6 @@ export default class extends HTMLElement {
           if ($lineContent.innerHTML !== $lineInput.value) {
             this.updateHandle($lineInput.name, $lineInput.value);
           }
-          $lineContent.innerHTML = $lineInput.value;
-          $lineContent.style.display = '';
-          $lineInput.style.display = 'none';
         }
       }
     }
