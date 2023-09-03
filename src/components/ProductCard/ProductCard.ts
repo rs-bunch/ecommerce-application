@@ -1,5 +1,5 @@
 import ElementHTML from './product-card.html';
-import { createElementFromHTML } from '../../utils/create-element';
+import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import { productCard } from '../../styles/styles';
 
 export default class ProductCard extends HTMLElement {

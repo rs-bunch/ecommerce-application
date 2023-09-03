@@ -6,7 +6,7 @@ import { ProductListState } from '../../dto/types';
 const getProducts = createAsyncThunk('/products/accessories/', async (payload: { categoryId: string }) => {
   return getCategoryProductList(payload.categoryId)
     .then((response) => {
-      console.log(response);
+      return response.body;
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
@@ -22,7 +22,7 @@ const productListSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-      Object.assign(state, payload);
+      Object.assign(state, { products: payload });
     },
     [getProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
       Object.assign(state, { id: null, products: null });
