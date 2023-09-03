@@ -131,7 +131,7 @@ export default class ShopHeader extends HTMLElement {
   private initSizeChangeListener(): void {
     const mediaQuerryBurger: MediaQueryList = window.matchMedia('(min-width: 1024px)');
     const handleBurger = (e: MediaQueryListEvent): void => {
-      if (e.matches) this.closeMenu();
+      if (e.matches && this.$sideBar?.classList.contains('open')) this.closeMenu();
     };
     mediaQuerryBurger.addEventListener('change', handleBurger);
   }

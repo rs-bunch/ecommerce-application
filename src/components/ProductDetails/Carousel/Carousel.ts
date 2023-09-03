@@ -2,11 +2,17 @@ import { Image } from '@commercetools/platform-sdk';
 import { createElement } from '../../../utils/createElement';
 import { removeAllChildNodes } from '../../../utils/removeAllChildNodes';
 import carouselBtnHTML from './carousel-buttons.html';
+import sliderBtnHTML from './slider-buttons.html';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 import { bootstrap } from '../../../styles/styles';
+import ImageModal from '../ImageModal/ImageModal';
 
 export default class Carousel extends HTMLElement {
   public $element: HTMLElement | null;
+
+  private idString: string;
+
+  public $modalContainer: ImageModal;
 
   private $carouselIndicators: HTMLElement;
 
@@ -14,32 +20,42 @@ export default class Carousel extends HTMLElement {
 
   private $carouselBtns: DocumentFragment;
 
+  private $sliderBtns: DocumentFragment;
+
   private $btnPrev: Element | null;
 
   private $btnNext: Element | null;
+
+  private bindedClosedModal: () => void;
 
   private bindedSlidePrev: () => void;
 
   private bindedSlideNext: () => void;
 
-  constructor() {
+  constructor(id: string, modalContainer: ImageModal) {
     super();
-    this.$element = createElement('div', 'carousel carousel-dark slide', [['id', 'product-carousel']]);
+    this.idString = id;
+    this.$element = createElement('div', 'carousel carousel-dark slide', [['id', id]]);
+    this.$modalContainer = modalContainer;
     this.$carouselIndicators = createElement('div', 'carousel-indicators', []) as HTMLElement;
     this.$carouselInner = createElement('div', 'carousel-inner', []) as HTMLElement;
     this.$carouselBtns = createFragmentFromHTML(carouselBtnHTML);
-    this.$btnPrev = this.$carouselBtns.querySelector('.carousel-control-prev');
-    this.$btnNext = this.$carouselBtns.querySelector('.carousel-control-next');
+    this.$sliderBtns = createFragmentFromHTML(sliderBtnHTML);
+    this.$btnPrev =
+      id === 'productCarousel'
+        ? this.$carouselBtns.querySelector('.carousel-control-prev')
+        : this.$sliderBtns.querySelector('.carousel-control-prev');
+    this.$btnNext =
+      id === 'productCarousel'
+        ? this.$carouselBtns.querySelector('.carousel-control-next')
+        : this.$sliderBtns.querySelector('.carousel-control-next');
     this.bindedSlidePrev = this.slidePrev.bind(this);
     this.bindedSlideNext = this.slideNext.bind(this);
+    this.bindedClosedModal = this.closeModal.bind(this);
     this.initArrowBtns();
   }
 
-  private connectedCallback(): void {
-    this.attachShadow({ mode: 'open' });
-    if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [bootstrap];
-    if (this.$element) this.shadowRoot?.appendChild(this.$element);
-  }
+  private connectedCallback(): void {}
 
   private disconnectedCallback(): void {}
 
@@ -78,7 +94,7 @@ export default class Carousel extends HTMLElement {
     else this.$carouselIndicators.firstElementChild?.classList.add('active');
   }
 
-  public updateImages(images: Image[] | undefined): void {
+  public updateImages(images: Image[] | undefined, options: { carouselName: string; isModal: boolean }): void {
     if (!this.$element) return;
     this.resetCarousel();
     if (!images) {
@@ -87,7 +103,10 @@ export default class Carousel extends HTMLElement {
     }
 
     const multipleImg = images.length > 1;
-    if (multipleImg) this.$element.append(this.$carouselBtns);
+    if (multipleImg) {
+      if (this.idString === 'productCarousel') this.$element.append(this.$carouselBtns);
+      if (this.idString === 'modalSlider') this.$element.append(this.$sliderBtns);
+    }
 
     for (let i = 0; i < images.length; i += 1) {
       const { url } = images[i];
@@ -95,13 +114,14 @@ export default class Carousel extends HTMLElement {
         ['src', url],
         ['alt', `Image ${i + 1}`],
       ]) as HTMLImageElement;
-      const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
+      const carouselItem = createElement('div', 'carousel-item', [['targetSlide', `${i}`]]) as HTMLElement;
       carouselItem.appendChild(img);
       this.$carouselInner.appendChild(carouselItem);
-      if (multipleImg) {
+      if (!options.isModal) carouselItem.addEventListener('click', this.openModal.bind(this));
+      if (multipleImg && !options.isModal) {
         const indicator = createElement('button', '', [
           ['type', 'button'],
-          ['bsTarget', 'product-carousel'],
+          ['bsTarget', options.carouselName],
           ['data-bs-slide-to', `${i}`],
           ['aria-label', `Slide ${i + 1}`],
         ]) as HTMLButtonElement;
@@ -114,6 +134,7 @@ export default class Carousel extends HTMLElement {
       this.$carouselIndicators.firstChild.setAttribute('aria-current', 'true');
     }
     if (multipleImg) this.initIndicators(this.$carouselInner, this.$carouselIndicators);
+    console.log(this.$element);
   }
 
   private resetCarousel(): void {
@@ -125,7 +146,7 @@ export default class Carousel extends HTMLElement {
   }
 
   private putPlaceholderImage(): void {
-    const carouselItem = createElement('div', 'carousel-item', []) as HTMLElement;
+    const carouselItem = createElement('div', 'carousel-item', [['targetSlide', `0`]]) as HTMLElement;
     const img = createElement('img', 'd-block w-100', [
       ['src', 'https://placehold.jp/569x1200.png?text=No%20Image'],
       ['alt', `Image 1`],
@@ -153,6 +174,30 @@ export default class Carousel extends HTMLElement {
         }
       })
     );
+  }
+
+  private openModal(event: Event): void {
+    const overlay: HTMLElement | null = document.querySelector('custom-overlay');
+    if (this.$modalContainer.$closeBtn)
+      this.$modalContainer.$closeBtn.addEventListener('click', this.bindedClosedModal);
+    document.querySelector('body')?.append(this.$modalContainer);
+    if (event.target instanceof HTMLElement) {
+      const slideNumber = event.target.dataset.targetSlide;
+      if (!Number.isNaN(Number(slideNumber))) {
+        this.$carouselInner.querySelector('.active')?.classList.remove('active');
+        const slides = this.$carouselInner.querySelectorAll('.carousel-item');
+        slides[Number(slideNumber)]?.classList.add('active');
+      }
+    }
+    overlay?.addEventListener('click', this.bindedClosedModal, { once: true });
+    overlay?.setAttribute('active', 'true');
+  }
+
+  private closeModal(): void {
+    const overlay: HTMLElement | null = document.querySelector('custom-overlay');
+    document.querySelector('image-modal')?.remove();
+    overlay?.removeEventListener('click', this.bindedClosedModal);
+    overlay?.setAttribute('active', 'false');
   }
 
   private static get observedAttributes(): string[] {
