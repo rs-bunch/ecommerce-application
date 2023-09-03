@@ -11,7 +11,7 @@ import Page404 from './components/Page404/Page404';
 import StartPage from './components/StartPage/StartPage';
 import FavouriteItems from './components/FavouriteItems/FavouriteItems';
 import Cart from './components/Cart/Cart';
-import MyAccount from './components/Profile/Profile';
+import ProfilePage from './components/Profile/ProfilePage';
 import AuthPage from './components/AuthPage/AuthPage';
 import SignupForm from './components/SignupForm/SignupForm';
 import LoginForm from './components/LoginForm/LoginForm';
@@ -45,8 +45,8 @@ customElements.define('favourite-items', FavouriteItems);
 connect(Cart, store);
 customElements.define('cart-element', Cart);
 
-connect(MyAccount, store);
-customElements.define('account-element', MyAccount);
+connect(ProfilePage, store);
+customElements.define('profile-page', ProfilePage);
 
 connect(AuthPage, store);
 customElements.define('auth-page', AuthPage);
