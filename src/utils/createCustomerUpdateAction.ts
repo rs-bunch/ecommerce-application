@@ -6,8 +6,11 @@ export default (attrName: string, attrValue: string): CustomerUpdateAction | und
     case 'firstName':
       customerUpdateAction = { action: 'setFirstName', firstName: attrValue };
       break;
-    case 'lasttName':
+    case 'lastName':
       customerUpdateAction = { action: 'setLastName', lastName: attrValue };
+      break;
+    case 'dateOfBirth':
+      customerUpdateAction = { action: 'setDateOfBirth', dateOfBirth: attrValue };
       break;
     default:
       break;
