@@ -1,4 +1,10 @@
-import type { CustomerDraft, ClientResponse, CustomerSignInResult } from '@commercetools/platform-sdk';
+import type {
+  CustomerDraft,
+  ClientResponse,
+  CustomerSignInResult,
+  Customer,
+  CustomerUpdate,
+} from '@commercetools/platform-sdk';
 import { apiRoot } from './apiRoot';
 import { AuthPayload } from '../../dto/types';
 
@@ -14,4 +20,8 @@ const loginCustomer = (payload: AuthPayload): Promise<ClientResponse<CustomerSig
   return apiRoot.login().post({ body: payload }).execute();
 };
 
-export { createCustomer, loginCustomer };
+const updateCustomerById = (payload: { id: string; query: CustomerUpdate }): Promise<ClientResponse<Customer>> => {
+  return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
+};
+
+export { createCustomer, loginCustomer, updateCustomerById };
