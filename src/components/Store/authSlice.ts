@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import type { Customer, CustomerDraft } from '@commercetools/platform-sdk';
+import type { Customer, CustomerDraft, CustomerUpdate } from '@commercetools/platform-sdk';
 import type { AuthState } from '../../dto/types';
-import { createCustomer, loginCustomer } from '../Api/auth';
+import { createCustomer, loginCustomer, updateCustomerById } from '../Api/auth';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
 import { AuthPayload } from '../../dto/types';
 
@@ -31,6 +31,22 @@ const login = createAsyncThunk('auth/login', async (payload: AuthPayload) => {
       }
       notifyInfo('Successful login!').showToast();
       return response.body.customer;
+    })
+    .catch((error) => {
+      notifyError(String(error.message)).showToast();
+    });
+});
+
+const update = createAsyncThunk('auth/update', async (payload: { id: string; query: CustomerUpdate }) => {
+  return updateCustomerById(payload)
+    .then((response) => {
+      if (response.statusCode !== 200) {
+        let message = '';
+        if ('message' in response) message = String(response.message);
+        throw new Error(message);
+      }
+      notifyInfo('Updated!').showToast();
+      return response.body;
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
@@ -80,9 +96,18 @@ const authSlice = createSlice({
     [login.rejected.type]: (state: AuthState) => {
       Object.assign(state, initialState);
     },
+    [update.pending.type]: (state: AuthState) => {
+      Object.assign(state, { inProgress: true });
+    },
+    [update.fulfilled.type]: (state: AuthState, { payload }: PayloadAction<Customer>) => {
+      Object.assign(state, { inProgress: false }, payload);
+    },
+    [update.rejected.type]: (state: AuthState) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 
-export { signup, login };
+export { signup, login, update };
 export const { initAuth, logout } = authSlice.actions;
 export default authSlice;
