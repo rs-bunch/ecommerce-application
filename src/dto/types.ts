@@ -1,13 +1,11 @@
-import { ProductData } from '@commercetools/platform-sdk';
+import type { ProductData, Customer } from '@commercetools/platform-sdk';
 
 export interface LocationState {
   location: string | null;
 }
 
-export interface AuthState {
-  id: string | null;
+export interface AuthState extends Customer {
   inProgress?: boolean;
-  firstName: string | null;
 }
 
 export interface AuthPayload {
@@ -18,4 +16,11 @@ export interface AuthPayload {
 export interface ProductState {
   product: ProductData | null;
   id: number | null;
+}
+
+export type TextValidator = (value: string, payload?: string | number) => Error | void;
+
+export enum CountryCodes {
+  US = 'United States of America',
+  CA = 'Canada',
 }

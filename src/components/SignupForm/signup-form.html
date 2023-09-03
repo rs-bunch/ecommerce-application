@@ -91,7 +91,7 @@
       <input class="form-control field__input" type="text" name="postalCode" id="zip" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
-        Format 12345 for the U.S. or A1B2C3 for the Canada
+        Format 12345 for the U.S. or A1B 2C3 for the Canada
       </p>
     </div>
   
@@ -118,7 +118,7 @@
       <div class="custom-control custom-checkbox">
         <label class="custom-control-label" for="default-billing">
           <input type="checkbox" class="custom-control-input valid" id="default-billing">
-          Set address as billing address
+          Set address as default billing address
         </label>
       </div>
     </div>
@@ -156,7 +156,7 @@
       <input class="form-control field__input" type="text" name="billingPostalCode" id="billing-zip" required>
       <div class="invalid-tooltip"></div>
       <p class="field__description">
-        Format 12345 for the U.S. or A1B2C3 for the Canada
+        Format 12345 for the U.S. or A1B 2C3 for the Canada
       </p>
     </div>
   
@@ -172,7 +172,16 @@
         Must be a valid country
       </p>
     </div>
+
+    <div class="custom-control custom-checkbox">
+      <label class="custom-control-label" for="billing-as-default">
+        <input type="checkbox" class="custom-control-input valid" id="billing-as-default">
+        Set address as billing address
+      </label>
+    </div>
   </div>
+
+  <div class="form__field field"></div>
 
   <div class="form__field field">
     <button id="form-submit" type="submit" class="field__button ">Sign Up</button>

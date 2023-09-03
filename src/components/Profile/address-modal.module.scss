@@ -1,0 +1,60 @@
+.modal {
+  position: absolute;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: #00000020;
+  font: normal 16px 'Causten';
+}
+
+.modal__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  padding: 20px;
+  border-radius: 15px;
+  background: #FFFFFF;
+  
+  @include media-tablet {
+    min-width: 360px;
+    padding: 30px;
+    border-radius: 20px;
+  }
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal__title {
+  font-size: 22px;
+  font-style: bold;
+}
+
+// .modal__form {}
+
+.modal__line {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid;
+  background: #8b33fd15;
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: #8b33fd;
+      background: #8b33fd;
+      color: #FFFFFF;
+    }
+  }
+}

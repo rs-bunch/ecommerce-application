@@ -1,14 +1,13 @@
 /**
  * @jest-environment jsdom
  */
-import 'whatwg-fetch';
 import '../styles/vars.scss';
 import '../styles/mixins.scss';
 import Cart from '../components/Cart/Cart';
 import FavouriteItems from '../components/FavouriteItems/FavouriteItems';
 import ShopHeader from '../components/Header/Header';
 import CustomOverlay from '../components/Overlay/Overlay';
-import MyAccount from '../components/Profile/Profile';
+import ProfilePage from '../components/Profile/ProfilePage';
 import StartPage from '../components/StartPage/StartPage';
 import LoginForm from '../components/LoginForm/LoginForm';
 import TestUtils from './utils/test-utils';
@@ -35,7 +34,7 @@ customElements.define('login-form', LoginForm);
 customElements.define('start-page', StartPage);
 customElements.define('favourite-items', FavouriteItems);
 customElements.define('cart-element', Cart);
-customElements.define('account-element', MyAccount);
+customElements.define('account-element', ProfilePage);
 customElements.define('error-element', Page404);
 
 describe('Cart element tests', () => {

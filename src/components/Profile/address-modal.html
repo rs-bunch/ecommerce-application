@@ -1,0 +1,44 @@
+<div class="modal">
+  <div class="modal__content">
+    <div class="modal__header">
+      <div id="title" class="modal__title"></div>
+      <button id="close" class="modal__button">X</button>
+    </div>
+    <div class="modal__line line">
+      <label for="street" class="line__label">Street</label>
+      <input class="line__input form-control" type="text" name="street" id="street">
+      <p class="line__description">
+        Must contain at least one character
+      </p>
+    </div>
+    <div class="modal__line line">
+      <label for="city" class="line__label">City</label>
+      <input class="line__input form-control" type="text" name="city" id="city">
+      <p class="line__description">
+        Minimum one char w/out special or numbers
+      </p>
+    </div>
+    <div class="modal__line line">
+      <label for="zip" class="line__label">Postal Code</label>
+      <input class="line__input form-control" type="text" name="zip" id="zip">
+      <p class="line__description">
+        Valid country postal code
+      </p>
+    </div>
+    <div id="" class="modal__line line">
+      <label class="line__label" for="country">
+        Country
+      </label>
+      <select id="country" class="line__select form-control" required>
+        <option value="US">United States of America</option>
+        <option value="CA">Canada</option>
+      </select>
+      <p class="line__description">
+        Must be a valid country
+      </p>
+    </div>
+    <div class="modal__line line">
+      <button id="save" class="line__button modal__button">Save</button>
+    </div>
+  </div>
+</div>
