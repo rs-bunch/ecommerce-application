@@ -19,3 +19,8 @@ export interface ProductState {
 }
 
 export type TextValidator = (value: string, payload?: string | number) => Error | void;
+
+export enum CountryCodes {
+  US = 'United States of America',
+  CA = 'Canada',
+}
