@@ -1,10 +1,10 @@
 import { CustomerUpdate } from '@commercetools/platform-sdk';
 import ElementHTML from './contact-card.html';
 import stylesheet from './contact-card.module.scss';
-import { bootstrap } from '../../styles/styles';
-import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import { updateBindAction } from '../Store/store';
-import createCustomerUpdateAction from '../../utils/createCustomerUpdateAction';
+import { bootstrap } from '../../../styles/styles';
+import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
+import { updateBindAction } from '../../Store/store';
+import createCustomerUpdateAction from '../../../utils/createCustomerUpdateAction';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;

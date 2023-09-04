@@ -1,4 +1,4 @@
-import type { ProductData, Customer } from '@commercetools/platform-sdk';
+import { ProductData, ProductProjectionPagedSearchResponse, Customer } from '@commercetools/platform-sdk';
 
 export interface LocationState {
   location: string | null;
@@ -23,4 +23,9 @@ export type TextValidator = (value: string, payload?: string | number) => Error 
 export enum CountryCodes {
   US = 'United States of America',
   CA = 'Canada',
+}
+
+export interface ProductListState {
+  id: string | null;
+  products?: ProductProjectionPagedSearchResponse | null;
 }

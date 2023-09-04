@@ -5,6 +5,7 @@ import type LocalStorage from '../LocalStorage/LocalStorage';
 import { getProductDetailsById } from '../Api/product';
 import { notifyError } from '../../utils/notify/notify';
 import { selectProduct } from '../Store/productSlice';
+import { getProducts } from '../Store/productListSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -69,6 +70,16 @@ class Router {
           this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
           break;
         }
+        break;
+      }
+      case 'products': {
+        const categoriesId = path.split('/')[2];
+        this.store.dispatch(
+          getProducts({
+            // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
+            categoryId: `categories.id:subtree("${categoriesId}")`,
+          })
+        );
         break;
       }
       default:

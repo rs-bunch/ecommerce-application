@@ -1,7 +1,7 @@
 import ElementHTML from './address-modal.html';
 import stylesheet from './address-modal.module.scss';
-import { bootstrap } from '../../styles/styles';
-import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
+import { bootstrap } from '../../../styles/styles';
+import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;

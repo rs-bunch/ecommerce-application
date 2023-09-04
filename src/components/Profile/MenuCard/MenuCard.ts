@@ -1,7 +1,7 @@
 import ElementHTML from './menu-card.html';
 import stylesheet from './menu-card.module.scss';
-import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import { logoutBindAction } from '../Store/store';
+import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
+import { logoutBindAction } from '../../Store/store';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;

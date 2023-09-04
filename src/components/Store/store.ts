@@ -2,11 +2,13 @@ import { configureStore, combineReducers, bindActionCreators } from '@reduxjs/to
 import locationSlice from './locationSlice';
 import productSlice from './productSlice';
 import authSlice, { logout, update } from './authSlice';
+import productListSlice from './productListSlice';
 
 const rootReducer = combineReducers({
   location: locationSlice.reducer,
   auth: authSlice.reducer,
   product: productSlice.reducer,
+  productList: productListSlice.reducer,
 });
 
 const store = configureStore({
