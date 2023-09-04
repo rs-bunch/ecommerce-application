@@ -228,7 +228,6 @@ export default class ProductDetails extends HTMLElement {
         copy.classList.remove('selected', 'shown');
       }
     });
-    console.log(this.sizeBtns);
   }
 
   private async updateCategoriesPath(id: string): Promise<string> {
