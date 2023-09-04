@@ -13,6 +13,8 @@ export default class ProductCard extends HTMLElement {
 
   private $productPrice: HTMLElement | null;
 
+  private $productDesc: HTMLElement | null;
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -22,6 +24,7 @@ export default class ProductCard extends HTMLElement {
     this.$productName = this.$element.querySelector('#product-name');
     this.$productBrand = this.$element.querySelector('#product-brand');
     this.$productPrice = this.$element.querySelector('#product-price');
+    this.$productDesc = this.$element.querySelector('#product-desc');
 
     if (!this.shadowRoot) return;
     if (this.$element) {
@@ -37,13 +40,14 @@ export default class ProductCard extends HTMLElement {
     const price = this.getAttribute('data-price');
     if (!this.$productPrice) return;
     const discounted = this.$productPrice.getAttribute('data-discount');
-    console.log(discounted);
+    const desc = this.getAttribute('data-desc');
 
     if (this.$productImage) this.$productImage.style.backgroundImage = `url("${imageUrl}")`;
     if (this.$productName) this.$productName.textContent = name;
     if (this.$productBrand) this.$productBrand.textContent = brand;
     if (this.$productPrice) this.$productPrice.textContent = price;
     if (discounted) this.$productPrice?.classList.add('product-card__price_discounted');
+    if (this.$productDesc) this.$productDesc.textContent = desc;
   }
 
   public connectedCallback(): void {
@@ -51,7 +55,7 @@ export default class ProductCard extends HTMLElement {
   }
 
   public static get observedAttributes(): string[] {
-    return ['data-image', 'data-name', 'data-brand', 'data-price', 'data-discount'];
+    return ['data-image', 'data-name', 'data-brand', 'data-price', 'data-discount', 'data-desc'];
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {

@@ -57,6 +57,11 @@ export default class ProductList extends HTMLElement {
       if (product.masterVariant.prices[0].discounted) {
         discount = product.masterVariant.prices[0].discounted.value.centAmount / 100;
       }
+      const { description } = product;
+      if (description) {
+        if (!card.shadowRoot) return;
+        card.setAttribute('data-desc', description['en-US']);
+      }
 
       card.setAttribute('slot', 'cards-slot');
 
