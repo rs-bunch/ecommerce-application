@@ -42,6 +42,8 @@ export default class ShopHeader extends HTMLElement {
 
   public $logOutBtn: HTMLElement | null | undefined;
 
+  public $myAccBtn: HTMLElement | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -61,6 +63,7 @@ export default class ShopHeader extends HTMLElement {
     this.$signInBtn = this.$element?.querySelector('.login__link_login');
     this.$loginGreetText = this.$element?.querySelector('.login__hello');
     this.$logOutBtn = this.$element?.querySelector('.login__link_logout');
+    this.$myAccBtn = this.$element?.querySelector('.login__button_my-account');
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
@@ -81,8 +84,16 @@ export default class ShopHeader extends HTMLElement {
     oldValue: string | null,
     newValue: string | null
   ): Promise<void> {
-    if (attributeName === 'id' && this.$logOutBtn && this.$loginGreetText && this.$signInBtn && this.$joinBtn) {
+    if (
+      attributeName === 'id' &&
+      this.$logOutBtn &&
+      this.$loginGreetText &&
+      this.$signInBtn &&
+      this.$joinBtn &&
+      this.$myAccBtn
+    ) {
       this.$logOutBtn.style.display = newValue ? '' : 'none';
+      this.$myAccBtn.style.display = newValue ? '' : 'none';
       this.$loginGreetText.style.display = newValue ? '' : 'none';
       this.$signInBtn.style.display = newValue ? 'none' : '';
       this.$joinBtn.style.display = newValue ? 'none' : '';
