@@ -64,8 +64,8 @@ export default class extends HTMLElement {
     }
     if (newState.location.location === 'profile' && !newState.auth.id && this.changeLocation) {
       this.style.display = 'none';
-      window.history.pushState({}, '', String('/'));
-      this.changeLocation({ location: 'main' });
+      window.history.pushState({}, '', String('/login'));
+      this.changeLocation({ location: 'login' });
     }
     if (newState.location.location === 'profile' && oldState.auth.version !== newState.auth.version) {
       this.render(newState.auth);
