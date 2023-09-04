@@ -17,6 +17,10 @@ export default class extends HTMLElement {
 
   private $birthDate: HTMLSpanElement | null;
 
+  private $email: HTMLSpanElement | null;
+
+  private $password: HTMLSpanElement | null;
+
   private $saveFirstNameButton: HTMLButtonElement | null;
 
   private $saveLasttNameButton: HTMLButtonElement | null;
@@ -30,6 +34,8 @@ export default class extends HTMLElement {
     this.$firstName = this.$element.querySelector('#first-name');
     this.$lastName = this.$element.querySelector('#last-name');
     this.$birthDate = this.$element.querySelector('#birth-date');
+    this.$email = this.$element.querySelector('#email');
+    this.$password = this.$element.querySelector('#password');
     this.$saveFirstNameButton = this.$element.querySelector('#save-first-name');
     this.$saveLasttNameButton = this.$element.querySelector('#save-last-name');
     this.$saveBirthDateButton = this.$element.querySelector('#save-birth-date');
@@ -49,12 +55,13 @@ export default class extends HTMLElement {
     if (attributeName === 'first-name' && this.$firstName) this.$firstName.innerText = newValue;
     if (attributeName === 'last-name' && this.$lastName) this.$lastName.innerText = newValue;
     if (attributeName === 'birth-date' && this.$birthDate) this.$birthDate.innerText = newValue;
+    if (attributeName === 'email' && this.$email) this.$email.innerText = newValue;
   }
 
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['first-name', 'last-name', 'birth-date'];
+    return ['first-name', 'last-name', 'birth-date', 'email'];
   }
 
   private handleLineElements(e: Event): void {
@@ -68,7 +75,9 @@ export default class extends HTMLElement {
         if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'none';
         if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = 'inline';
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
-          $lineInput.value = $lineContent.innerHTML;
+          if ($lineInput.getAttribute('name') !== 'password') {
+            $lineInput.value = $lineContent.innerHTML;
+          }
           $lineContent.style.display = 'none';
           $lineInput.style.display = 'inline';
         }
@@ -80,6 +89,8 @@ export default class extends HTMLElement {
           if ($lineContent.innerHTML !== $lineInput.value) {
             this.updateHandle($lineInput.name, $lineInput.value);
           }
+          $lineContent.style.display = 'inline';
+          $lineInput.style.display = 'none';
         }
       }
     }
@@ -96,7 +107,6 @@ export default class extends HTMLElement {
     if (customerUpdateAction) query.actions.push(customerUpdateAction);
     const payload = { id, query };
     if (payload) {
-      console.log(payload);
       updateBindAction(payload);
     }
   }

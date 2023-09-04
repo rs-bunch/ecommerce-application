@@ -100,6 +100,7 @@ export default class extends HTMLElement {
       $contact.setAttribute('first-name', customer.firstName || 'Default');
       $contact.setAttribute('last-name', customer.lastName || 'Default');
       $contact.setAttribute('birth-date', customer.dateOfBirth || 'Default');
+      $contact.setAttribute('email', customer.email || 'Default');
       $contact.setAttribute('customer-id', `${customer.id}`);
       $contact.setAttribute('customer-version', `${customer.version}`);
       this.$contacts.appendChild($contact);
