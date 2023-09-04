@@ -135,7 +135,6 @@ export default class Carousel extends HTMLElement {
       this.$carouselIndicators.firstChild.setAttribute('aria-current', 'true');
     }
     if (multipleImg) this.initIndicators(this.$carouselInner, this.$carouselIndicators);
-    console.log(this.$element);
   }
 
   private resetCarousel(): void {
