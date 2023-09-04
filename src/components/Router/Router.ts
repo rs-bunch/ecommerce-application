@@ -52,22 +52,27 @@ class Router {
     const payload = {
       location: location[locationPath] || location['/404'],
     };
-    console.log(locationPath, payload);
-    if (payload.location === 'product') {
-      const productId = path.split('/')[2];
-      console.log(productId);
-      if (productId[2]) {
+    switch (payload.location) {
+      case 'product': {
+        const productId = path.split('/')[2];
+        if (!productId) {
+          payload.location = 'error';
+          break;
+        }
         if (type === 'INIT_LOCATION') this.store.dispatch(initLocation({ location: 'loading' }));
         if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation({ location: 'loading' }));
         const response = await getProductDetailsById(productId).catch((error) => {
           notifyError(String(error.message)).showToast();
-          this.store.dispatch(changeLocation({ location: 'error' }));
+          payload.location = 'error';
         });
         if (response && response.statusCode === 200) {
-          payload.location = 'product';
           this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
+          break;
         }
+        break;
       }
+      default:
+        payload.location = location[locationPath];
     }
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
