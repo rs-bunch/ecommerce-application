@@ -54,7 +54,6 @@ class Router {
     const payload = {
       location: location[locationPath] || location['/404'],
     };
-    console.log(path, locationPath, payload);
     switch (payload.location) {
       case 'product': {
         const productId = path.split('/')[2];
@@ -86,7 +85,6 @@ class Router {
       default:
         payload.location = location[locationPath];
     }
-    console.log(payload);
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
   }

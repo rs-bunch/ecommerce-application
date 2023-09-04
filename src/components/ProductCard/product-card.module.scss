@@ -1,18 +1,19 @@
 .wrapper{
     width: 282px;
     height: 461px;
+    overflow: hidden;
+    transition: all ease-in-out .2s;
+    @media (hover: hover) {
+        &:hover {
+            box-shadow: 6px 6px 2px 1px $color-brand-main-xxl;
+            transform: translate(-3px, -3px);
+        }
+    }
 }
 
 .product-card{
     display: flex;
     flex-direction: column;
-
-    &__description{
-        text-overflow: ellipsis;
-        overflow: hidden;
-        width: 100%;
-        white-space: nowrap;
-    }
 
     &__info{
         display: flex;
@@ -24,14 +25,34 @@
         flex-direction: column;
     }
 
-    &__name{
+    &__name,
+    &__brand,
+    &__description{
         text-overflow: ellipsis;
         overflow: hidden;
         width: 150px;
         white-space: nowrap;
+        font-family: Causten;
+        font-weight: 600;
+        font-size: 16px;
+        color: $color-dark;
+    }
+
+    &__brand{
+        font-weight: 600;
+        font-size: 14px;
+        color: $color-light;
+    }
+
+    &__description{
+        width: 100%;
+        font-weight: 500;
+        font-size: 14px;
+        color: $color-light;
     }
 
     &__price{
+        font-family: Causten;
         border-radius: 8px;
         background: #F6F6F6;
         padding: 10px 16px;
@@ -51,24 +72,35 @@
     }
 
     &__image{
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         position: relative;
         left: 0px;
         top: 0px;
+        cursor: pointer;
     }
 
     &__like-btn{
         width: 32.359px;
         height: 32.359px;
         border-radius: 50%;
-        background-color: white;
-        background-image: url('../../assets/images/heart.svg');
 
         position: absolute;
         left: 100%;
         top: 10px;
 
         transform: translate(-150%);
+
+        & svg circle {
+            transition: all ease-in-out .2s;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                svg circle {
+                    fill: $color-brand-main-xxl;
+                }
+            }
+        }
     }
 }
 

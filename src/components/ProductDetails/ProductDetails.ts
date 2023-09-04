@@ -110,14 +110,20 @@ export default class ProductDetails extends HTMLElement {
           newValue.id === 1
             ? newValue.product?.masterVariant
             : newValue.product?.variants.find((e) => e.id === newValue.id);
-        const oldData =
-          oldValue.id === 1
-            ? oldValue.product?.masterVariant
-            : oldValue.product?.variants.find((e) => e.id === oldValue.id);
         if (data && data.prices) this.updatePrices(data.prices[0], data.prices[0].discounted);
-        if (data && !this.checkForSameUrls(oldData?.images, data.images)) {
+        if (data && data.images?.length) {
           this.carousel.updateImages(data.images, { carouselName: 'productCarousel', isModal: false });
           this.modalSlider.updateImages(data.images, { carouselName: 'modalSlider', isModal: true });
+        }
+        if (data && !data.images?.length && newValue.product?.masterVariant.images) {
+          this.carousel.updateImages(newValue.product?.masterVariant.images, {
+            carouselName: 'productCarousel',
+            isModal: false,
+          });
+          this.modalSlider.updateImages(newValue.product?.masterVariant.images, {
+            carouselName: 'modalSlider',
+            isModal: true,
+          });
         }
       }
     }
@@ -146,7 +152,7 @@ export default class ProductDetails extends HTMLElement {
     if (this.$productDescr && descr) this.$productDescr.textContent = descr;
     if (prices) this.updatePrices(prices, prices.discounted);
     if (images) {
-      this.carousel.updateImages(images, { carouselName: 'product-carousel', isModal: false });
+      this.carousel.updateImages(images, { carouselName: 'productCarousel', isModal: false });
       this.modalSlider.updateImages(images, { carouselName: 'modalSlider', isModal: true });
     }
     this.initSizes(data);
@@ -219,6 +225,7 @@ export default class ProductDetails extends HTMLElement {
       if (copy instanceof Element) {
         this.sizeBtns[key] = copy;
         this.$sizeBtns?.appendChild(copy);
+        copy.classList.remove('selected', 'shown');
       }
     });
   }
