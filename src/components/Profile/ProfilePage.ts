@@ -4,10 +4,10 @@ import stylesheet from './profile-page.module.scss';
 // import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { RootState, AppDispatch } from '../Store/store';
-import MenuCard from './MenuCard';
-import AddressCard from './AddressCard';
-import ContactCard from './ContactCard';
-import AddressModal from './AddressModal';
+import MenuCard from './MenuCard/MenuCard';
+import AddressCard from './AddressCard/AddressCard';
+import ContactCard from './ContactCard/ContactCard';
+import AddressModal from './AddressModal/AddressModal';
 import { changeLocation } from '../Store/locationSlice';
 
 customElements.define('menu-card', MenuCard);

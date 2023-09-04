@@ -1,7 +1,7 @@
 import ElementHTML from './address-card.html';
 import stylesheet from './address-card.module.scss';
-import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import { CountryCodes } from '../../dto/types';
+import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
+import { CountryCodes } from '../../../dto/types';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;
