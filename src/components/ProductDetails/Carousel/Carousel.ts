@@ -190,7 +190,7 @@ export default class Carousel extends HTMLElement {
     this.syncImageInModal(event.target);
   }
 
-  private closeModal(): void {
+  public closeModal(): void {
     const overlay: HTMLElement | null = document.querySelector('custom-overlay');
     document.querySelector('image-modal')?.remove();
     overlay?.removeEventListener('click', this.bindedClosedModal);

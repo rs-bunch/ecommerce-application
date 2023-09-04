@@ -102,6 +102,7 @@ export default class ProductDetails extends HTMLElement {
   private disconnectedCallback(): void {}
 
   private attributeChangedCallback(attributeName: string, oldValue: ProductState, newValue: ProductState): void {
+    this.carousel.closeModal();
     if (attributeName === 'product') {
       if (newValue.product && oldValue.product !== newValue.product) this.updateProductDetails(newValue.product);
       else if (newValue.id && oldValue.id !== newValue.id) {
