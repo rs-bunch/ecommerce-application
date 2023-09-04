@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
-import { getCategoryProductList } from '../Api/productList';
+import { getCategoryProductList, getSortedCategoryProductList } from '../Api/productList';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
 import { ProductListState } from '../../dto/types';
 
@@ -12,6 +12,19 @@ const getProducts = createAsyncThunk('/products/accessories/', async (payload: {
       notifyError(String(error.message)).showToast();
     });
 });
+
+const getSortedProducts = createAsyncThunk(
+  '/products/accessories/',
+  async (payload: { categoryId: string; criteria: string }) => {
+    return getSortedCategoryProductList(payload.categoryId, payload.criteria)
+      .then((response) => {
+        return response.body;
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+);
 
 const productListSlice = createSlice({
   name: 'productList',
@@ -30,8 +43,17 @@ const productListSlice = createSlice({
     [getProducts.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
       Object.assign(state, { id: null });
     },
+    [getSortedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { products: payload });
+    },
+    [getSortedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { id: null, products: null });
+    },
+    [getSortedProducts.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { id: null });
+    },
   },
 });
 
-export { getProducts };
+export { getProducts, getSortedProducts };
 export default productListSlice;

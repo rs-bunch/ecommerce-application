@@ -6,7 +6,7 @@ import { getProductDetailsById } from '../Api/product';
 import { notifyError } from '../../utils/notify/notify';
 import { selectProduct } from '../Store/productSlice';
 
-import { getProducts } from '../Store/productListSlice';
+import { getProducts, getSortedProducts } from '../Store/productListSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -49,6 +49,8 @@ class Router {
 
   private async handleLocation(type: string): Promise<void> {
     const path = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+
     const payload = {
       location: location[path] || location['/404'],
     };
@@ -64,13 +66,28 @@ class Router {
           this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
         }
       } else if (pathParts[1] === 'products' && pathParts[2]) {
-        payload.location = 'products';
-        this.store.dispatch(
-          getProducts({
-            // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
-            categoryId: `categories.id:subtree("${pathParts[2]}")`,
-          })
-        );
+        if (!urlParams.size) {
+          payload.location = 'products';
+          this.store.dispatch(
+            getProducts({
+              // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
+              categoryId: `categories.id:subtree("${pathParts[2]}")`,
+            })
+          );
+        } else {
+          payload.location = 'products';
+          const sort = urlParams.get('sort');
+          const order = urlParams.get('order');
+
+          if (sort && order) {
+            this.store.dispatch(
+              getSortedProducts({
+                categoryId: `categories.id:subtree("${pathParts[2]}")`,
+                criteria: `${sort} ${order}`,
+              })
+            );
+          }
+        }
       }
     }
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
