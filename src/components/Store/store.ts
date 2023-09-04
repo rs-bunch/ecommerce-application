@@ -1,11 +1,8 @@
 import { configureStore, combineReducers, bindActionCreators } from '@reduxjs/toolkit';
 import locationSlice from './locationSlice';
 import productSlice from './productSlice';
-<<<<<<< HEAD
 import authSlice, { logout, update } from './authSlice';
-=======
 import productListSlice from './productListSlice';
->>>>>>> 129ea45 (ECOMM-83 Implementing the product card component, implementing the product list)
 
 const rootReducer = combineReducers({
   location: locationSlice.reducer,
