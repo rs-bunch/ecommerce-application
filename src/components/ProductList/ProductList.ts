@@ -29,32 +29,16 @@ export default class ProductList extends HTMLElement {
     }
   }
 
-  public connectedCallback(): void {
-    if (this.getProducts)
-      this.getProducts({
-        categoryId: 'categories.id:subtree("94038ccd-10f8-4ccc-a616-cfa5438bcc9a")',
-      });
-  }
+  public connectedCallback(): void {}
 
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
-    if (!this.$element) return;
-    switch (attributeName) {
-      case 'location':
-        this.style.display = '';
-        break;
-      default:
-        this.style.display = 'none';
-        break;
-    }
-  }
+  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
 
   private renderProductCards(productsData: ProductProjection[]): void {
-    const slot = document.createElement('slot');
-    slot.setAttribute('name', 'cards-slot');
-
     if (!this.shadowRoot) return;
-    const container = this.shadowRoot.querySelector('.products-container');
-    container?.appendChild(slot);
+    const cards = this.querySelectorAll('[slot="cards-slot"]');
+    for (let i = 0; i < cards.length; i += 1) {
+      cards[i].remove();
+    }
 
     for (let i = 0; i < productsData.length; i += 1) {
       const product = productsData[i];
