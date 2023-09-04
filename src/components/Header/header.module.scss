@@ -110,16 +110,16 @@ a {
   font-weight: 500;
   font-size: 22px;
   line-height: 26px;
-  color: #807D7E;
+  color: $color-light;
   transition: all ease-in-out .3s;
   @media (hover: hover) {
     &:hover {
     text-shadow:
-    -0.25px -0.25px 0 #3C4242,
-    0.25px -0.25px 0 #3C4242,
-    -0.25px 0.25px 0 #3C4242,
-    0.25px 0.25px 0 #3C4242;
-    color: #3C4242;
+    -0.25px -0.25px 0 $color-dark,
+    0.25px -0.25px 0 $color-dark,
+    -0.25px 0.25px 0 $color-dark,
+    0.25px 0.25px 0 $color-dark;
+    color: $color-dark;
     cursor: pointer;
     }
   }

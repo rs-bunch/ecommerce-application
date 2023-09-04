@@ -27,5 +27,7 @@ export enum CountryCodes {
 
 export interface ProductListState {
   id: string | null;
-  products?: ProductProjectionPagedSearchResponse | null;
+  products: ProductProjectionPagedSearchResponse | null;
 }
+
+export type CategoiesPathData = { name: string; id: string }[];
