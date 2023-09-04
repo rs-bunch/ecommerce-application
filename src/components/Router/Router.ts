@@ -76,12 +76,11 @@ class Router {
       }
       case 'products': {
         const categoriesId = path.split('/')[2];
-        this.store.dispatch(
-          getProducts({
-            // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
-            categoryId: `categories.id:subtree("${categoriesId}")`,
-          })
-        );
+        if (!categoriesId) {
+          payload.location = 'error';
+          break;
+        }
+        this.store.dispatch(getProducts({ categoryId: `categories.id:subtree("${categoriesId}")` }));
         break;
       }
       default:
