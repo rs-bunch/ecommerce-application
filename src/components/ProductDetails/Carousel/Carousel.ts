@@ -4,13 +4,10 @@ import { removeAllChildNodes } from '../../../utils/removeAllChildNodes';
 import carouselBtnHTML from './carousel-buttons.html';
 import sliderBtnHTML from './slider-buttons.html';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
-import { bootstrap } from '../../../styles/styles';
 import ImageModal from '../ImageModal/ImageModal';
 
 export default class Carousel extends HTMLElement {
   public $element: HTMLElement | null;
-
-  private idString: string;
 
   public $modalContainer: ImageModal;
 
@@ -34,7 +31,6 @@ export default class Carousel extends HTMLElement {
 
   constructor(id: string, modalContainer: ImageModal) {
     super();
-    this.idString = id;
     this.$element = createElement('div', 'carousel carousel-dark slide', [['id', id]]);
     this.$modalContainer = modalContainer;
     this.$carouselIndicators = createElement('div', 'carousel-indicators', []) as HTMLElement;
@@ -103,10 +99,7 @@ export default class Carousel extends HTMLElement {
     }
 
     const multipleImg = images.length > 1;
-    if (multipleImg) {
-      if (this.idString === 'productCarousel') this.$element.append(this.$carouselBtns);
-      if (this.idString === 'modalSlider') this.$element.append(this.$sliderBtns);
-    }
+    if (multipleImg && this.$btnNext && this.$btnPrev) this.$element.append(this.$btnPrev, this.$btnNext);
 
     for (let i = 0; i < images.length; i += 1) {
       const { url } = images[i];
