@@ -15,6 +15,7 @@ const location: { [index: string]: string } = {
   '/favourites': 'favourites',
   '/men': 'men',
   '/women': 'women',
+  '/product': 'product',
   '/404': 'error',
 };
 
@@ -47,16 +48,21 @@ class Router {
 
   private async handleLocation(type: string): Promise<void> {
     const path = window.location.pathname;
+    const locationPath = `/${path.split('/')[1]}`;
     const payload = {
-      location: location[path] || location['/404'],
+      location: location[locationPath] || location['/404'],
     };
-
-    if (payload.location === 'error') {
-      const pathParts = path.split('/');
-      if (pathParts[1] === 'product' && pathParts[2]) {
-        const response = await getProductDetailsById(pathParts[2]).catch((error) =>
-          notifyError(String(error.message)).showToast()
-        );
+    console.log(locationPath, payload);
+    if (payload.location === 'product') {
+      const productId = path.split('/')[2];
+      console.log(productId);
+      if (productId[2]) {
+        if (type === 'INIT_LOCATION') this.store.dispatch(initLocation({ location: 'loading' }));
+        if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation({ location: 'loading' }));
+        const response = await getProductDetailsById(productId).catch((error) => {
+          notifyError(String(error.message)).showToast();
+          this.store.dispatch(changeLocation({ location: 'error' }));
+        });
         if (response && response.statusCode === 200) {
           payload.location = 'product';
           this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
