@@ -52,6 +52,7 @@
     }
 
     &__price{
+        font-family: Causten;
         border-radius: 8px;
         background: #F6F6F6;
         padding: 10px 16px;
@@ -71,10 +72,11 @@
     }
 
     &__image{
-        margin-bottom: 25px;
+        margin-bottom: 10px;
         position: relative;
         left: 0px;
         top: 0px;
+        cursor: pointer;
     }
 
     &__like-btn{

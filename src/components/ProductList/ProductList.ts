@@ -43,10 +43,10 @@ export default class ProductList extends HTMLElement {
     for (let i = 0; i < productsData.length; i += 1) {
       const product = productsData[i];
       const card = document.createElement('product-card');
-
       const imagesObj = product.masterVariant.images;
       if (!imagesObj) return;
 
+      const { id } = productsData[i];
       const imageUrl = imagesObj[0].url;
       const name = product.name['en-US'];
       if (!product.metaTitle) return;
@@ -65,6 +65,7 @@ export default class ProductList extends HTMLElement {
 
       card.setAttribute('slot', 'cards-slot');
 
+      card.setAttribute('data-link', id);
       card.setAttribute('data-image', imageUrl);
       card.setAttribute('data-name', name);
       card.setAttribute('data-brand', brand);
