@@ -7,12 +7,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   @media screen and (min-width: $mobile-width) {
-    width: 75vw;
+    width: 80vw;
   }
   @media screen and (min-width: $tablet-width) {
-    width: 57vw;
+    width: auto;
   }
 }
 
@@ -22,7 +21,7 @@
 }
 
 .close-btn {
-  height: 3px;
+  height: 35px;
   width: 35px;
   transition: all 0.3s ease-out 0s;
   cursor: pointer;
@@ -39,11 +38,7 @@
     background-color: white;
     transform: rotate(45deg);
     transform-origin: left center;
-    @media (hover: hover) {
-      &:hover {
-        background-color: $color-dark;
-      }
-    }
+    transition: all ease-in-out .1s;
   }
   &::after {
     position: absolute;
@@ -54,9 +49,13 @@
     background-color: white;
     transform: rotate(-45deg);
     transform-origin: left center;
-    @media (hover: hover) {
-      &:hover {
-        background-color: $color-dark;
+    transition: all ease-in-out .1s;
+  }
+  @media (hover: hover) {
+    &:hover {
+      &::after,
+      &::before {
+        background-color: $color-light-l;
       }
     }
   }
