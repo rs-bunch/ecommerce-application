@@ -61,6 +61,7 @@ export default class extends HTMLElement {
         this.render(newState.auth);
       }
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+      document.querySelectorAll('address-modal').forEach(($el) => $el.remove());
     }
     if (newState.location.location === 'profile' && !newState.auth.id && this.changeLocation) {
       this.style.display = 'none';
