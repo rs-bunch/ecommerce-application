@@ -5,7 +5,6 @@ import type LocalStorage from '../LocalStorage/LocalStorage';
 import { getProductDetailsById } from '../Api/product';
 import { notifyError } from '../../utils/notify/notify';
 import { selectProduct } from '../Store/productSlice';
-
 import { getProducts } from '../Store/productListSlice';
 
 const location: { [index: string]: string } = {
@@ -17,6 +16,8 @@ const location: { [index: string]: string } = {
   '/favourites': 'favourites',
   '/men': 'men',
   '/women': 'women',
+  '/product': 'product',
+  '/products': 'products',
   '/404': 'error',
 };
 
@@ -49,30 +50,43 @@ class Router {
 
   private async handleLocation(type: string): Promise<void> {
     const path = window.location.pathname;
+    const locationPath = `/${path.split('/')[1]}`;
     const payload = {
-      location: location[path] || location['/404'],
+      location: location[locationPath] || location['/404'],
     };
-
-    if (payload.location === 'error') {
-      const pathParts = path.split('/');
-      if (pathParts[1] === 'product' && pathParts[2]) {
-        const response = await getProductDetailsById(pathParts[2]).catch((error) =>
-          notifyError(String(error.message)).showToast()
-        );
-        if (response && response.statusCode === 200) {
-          payload.location = 'product';
-          this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
+    console.log(path, locationPath, payload);
+    switch (payload.location) {
+      case 'product': {
+        const productId = path.split('/')[2];
+        if (!productId) {
+          payload.location = 'error';
+          break;
         }
-      } else if (pathParts[1] === 'products' && pathParts[2]) {
-        payload.location = 'products';
-        this.store.dispatch(
-          getProducts({
-            // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
-            categoryId: `categories.id:subtree("${pathParts[2]}")`,
-          })
-        );
+        if (type === 'INIT_LOCATION') this.store.dispatch(initLocation({ location: 'loading' }));
+        if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation({ location: 'loading' }));
+        const response = await getProductDetailsById(productId).catch((error) => {
+          notifyError(String(error.message)).showToast();
+          payload.location = 'error';
+        });
+        if (response && response.statusCode === 200) {
+          this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
+          break;
+        }
+        break;
       }
+      case 'products': {
+        const categoriesId = path.split('/')[2];
+        if (!categoriesId) {
+          payload.location = 'error';
+          break;
+        }
+        this.store.dispatch(getProducts({ categoryId: `categories.id:subtree("${categoriesId}")` }));
+        break;
+      }
+      default:
+        payload.location = location[locationPath];
     }
+    console.log(payload);
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
   }

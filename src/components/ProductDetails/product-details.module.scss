@@ -24,7 +24,7 @@
   }
 }
 
-.carousel-item img {
+#productCarousel .carousel-item img {
   object-fit: contain;
   @include media-tablet{
     height: 500px;
