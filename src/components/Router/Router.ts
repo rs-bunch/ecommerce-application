@@ -6,6 +6,8 @@ import { getProductDetailsById } from '../Api/product';
 import { notifyError } from '../../utils/notify/notify';
 import { selectProduct } from '../Store/productSlice';
 
+import { getProducts } from '../Store/productListSlice';
+
 const location: { [index: string]: string } = {
   '/': 'main',
   '/login': 'login',
@@ -61,6 +63,14 @@ class Router {
           payload.location = 'product';
           this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
         }
+      } else if (pathParts[1] === 'products' && pathParts[2]) {
+        payload.location = 'products';
+        this.store.dispatch(
+          getProducts({
+            // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
+            categoryId: `categories.id:subtree("${pathParts[2]}")`,
+          })
+        );
       }
     }
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
