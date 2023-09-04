@@ -4,10 +4,10 @@ import stylesheet from './profile-page.module.scss';
 // import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { RootState, AppDispatch } from '../Store/store';
-import MenuCard from './MenuCard';
-import AddressCard from './AddressCard';
-import ContactCard from './ContactCard';
-import AddressModal from './AddressModal';
+import MenuCard from './MenuCard/MenuCard';
+import AddressCard from './AddressCard/AddressCard';
+import ContactCard from './ContactCard/ContactCard';
+import AddressModal from './AddressModal/AddressModal';
 import { changeLocation } from '../Store/locationSlice';
 
 customElements.define('menu-card', MenuCard);
@@ -61,11 +61,12 @@ export default class extends HTMLElement {
         this.render(newState.auth);
       }
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+      document.querySelectorAll('address-modal').forEach(($el) => $el.remove());
     }
     if (newState.location.location === 'profile' && !newState.auth.id && this.changeLocation) {
       this.style.display = 'none';
-      window.history.pushState({}, '', String('/'));
-      this.changeLocation({ location: 'main' });
+      window.history.pushState({}, '', String('/login'));
+      this.changeLocation({ location: 'login' });
     }
     if (newState.location.location === 'profile' && oldState.auth.version !== newState.auth.version) {
       this.render(newState.auth);
