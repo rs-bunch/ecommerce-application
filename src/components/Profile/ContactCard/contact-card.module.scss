@@ -3,6 +3,7 @@
 
 .line {
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: first baseline;
   padding-bottom: 20px;
@@ -29,6 +30,27 @@
 .line__input {
   display: none;
   height: 24px;
+  border: 1.5px solid #3C4242;
+
+  &.invalid {
+    border-color: #dc3545;
+  }
+
+  &.valid {
+    border-color: #3ddb28;
+  }
+
+  & + .invalid-tooltip {
+    display: none;
+  }
+
+  &.invalid + .invalid-tooltip {
+    display: block;
+  }
+}
+
+.invalid-tooltip {
+  top: 55px
 }
 
 .line__edit, .line__save {

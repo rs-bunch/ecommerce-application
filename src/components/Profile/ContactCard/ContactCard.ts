@@ -5,6 +5,15 @@ import { bootstrap } from '../../../styles/styles';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 import { updateBindAction } from '../../Store/store';
 import createCustomerUpdateAction from '../../../utils/createCustomerUpdateAction';
+import { TextValidator } from '../../../dto/types';
+import {
+  validateName,
+  validateYearOld,
+  validateEmail,
+  validatePassword,
+} from '../../../utils/validation/textValidation';
+
+const ALLOWED_YEARS_OLD = 13;
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;
@@ -21,6 +30,16 @@ export default class extends HTMLElement {
 
   private $password: HTMLSpanElement | null;
 
+  private $firstNameField: HTMLElement | null;
+
+  private $lastNameField: HTMLElement | null;
+
+  private $birthDateField: HTMLElement | null;
+
+  private $emailField: HTMLElement | null;
+
+  private $passwordField: HTMLElement | null;
+
   private $saveFirstNameButton: HTMLButtonElement | null;
 
   private $saveLasttNameButton: HTMLButtonElement | null;
@@ -31,16 +50,30 @@ export default class extends HTMLElement {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
     this.$content = this.$element.querySelector('#content');
+
+    this.$firstNameField = this.$element.querySelector('#first-name-field');
+    this.$lastNameField = this.$element.querySelector('#last-name-field');
+    this.$birthDateField = this.$element.querySelector('#birth-date-field');
+    this.$emailField = this.$element.querySelector('#email-field');
+    this.$passwordField = this.$element.querySelector('#password-field');
+
     this.$firstName = this.$element.querySelector('#first-name');
     this.$lastName = this.$element.querySelector('#last-name');
     this.$birthDate = this.$element.querySelector('#birth-date');
     this.$email = this.$element.querySelector('#email');
     this.$password = this.$element.querySelector('#password');
+
     this.$saveFirstNameButton = this.$element.querySelector('#save-first-name');
     this.$saveLasttNameButton = this.$element.querySelector('#save-last-name');
     this.$saveBirthDateButton = this.$element.querySelector('#save-birth-date');
 
     this.$content?.addEventListener('click', (e) => this.handleLineElements(e));
+
+    this.$firstNameField?.addEventListener('input', () => this.validateHandle(this.$firstNameField));
+    this.$lastNameField?.addEventListener('input', () => this.validateHandle(this.$lastNameField));
+    this.$birthDateField?.addEventListener('input', () => this.validateHandle(this.$birthDateField));
+    this.$emailField?.addEventListener('input', () => this.validateHandle(this.$emailField));
+    this.$passwordField?.addEventListener('input', () => this.validateHandle(this.$passwordField));
   }
 
   private connectedCallback(): void {
@@ -83,14 +116,17 @@ export default class extends HTMLElement {
         }
       }
       if (e.target.classList.contains('line__save')) {
-        if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
-        if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
+        this.validateHandle(e.target.closest('.line'));
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
-          if ($lineContent.innerHTML !== $lineInput.value) {
+          if ($lineContent.innerHTML !== $lineInput.value && !$lineInput.classList.contains('invalid')) {
             this.updateHandle($lineInput.name, $lineInput.value);
           }
-          $lineContent.style.display = 'inline';
-          $lineInput.style.display = 'none';
+          if (!$lineInput.classList.contains('invalid')) {
+            if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
+            if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
+            $lineContent.style.display = 'inline';
+            $lineInput.style.display = 'none';
+          }
         }
       }
     }
@@ -108,6 +144,50 @@ export default class extends HTMLElement {
     const payload = { id, query };
     if (payload) {
       updateBindAction(payload);
+    }
+  }
+
+  private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
+    if (field) {
+      const input = field.querySelector('input');
+      const invalidTooltip = field.querySelector('.invalid-tooltip');
+      try {
+        validator(input?.value || '', payload);
+        if (input) input.classList.remove('invalid');
+        if (input) input.classList.add('valid');
+      } catch (error) {
+        if (input && invalidTooltip && error instanceof Error) {
+          invalidTooltip.innerHTML = error.message;
+          if (input) input.classList.remove('valid');
+          if (input) input.classList.add('invalid');
+        }
+      }
+    }
+  }
+
+  private validateHandle(field: HTMLElement | null): void {
+    const $input = field?.querySelector('input');
+    if ($input && $input.hasAttribute('name')) {
+      const name = $input.getAttribute('name');
+      switch (name) {
+        case 'firstName':
+          this.validateTextInput(field, validateName);
+          break;
+        case 'lasttName':
+          this.validateTextInput(field, validateName);
+          break;
+        case 'dateOfBirth':
+          this.validateTextInput(field, validateYearOld, ALLOWED_YEARS_OLD);
+          break;
+        case 'email':
+          this.validateTextInput(field, validateEmail);
+          break;
+        case 'password':
+          this.validateTextInput(field, validatePassword);
+          break;
+        default:
+          break;
+      }
     }
   }
 }
