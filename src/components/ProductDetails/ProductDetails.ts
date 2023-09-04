@@ -225,8 +225,10 @@ export default class ProductDetails extends HTMLElement {
       if (copy instanceof Element) {
         this.sizeBtns[key] = copy;
         this.$sizeBtns?.appendChild(copy);
+        copy.classList.remove('selected', 'shown');
       }
     });
+    console.log(this.sizeBtns);
   }
 
   private async updateCategoriesPath(id: string): Promise<string> {
