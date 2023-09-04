@@ -110,7 +110,7 @@ export default class extends HTMLElement {
 
   private editHandler(): void {
     const $modal = document.createElement('address-modal');
-    $modal.setAttribute('name', 'Edit Address');
+    $modal.setAttribute('type', 'new');
     $modal.setAttribute('zip', `${this.$zip?.innerHTML}`);
     $modal.setAttribute('city', `${this.$city?.innerHTML}`);
     $modal.setAttribute('street', `${this.$street?.innerHTML}`);

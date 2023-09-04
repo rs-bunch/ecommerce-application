@@ -140,7 +140,7 @@ export default class extends HTMLElement {
 
   private addNewHandle(): void {
     const $modal = document.createElement('address-modal');
-    $modal.setAttribute('name', 'Add New Address');
+    $modal.setAttribute('type', 'new');
     document.querySelector('#body')?.appendChild($modal);
   }
 }

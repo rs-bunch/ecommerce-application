@@ -39,11 +39,6 @@
 
 // .modal__form {}
 
-.modal__line {
-  display: flex;
-  flex-direction: column;
-}
-
 .modal__button {
   padding: 5px 10px;
   border-radius: 5px;
@@ -57,4 +52,50 @@
       color: #FFFFFF;
     }
   }
+}
+
+.modal__line {
+  display: flex;
+  flex-direction: column;
+}
+
+.line {
+  position: relative;
+}
+
+.line__input {
+  height: 25px;
+  width: 100%;
+  border: 1.5px solid #3C4242;
+
+  &.invalid {
+    border-color: #dc3545;
+  }
+
+  &.valid {
+    border-color: #3ddb28;
+  }
+
+  & + .invalid-tooltip {
+    display: none;
+  }
+
+  &.invalid + .invalid-tooltip {
+    display: block;
+  }
+}
+
+.line__select {
+  border: 1.5px solid #000;
+  height: 25px;
+  padding: 0 12px;
+
+  &:focus {
+    transition: all .3s ease;
+  }
+}
+
+.invalid-tooltip {
+  top: 46px;
+  font-size: 12px;
 }

@@ -4,28 +4,31 @@
       <div id="title" class="modal__title"></div>
       <button id="close" class="modal__button">X</button>
     </div>
-    <div class="modal__line line">
+    <div id="street-field" class="modal__line line field">
       <label for="street" class="line__label">Street</label>
-      <input class="line__input form-control" type="text" name="street" id="street">
+      <input class="line__input form-control" type="text" name="street" id="street" required>
+      <div class="invalid-tooltip"></div>
       <p class="line__description">
         Must contain at least one character
       </p>
     </div>
-    <div class="modal__line line">
+    <div id="city-field" class="modal__line line field">
       <label for="city" class="line__label">City</label>
-      <input class="line__input form-control" type="text" name="city" id="city">
+      <input class="line__input form-control" type="text" name="city" id="city" required>
+      <div class="invalid-tooltip"></div>
       <p class="line__description">
         Minimum one char w/out special or numbers
       </p>
     </div>
-    <div class="modal__line line">
+    <div id="zip-field" class="modal__line line field">
       <label for="zip" class="line__label">Postal Code</label>
-      <input class="line__input form-control" type="text" name="zip" id="zip">
+      <input class="line__input form-control" type="text" name="zip" id="zip" required>
+      <div class="invalid-tooltip"></div>
       <p class="line__description">
         Valid country postal code
       </p>
     </div>
-    <div id="" class="modal__line line">
+    <div id="country-field" class="modal__line line field">
       <label class="line__label" for="country">
         Country
       </label>
@@ -33,6 +36,7 @@
         <option value="US">United States of America</option>
         <option value="CA">Canada</option>
       </select>
+      <div class="invalid-tooltip"></div>
       <p class="line__description">
         Must be a valid country
       </p>
