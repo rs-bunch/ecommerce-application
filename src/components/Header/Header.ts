@@ -44,6 +44,8 @@ export default class ShopHeader extends HTMLElement {
 
   public $myAccBtn: HTMLElement | null | undefined;
 
+  public $myOrdersBtn: HTMLElement | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -64,6 +66,7 @@ export default class ShopHeader extends HTMLElement {
     this.$loginGreetText = this.$element?.querySelector('.login__hello');
     this.$logOutBtn = this.$element?.querySelector('.login__link_logout');
     this.$myAccBtn = this.$element?.querySelector('.login__button_my-account');
+    this.$myOrdersBtn = this.$element?.querySelector('.login__button_my-cart');
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
@@ -129,6 +132,9 @@ export default class ShopHeader extends HTMLElement {
   private initButtons(): void {
     const sideLinks: NodeListOf<Element> | undefined = this.$sideBar?.querySelectorAll('.link__side-bar');
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
+    [this.$joinBtn, this.$myOrdersBtn, this.$myAccBtn, this.$signInBtn].forEach(
+      (btn) => btn?.addEventListener('click', this.closeLoginDropdown.bind(this))
+    );
     this.$burgerBtn?.addEventListener('click', () => this.openMenu());
     this.$burgerCloseBtn?.addEventListener('click', this.bindedCloseMenu);
     this.$logOutBtn?.addEventListener('click', () => {
@@ -173,5 +179,9 @@ export default class ShopHeader extends HTMLElement {
     this.$sideBar?.classList.add('open');
     overlay?.addEventListener('click', this.bindedCloseMenu, { once: true });
     overlay?.setAttribute('active', 'true');
+  }
+
+  private closeLoginDropdown(): void {
+    this.$loginDropdown?.classList.remove('active');
   }
 }
