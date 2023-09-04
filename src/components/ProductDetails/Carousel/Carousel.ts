@@ -113,12 +113,13 @@ export default class Carousel extends HTMLElement {
       const img = createElement('img', 'd-block w-100', [
         ['src', url],
         ['alt', `Image ${i + 1}`],
+        ['data-target-slide', `${i}`],
       ]) as HTMLImageElement;
-      const carouselItem = createElement('div', 'carousel-item', [['targetSlide', `${i}`]]) as HTMLElement;
+      const carouselItem = createElement('div', 'carousel-item', [['data-target-slide', `${i}`]]) as HTMLElement;
       carouselItem.appendChild(img);
       this.$carouselInner.appendChild(carouselItem);
       if (!options.isModal) carouselItem.addEventListener('click', this.openModal.bind(this));
-      if (multipleImg && !options.isModal) {
+      if (multipleImg) {
         const indicator = createElement('button', '', [
           ['type', 'button'],
           ['bsTarget', options.carouselName],
@@ -146,10 +147,11 @@ export default class Carousel extends HTMLElement {
   }
 
   private putPlaceholderImage(): void {
-    const carouselItem = createElement('div', 'carousel-item', [['targetSlide', `0`]]) as HTMLElement;
+    const carouselItem = createElement('div', 'carousel-item', [['data-target-slide', `0`]]) as HTMLElement;
     const img = createElement('img', 'd-block w-100', [
       ['src', 'https://placehold.jp/569x1200.png?text=No%20Image'],
       ['alt', `Image 1`],
+      ['data-target-slide', `0`],
     ]) as HTMLImageElement;
     carouselItem.appendChild(img);
     this.$carouselInner.appendChild(carouselItem);
@@ -181,16 +183,12 @@ export default class Carousel extends HTMLElement {
     if (this.$modalContainer.$closeBtn)
       this.$modalContainer.$closeBtn.addEventListener('click', this.bindedClosedModal);
     document.querySelector('body')?.append(this.$modalContainer);
-    if (event.target instanceof HTMLElement) {
-      const slideNumber = event.target.dataset.targetSlide;
-      if (!Number.isNaN(Number(slideNumber))) {
-        this.$carouselInner.querySelector('.active')?.classList.remove('active');
-        const slides = this.$carouselInner.querySelectorAll('.carousel-item');
-        slides[Number(slideNumber)]?.classList.add('active');
-      }
-    }
+
     overlay?.addEventListener('click', this.bindedClosedModal, { once: true });
     overlay?.setAttribute('active', 'true');
+
+    if (!this.$carouselIndicators.firstChild || !(event.target instanceof HTMLElement)) return;
+    this.syncImageInModal(event.target);
   }
 
   private closeModal(): void {
@@ -202,6 +200,22 @@ export default class Carousel extends HTMLElement {
 
   private static get observedAttributes(): string[] {
     return ['name'];
+  }
+
+  private syncImageInModal(element: HTMLElement): void {
+    const slideNumber = element.dataset.targetSlide;
+    if (!Number.isNaN(Number(slideNumber))) {
+      this.$modalContainer.$element?.querySelectorAll('.active')?.forEach((el) => {
+        el.classList.remove('active');
+      });
+      const slides = this.$modalContainer.$element?.querySelectorAll('.carousel-item');
+      const indicators = this.$modalContainer.$element?.querySelectorAll('.carousel-indicators > *');
+      if (slides?.length && indicators?.length) {
+        indicators[Number(slideNumber)]?.classList.add('active');
+        slides[Number(slideNumber)]?.classList.add('active');
+        slides[Number(slideNumber)]?.setAttribute('aria-current', 'true');
+      }
+    }
   }
 }
 
