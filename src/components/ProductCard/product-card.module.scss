@@ -25,6 +25,19 @@
         border-radius: 8px;
         background: #F6F6F6;
         padding: 10px 16px;
+
+        &_discounted{
+            background: rgb(255, 61, 61);
+            color: white;
+            font-weight: bold;
+
+            &::before{
+                content: attr(data-discount);
+                text-decoration: line-through;
+                margin-right: 5px;
+                font-weight: normal;
+            }
+        }
     }
 
     &__image{

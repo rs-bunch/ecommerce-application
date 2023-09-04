@@ -6,6 +6,8 @@ import { changeLocation } from '../Store/locationSlice';
 import { getProducts } from '../Store/productListSlice';
 import ProductCard from '../ProductCard/ProductCard';
 
+import productsContainer from './product-list.module.scss';
+
 customElements.define('product-card', ProductCard);
 
 export default class ProductList extends HTMLElement {
@@ -23,7 +25,7 @@ export default class ProductList extends HTMLElement {
     if (!this.shadowRoot) return;
     if (this.$element) {
       this.shadowRoot?.appendChild(this.$element);
-      //   this.shadowRoot.adoptedStyleSheets = [login, bootstrap];
+      this.shadowRoot.adoptedStyleSheets = [productsContainer];
     }
   }
 
@@ -47,10 +49,15 @@ export default class ProductList extends HTMLElement {
   }
 
   private renderProductCards(productsData: ProductProjection[]): void {
-    console.log(productsData);
+    const slot = document.createElement('slot');
+    slot.setAttribute('name', 'cards-slot');
+
+    if (!this.shadowRoot) return;
+    const container = this.shadowRoot.querySelector('.products-container');
+    container?.appendChild(slot);
+
     for (let i = 0; i < productsData.length; i += 1) {
       const product = productsData[i];
-      const slot = document.createElement('slot');
       const card = document.createElement('product-card');
 
       const imagesObj = product.masterVariant.images;
@@ -62,17 +69,27 @@ export default class ProductList extends HTMLElement {
       const brand = product.metaTitle['en-US'];
       if (!product.masterVariant.prices) return;
       const price = product.masterVariant.prices[0].value.centAmount / 100;
+      let discount = null;
+      if (product.masterVariant.prices[0].discounted) {
+        discount = product.masterVariant.prices[0].discounted.value.centAmount / 100;
+      }
 
-      slot.setAttribute('name', `${i}`);
-      card.setAttribute('slot', `${i}`);
+      card.setAttribute('slot', 'cards-slot');
 
       card.setAttribute('data-image', imageUrl);
       card.setAttribute('data-name', name);
       card.setAttribute('data-brand', brand);
-      card.setAttribute('data-price', `${price}$`);
 
-      this.appendChild(slot);
-      document.body.append(card);
+      if (discount) {
+        card.setAttribute('data-price', `${discount}$`);
+        if (!card.shadowRoot) return;
+        const priceField = card.shadowRoot.querySelector('.product-card__price');
+        if (priceField) priceField.setAttribute('data-discount', `${price}$`);
+      } else {
+        card.setAttribute('data-price', `${price}$`);
+      }
+
+      this.append(card);
     }
   }
 
@@ -84,7 +101,6 @@ export default class ProductList extends HTMLElement {
       this.attributeChangedCallback('location', '', String(location));
     }
     if (products) {
-      console.log('map', products);
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);
     }
   }

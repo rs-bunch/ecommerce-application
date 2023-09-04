@@ -67,7 +67,8 @@ class Router {
         payload.location = 'products';
         this.store.dispatch(
           getProducts({
-            categoryId: 'categories.id:subtree("94038ccd-10f8-4ccc-a616-cfa5438bcc9a")',
+            // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
+            categoryId: `categories.id:subtree("${pathParts[2]}")`,
           })
         );
       }

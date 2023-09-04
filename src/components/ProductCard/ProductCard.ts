@@ -35,11 +35,15 @@ export default class ProductCard extends HTMLElement {
     const name = this.getAttribute('data-name');
     const brand = this.getAttribute('data-brand');
     const price = this.getAttribute('data-price');
+    if (!this.$productPrice) return;
+    const discounted = this.$productPrice.getAttribute('data-discount');
+    console.log(discounted);
 
     if (this.$productImage) this.$productImage.style.backgroundImage = `url("${imageUrl}")`;
     if (this.$productName) this.$productName.textContent = name;
     if (this.$productBrand) this.$productBrand.textContent = brand;
     if (this.$productPrice) this.$productPrice.textContent = price;
+    if (discounted) this.$productPrice?.classList.add('product-card__price_discounted');
   }
 
   public connectedCallback(): void {
@@ -47,7 +51,7 @@ export default class ProductCard extends HTMLElement {
   }
 
   public static get observedAttributes(): string[] {
-    return ['data-image', 'data-name', 'data-brand', 'data-price'];
+    return ['data-image', 'data-name', 'data-brand', 'data-price', 'data-discount'];
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
