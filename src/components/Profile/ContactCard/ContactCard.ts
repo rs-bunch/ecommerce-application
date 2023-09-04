@@ -3,7 +3,7 @@ import ElementHTML from './contact-card.html';
 import stylesheet from './contact-card.module.scss';
 import { bootstrap } from '../../../styles/styles';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
-import { updateBindAction } from '../../Store/store';
+import { updateCustomerBindAction, updatePasswordBindAction } from '../../Store/store';
 import createCustomerUpdateAction from '../../../utils/createCustomerUpdateAction';
 import { TextValidator } from '../../../dto/types';
 import {
@@ -38,7 +38,9 @@ export default class extends HTMLElement {
 
   private $emailField: HTMLElement | null;
 
-  private $passwordField: HTMLElement | null;
+  private $currentPasswordField: HTMLElement | null;
+
+  private $newPasswordField: HTMLElement | null;
 
   private $saveFirstNameButton: HTMLButtonElement | null;
 
@@ -55,7 +57,8 @@ export default class extends HTMLElement {
     this.$lastNameField = this.$element.querySelector('#last-name-field');
     this.$birthDateField = this.$element.querySelector('#birth-date-field');
     this.$emailField = this.$element.querySelector('#email-field');
-    this.$passwordField = this.$element.querySelector('#password-field');
+    this.$currentPasswordField = this.$element.querySelector('#current-password-field');
+    this.$newPasswordField = this.$element.querySelector('#new-password-field');
 
     this.$firstName = this.$element.querySelector('#first-name');
     this.$lastName = this.$element.querySelector('#last-name');
@@ -73,7 +76,8 @@ export default class extends HTMLElement {
     this.$lastNameField?.addEventListener('input', () => this.validateHandle(this.$lastNameField));
     this.$birthDateField?.addEventListener('input', () => this.validateHandle(this.$birthDateField));
     this.$emailField?.addEventListener('input', () => this.validateHandle(this.$emailField));
-    this.$passwordField?.addEventListener('input', () => this.validateHandle(this.$passwordField));
+    this.$currentPasswordField?.addEventListener('input', () => this.validateHandle(this.$currentPasswordField));
+    this.$newPasswordField?.addEventListener('input', () => this.validateHandle(this.$newPasswordField));
   }
 
   private connectedCallback(): void {
@@ -103,36 +107,54 @@ export default class extends HTMLElement {
       const $editButton = e.target.closest('.line')?.querySelector('.line__edit');
       const $cancelButton = e.target.closest('.line')?.querySelector('.line__cancel');
       const $lineContent = e.target.closest('.line')?.querySelector('.line__content');
+      const $lineFields = e.target.closest('.line')?.querySelectorAll('.line__field') as NodeListOf<HTMLElement>;
       const $lineInput = e.target.closest('.line')?.querySelector('.line__input');
+      const $newPasswordInput = e.target.closest('.line')?.querySelector('#new-password');
 
       if (e.target.classList.contains('line__edit')) {
         if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'none';
         if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = 'inline';
         if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = 'inline';
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
-          if ($lineInput.getAttribute('name') !== 'password') {
+          if ($lineInput.getAttribute('name') !== 'currentPassword') {
             $lineInput.value = $lineContent.innerHTML;
           } else {
             $lineInput.value = '';
+            if ($newPasswordInput instanceof HTMLInputElement) $newPasswordInput.value = '';
           }
           $lineContent.style.display = 'none';
-          $lineInput.style.display = 'inline';
+          if ($lineFields.item(0)) $lineFields.item(0).style.display = 'inline';
+          if ($lineFields.item(1)) $lineFields.item(1).style.display = 'inline';
         }
       }
       if (e.target.classList.contains('line__save')) {
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
-          if ($lineContent.innerHTML !== $lineInput.value) {
-            this.validateHandle(e.target.closest('.line'));
+          if ($lineInput.getAttribute('name') !== 'currentPassword') {
+            if ($lineContent.innerHTML !== $lineInput.value) {
+              this.validateHandle(e.target.closest('.line__field'));
+              if (!$lineInput.classList.contains('invalid')) {
+                this.updateHandle($lineInput.name, $lineInput.value);
+              }
+            }
             if (!$lineInput.classList.contains('invalid')) {
-              this.updateHandle($lineInput.name, $lineInput.value);
+              if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = '';
+              if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
+              if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
+              $lineContent.style.display = 'inline';
+              if ($lineFields.item(0)) $lineFields.item(0).style.display = 'none';
             }
           }
-          if (!$lineInput.classList.contains('invalid')) {
-            if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = '';
-            if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
-            if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
-            $lineContent.style.display = 'inline';
-            $lineInput.style.display = 'none';
+          if ($lineInput.getAttribute('name') === 'currentPassword') {
+            const currenFieldInput = $lineFields.item(0).querySelector('input');
+            const newFieldInput = $lineFields.item(1).querySelector('input');
+            this.validateHandle($lineFields.item(0));
+            this.validateHandle($lineFields.item(1));
+
+            if (currenFieldInput?.value && newFieldInput?.value) {
+              if (!currenFieldInput.classList.contains('invalid') && !newFieldInput.classList.contains('invalid')) {
+                this.updatePasswordHandle(currenFieldInput.value, newFieldInput.value);
+              }
+            }
           }
         }
       }
@@ -141,10 +163,17 @@ export default class extends HTMLElement {
           if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = '';
           if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
           if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
+
           $lineContent.style.display = 'inline';
-          $lineInput.style.display = 'none';
-          $lineInput.classList.remove('valid');
-          $lineInput.classList.remove('invalid');
+          $lineFields.item(0).style.display = 'none';
+          $lineFields.item(0).querySelector('input')?.classList.remove('valid');
+          $lineFields.item(0).querySelector('input')?.classList.remove('invalid');
+
+          if ($lineFields.item(1)) {
+            $lineFields.item(1).style.display = 'none';
+            $lineFields.item(1).querySelector('input')?.classList.remove('valid');
+            $lineFields.item(1).querySelector('input')?.classList.remove('invalid');
+          }
         }
       }
     }
@@ -160,9 +189,17 @@ export default class extends HTMLElement {
     };
     if (customerUpdateAction) query.actions.push(customerUpdateAction);
     const payload = { id, query };
-    if (payload) {
-      updateBindAction(payload);
-    }
+    if (payload) updateCustomerBindAction(payload);
+  }
+
+  private updatePasswordHandle(currentPassword: string, newPassword: string): void {
+    const payload = {
+      id: String(this.getAttribute('customer-id')),
+      version: Number(this.getAttribute('customer-version')),
+      currentPassword,
+      newPassword,
+    };
+    if (payload) updatePasswordBindAction(payload);
   }
 
   private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
@@ -191,7 +228,7 @@ export default class extends HTMLElement {
         case 'firstName':
           this.validateTextInput(field, validateName);
           break;
-        case 'lasttName':
+        case 'lastName':
           this.validateTextInput(field, validateName);
           break;
         case 'dateOfBirth':
@@ -200,7 +237,10 @@ export default class extends HTMLElement {
         case 'email':
           this.validateTextInput(field, validateEmail);
           break;
-        case 'password':
+        case 'currentPassword':
+          this.validateTextInput(field, validatePassword);
+          break;
+        case 'newPassword':
           this.validateTextInput(field, validatePassword);
           break;
         default:

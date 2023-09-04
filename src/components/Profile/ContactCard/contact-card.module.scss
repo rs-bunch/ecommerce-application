@@ -3,7 +3,6 @@
 
 .line {
   display: flex;
-  position: relative;
   justify-content: space-between;
   align-items: first baseline;
   padding-bottom: 20px;
@@ -27,9 +26,18 @@
   height: 24px;
 }
 
-.line__input {
+.line__label {
+  font-size: 15px;
+}
+
+.line__field {
+  position: relative;
   display: none;
-  height: 24px;
+}
+
+.line__input {
+  height: 25px;
+  width: 250px;
   border: 1.5px solid #3C4242;
 
   &.invalid {
@@ -50,7 +58,12 @@
 }
 
 .invalid-tooltip {
-  top: 55px
+  top: 25px;
+  font-size: 12px;
+
+  .field__with-title & {
+    top: 46px;
+  }
 }
 
 .line__controls {
