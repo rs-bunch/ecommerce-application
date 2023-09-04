@@ -50,7 +50,7 @@ export default class ProductList extends HTMLElement {
       const imageUrl = imagesObj[0].url;
       const name = product.name['en-US'];
       if (!product.metaTitle) return;
-      const brand = product.metaTitle['en-US'];
+      const brand = product.masterVariant.attributes?.find((atr) => atr.name === 'Brand')?.value as string | undefined;
       if (!product.masterVariant.prices) return;
       const price = product.masterVariant.prices[0].value.centAmount / 100;
       let discount = null;
@@ -68,7 +68,7 @@ export default class ProductList extends HTMLElement {
       card.setAttribute('data-link', id);
       card.setAttribute('data-image', imageUrl);
       card.setAttribute('data-name', name);
-      card.setAttribute('data-brand', brand);
+      if (brand) card.setAttribute('data-brand', brand);
 
       if (discount) {
         card.setAttribute('data-price', `${discount}$`);
