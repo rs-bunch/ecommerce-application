@@ -101,32 +101,50 @@ export default class extends HTMLElement {
     if (e.target instanceof HTMLButtonElement && e.target.closest('.line')) {
       const $saveButton = e.target.closest('.line')?.querySelector('.line__save');
       const $editButton = e.target.closest('.line')?.querySelector('.line__edit');
+      const $cancelButton = e.target.closest('.line')?.querySelector('.line__cancel');
       const $lineContent = e.target.closest('.line')?.querySelector('.line__content');
       const $lineInput = e.target.closest('.line')?.querySelector('.line__input');
 
       if (e.target.classList.contains('line__edit')) {
         if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'none';
         if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = 'inline';
+        if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = 'inline';
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
           if ($lineInput.getAttribute('name') !== 'password') {
             $lineInput.value = $lineContent.innerHTML;
+          } else {
+            $lineInput.value = '';
           }
           $lineContent.style.display = 'none';
           $lineInput.style.display = 'inline';
         }
       }
       if (e.target.classList.contains('line__save')) {
-        this.validateHandle(e.target.closest('.line'));
         if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
-          if ($lineContent.innerHTML !== $lineInput.value && !$lineInput.classList.contains('invalid')) {
-            this.updateHandle($lineInput.name, $lineInput.value);
+          if ($lineContent.innerHTML !== $lineInput.value) {
+            this.validateHandle(e.target.closest('.line'));
+            if (!$lineInput.classList.contains('invalid')) {
+              this.updateHandle($lineInput.name, $lineInput.value);
+            }
           }
           if (!$lineInput.classList.contains('invalid')) {
+            if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = '';
             if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
             if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
             $lineContent.style.display = 'inline';
             $lineInput.style.display = 'none';
           }
+        }
+      }
+      if (e.target.classList.contains('line__cancel')) {
+        if ($lineContent instanceof HTMLElement && $lineInput instanceof HTMLInputElement) {
+          if ($cancelButton instanceof HTMLButtonElement) $cancelButton.style.display = '';
+          if ($editButton instanceof HTMLButtonElement) $editButton.style.display = 'inline';
+          if ($saveButton instanceof HTMLButtonElement) $saveButton.style.display = '';
+          $lineContent.style.display = 'inline';
+          $lineInput.style.display = 'none';
+          $lineInput.classList.remove('valid');
+          $lineInput.classList.remove('invalid');
         }
       }
     }

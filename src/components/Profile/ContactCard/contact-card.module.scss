@@ -53,7 +53,14 @@
   top: 55px
 }
 
-.line__edit, .line__save {
+.line__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  row-gap: 8px;
+}
+
+.line__button {
   border: none;
   background: none;
   font: 600 18px 'Causten';
@@ -68,6 +75,6 @@
   }
 }
 
-.line__save {
+.line__save, .line__cancel {
   display: none;
 }
