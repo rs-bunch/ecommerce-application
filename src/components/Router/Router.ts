@@ -6,7 +6,12 @@ import { getProductDetailsById } from '../Api/product';
 import { notifyError } from '../../utils/notify/notify';
 import { selectProduct } from '../Store/productSlice';
 
-import { getProducts, getSortedProducts } from '../Store/productListSlice';
+import {
+  getProducts,
+  getSortedProducts,
+  getFilteredProducts,
+  getFilteredSortedProducts,
+} from '../Store/productListSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -70,7 +75,6 @@ class Router {
           payload.location = 'products';
           this.store.dispatch(
             getProducts({
-              // 94038ccd-10f8-4ccc-a616-cfa5438bcc9a
               categoryId: `categories.id:subtree("${pathParts[2]}")`,
             })
           );
@@ -78,8 +82,32 @@ class Router {
           payload.location = 'products';
           const sort = urlParams.get('sort');
           const order = urlParams.get('order');
+          const priceRange = urlParams.get('price');
+          const color = urlParams.get('color');
+          const size = urlParams.get('size');
 
-          if (sort && order) {
+          const filter = [];
+
+          if (priceRange) filter.push(`variants.price.centAmount:range (* to ${priceRange})`);
+          if (color) filter.push(`variants.attributes.Color:"${color}"`);
+          if (size) filter.push(`variants.attributes.Size:"${size}"`);
+
+          if (filter.length && sort && order) {
+            this.store.dispatch(
+              getFilteredSortedProducts({
+                categoryId: `categories.id:subtree("${pathParts[2]}")`,
+                filter,
+                sort: `${sort} ${order}`,
+              })
+            );
+          } else if (filter.length) {
+            this.store.dispatch(
+              getFilteredProducts({
+                categoryId: `categories.id:subtree("${pathParts[2]}")`,
+                criteria: filter,
+              })
+            );
+          } else if (sort && order) {
             this.store.dispatch(
               getSortedProducts({
                 categoryId: `categories.id:subtree("${pathParts[2]}")`,

@@ -16,6 +16,8 @@ export default class ProductsFilter extends HTMLElement {
 
   private $sortPrice: HTMLElement | null;
 
+  private $clearBtn: HTMLButtonElement | null;
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -24,6 +26,33 @@ export default class ProductsFilter extends HTMLElement {
     this.$priceLabel = this.$element.querySelector('#price-label');
     this.$sortName = this.$element.querySelector('#sort-name');
     this.$sortPrice = this.$element.querySelector('#sort-price');
+    this.$clearBtn = this.$element.querySelector('#clear-btn');
+
+    const sizeCheckArr = this.$element.querySelectorAll('.products-filter__size-check');
+    sizeCheckArr.forEach((check) => {
+      (check as HTMLElement).addEventListener('click', () => {
+        const val = check.textContent;
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('Size', `${val}`);
+        window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+      });
+    });
+
+    const colorCheckArr = this.$element.querySelectorAll('.products-filter__color-check');
+    colorCheckArr.forEach((check) => {
+      (check as HTMLElement).addEventListener('click', () => {
+        const val = (check as HTMLElement).dataset.color;
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('color', `${val}`);
+        window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+      });
+    });
+
+    if (this.$clearBtn) {
+      this.$clearBtn.addEventListener('click', () => {
+        window.location.href = `${window.location.origin}${window.location.pathname}`;
+      });
+    }
 
     if (!this.shadowRoot) return;
     if (this.$element) {
@@ -40,6 +69,16 @@ export default class ProductsFilter extends HTMLElement {
 
       const val = this.$priceRange.value;
       this.$priceLabel.textContent = `${val}$`;
+    });
+
+    this.$priceRange.addEventListener('mouseup', () => {
+      if (!this.$priceRange) return;
+
+      const val = this.$priceRange.value;
+      const location = `${window.location.origin}${window.location.pathname}`;
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set('price', `${Number(val) * 100}`);
+      window.location.href = `${location}?${urlParams.toString()}`;
     });
   }
 
@@ -70,9 +109,27 @@ export default class ProductsFilter extends HTMLElement {
       } else if (searchParams.size) {
         if (!this.$sortName || !this.$sortPrice) return;
         const order = searchParams.get('order');
-        if (!order) return;
-        this.$sortName.dataset.href = `${path}?sort=name.en-US&order=${order === 'asc' ? 'desc' : 'asc'}`;
-        this.$sortPrice.dataset.href = `${path}?sort=price&order=${order === 'asc' ? 'desc' : 'asc'}`;
+
+        const price = searchParams.get('price');
+        if (price && this.$priceRange && this.$priceLabel) {
+          this.$priceRange.value = `${+price / 100}`;
+          this.$priceLabel.textContent = `${+price / 100}$`;
+        }
+
+        if (!order) {
+          this.$sortName.dataset.href = `${path}?${searchParams.toString()}&sort=name.en-US&order=asc`;
+          this.$sortPrice.dataset.href = `${path}?${searchParams.toString()}sort=price&order=asc`;
+          return;
+        }
+
+        searchParams.delete('sort');
+        searchParams.delete('order');
+        this.$sortName.dataset.href = `${path}?${searchParams.toString()}&sort=name.en-US&order=${
+          order === 'asc' ? 'desc' : 'asc'
+        }`;
+        this.$sortPrice.dataset.href = `${path}?${searchParams.toString()}&sort=price&order=${
+          order === 'asc' ? 'desc' : 'asc'
+        }`;
       }
       this.style.display = newValue === 'products' ? '' : 'none';
     }
