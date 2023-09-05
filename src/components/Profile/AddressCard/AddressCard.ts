@@ -1,9 +1,10 @@
-import type { CustomerUpdate } from '@commercetools/platform-sdk';
+import type { Customer, CustomerUpdate } from '@commercetools/platform-sdk';
 import ElementHTML from './address-card.html';
 import stylesheet from './address-card.module.scss';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 import { CountryCodes } from '../../../dto/types';
 import { updateCustomerBindAction } from '../../Store/store';
+import AddressModal from '../AddressModal/AddressModal';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;
@@ -34,6 +35,8 @@ export default class extends HTMLElement {
 
   private countryCode: string | undefined;
 
+  private customer: Customer | undefined;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -52,6 +55,17 @@ export default class extends HTMLElement {
 
     this.$remove?.addEventListener('click', () => this.removeHandler());
     this.$edit?.addEventListener('click', () => this.editHandler());
+
+    this.$setDefaultShipping?.addEventListener('click', () => this.setDefaultShippingAddress());
+    this.$setDefaultBilling?.addEventListener('click', () => this.setDefaultBillingAddress());
+  }
+
+  public get currentCustomer(): Customer {
+    return this.customer as Customer;
+  }
+
+  public set currentCustomer(obj: Customer) {
+    this.customer = obj;
   }
 
   private connectedCallback(): void {
@@ -126,15 +140,46 @@ export default class extends HTMLElement {
   }
 
   private editHandler(): void {
-    const $modal = document.createElement('address-modal');
+    const $modal = new AddressModal();
+    if (this.customer) $modal.currentCustomer = this.customer;
     $modal.setAttribute('type', 'edit');
     $modal.setAttribute('zip', `${this.$zip?.innerHTML}`);
     $modal.setAttribute('city', `${this.$city?.innerHTML}`);
     $modal.setAttribute('street', `${this.$street?.innerHTML}`);
     $modal.setAttribute('country', `${this.countryCode}`);
     $modal.setAttribute('address-id', `${this.getAttribute('address-id')}`);
-    $modal.setAttribute('customer-id', `${this.getAttribute('customer-id')}`);
-    $modal.setAttribute('customer-version', `${this.getAttribute('customer-version')}`);
+    $modal.setAttribute('customer-id', `${this.customer?.id}`);
+    $modal.setAttribute('customer-version', `${this.customer?.version}`);
     document.querySelector('#body')?.appendChild($modal);
+  }
+
+  private setDefaultShippingAddress(): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'setDefaultShippingAddress',
+            addressId: String(this.getAttribute('address-id')),
+          },
+        ],
+      },
+    });
+  }
+
+  private setDefaultBillingAddress(): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'setDefaultBillingAddress',
+            addressId: String(this.getAttribute('address-id')),
+          },
+        ],
+      },
+    });
   }
 }

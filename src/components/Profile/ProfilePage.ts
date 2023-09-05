@@ -28,6 +28,8 @@ export default class extends HTMLElement {
 
   private $addNewButton: HTMLButtonElement | null;
 
+  private customer: Customer | undefined;
+
   private customerId: string | undefined;
 
   private customerVersion: number | undefined;
@@ -62,6 +64,7 @@ export default class extends HTMLElement {
     if (!oldState) return;
     if (oldState.location.location !== newState.location.location) {
       if (newState.location.location === 'profile' && newState.auth.id) {
+        this.customer = newState.auth;
         this.render(newState.auth);
       }
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
@@ -73,6 +76,7 @@ export default class extends HTMLElement {
       this.changeLocation({ location: 'login' });
     }
     if (newState.location.location === 'profile' && oldState.auth.version !== newState.auth.version) {
+      this.customer = newState.auth;
       this.render(newState.auth);
     }
   }
@@ -116,7 +120,8 @@ export default class extends HTMLElement {
     if (this.$addresses) {
       this.$addresses.innerHTML = '';
       customer.addresses.forEach((address) => {
-        const $address = document.createElement('address-card');
+        const $address = new AddressCard();
+        $address.currentCustomer = customer;
         $address.classList.add('block__card');
         $address.setAttribute('zip', `${address.postalCode}`);
         $address.setAttribute('country', `${address.country}`);
@@ -147,10 +152,9 @@ export default class extends HTMLElement {
   }
 
   private addNewHandle(): void {
-    const $modal = document.createElement('address-modal');
+    const $modal = new AddressModal();
+    if (this.customer) $modal.currentCustomer = this.customer;
     $modal.setAttribute('type', 'new');
-    $modal.setAttribute('customer-id', `${this.customerId}`);
-    $modal.setAttribute('customer-version', `${this.customerVersion}`);
     document.querySelector('#body')?.appendChild($modal);
   }
 }

@@ -1,4 +1,4 @@
-import type { BaseAddress } from '@commercetools/platform-sdk';
+import type { BaseAddress, Customer } from '@commercetools/platform-sdk';
 import ElementHTML from './address-modal.html';
 import stylesheet from './address-modal.module.scss';
 import { bootstrap } from '../../../styles/styles';
@@ -32,6 +32,16 @@ export default class extends HTMLElement {
 
   private $saveButton: HTMLButtonElement | null;
 
+  private customer: Customer | undefined;
+
+  private $shipping: HTMLInputElement | null;
+
+  private $shippingAsDefault: HTMLInputElement | null;
+
+  private $billing: HTMLInputElement | null;
+
+  private $billingAsDefault: HTMLInputElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -49,6 +59,11 @@ export default class extends HTMLElement {
     this.$closeButton = this.$element.querySelector('#close');
     this.$saveButton = this.$element.querySelector('#save');
 
+    this.$shipping = this.$element.querySelector('#shipping');
+    this.$shippingAsDefault = this.$element.querySelector('#shipping-as-default');
+    this.$billing = this.$element.querySelector('#billing');
+    this.$billingAsDefault = this.$element.querySelector('#billing-as-default');
+
     this.$closeButton?.addEventListener('click', () => this.closeHandler());
     this.$saveButton?.addEventListener('click', () => this.saveHandler());
 
@@ -62,6 +77,14 @@ export default class extends HTMLElement {
       const payload = this.$country?.value || '';
       this.validateHandle(this.$zipField, payload);
     });
+  }
+
+  public get currentCustomer(): Customer {
+    return this.customer as Customer;
+  }
+
+  public set currentCustomer(obj: Customer) {
+    this.customer = obj;
   }
 
   private connectedCallback(): void {
@@ -90,12 +113,27 @@ export default class extends HTMLElement {
     if (attributeName === 'city' && this.$city) this.$city.value = newValue;
     if (attributeName === 'street' && this.$street) this.$street.value = newValue;
     if (attributeName === 'country' && this.$country) this.$country.value = newValue;
+
+    if (attributeName === 'address-id' && newValue) {
+      if (this.customer?.shippingAddressIds?.find((el) => el === newValue)) {
+        if (this.$shipping) this.$shipping.checked = true;
+      }
+      if (this.customer?.defaultShippingAddressId === newValue) {
+        if (this.$shippingAsDefault) this.$shippingAsDefault.checked = true;
+      }
+      if (this.customer?.billingAddressIds?.find((el) => el === newValue)) {
+        if (this.$billing) this.$billing.checked = true;
+      }
+      if (this.customer?.defaultBillingAddressId === newValue) {
+        if (this.$billingAsDefault) this.$billingAsDefault.checked = true;
+      }
+    }
   }
 
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['name', 'zip', 'country', 'city', 'street', 'type', 'customer-id', 'customer-version', 'address-id'];
+    return ['name', 'zip', 'country', 'city', 'street', 'type', 'address-id'];
   }
 
   private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
@@ -164,6 +202,24 @@ export default class extends HTMLElement {
       }
       if (this.getAttribute('type') === 'edit') {
         this.changeAddress(payload);
+        // const addressId = String(this.getAttribute('address-id'));
+        // if (this.customer?.shippingAddressIds?.find((el) => el === addressId) && !this.$shipping?.checked)
+        //   this.removeShippingAddressId(addressId);
+        // if (this.customer?.defaultShippingAddressId === addressId && !this.$shippingAsDefault?.checked)
+        //   this.removeShippingAddressId(addressId);
+        // if (this.customer?.billingAddressIds?.find((el) => el === addressId) && !this.$shipping?.checked)
+        //   this.removeShippingAddressId(addressId);
+        // if (this.customer?.defaultBillingAddressId === addressId && !this.$billingAsDefault?.checked)
+        //   this.removeShippingAddressId(addressId);
+
+        // if (!this.customer?.shippingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
+        //   this.addShippingAddressId(addressId);
+        // if (this.customer?.defaultShippingAddressId !== addressId && this.$shippingAsDefault?.checked)
+        //   this.addShippingAddressId(addressId);
+        // if (!this.customer?.billingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
+        //   this.addShippingAddressId(addressId);
+        // if (this.customer?.defaultBillingAddressId !== addressId && this.$billingAsDefault?.checked)
+        //   this.addShippingAddressId(addressId);
       }
 
       document.getElementById('body')?.style.setProperty('position', 'static');
@@ -173,9 +229,9 @@ export default class extends HTMLElement {
 
   private createNewAddress(payload: BaseAddress): void {
     updateCustomerBindAction({
-      id: String(this.getAttribute('customer-id')),
+      id: String(this.customer?.id),
       query: {
-        version: Number(this.getAttribute('customer-version')),
+        version: Number(this.customer?.version),
         actions: [
           {
             action: 'addAddress',
@@ -188,14 +244,104 @@ export default class extends HTMLElement {
 
   private changeAddress(payload: BaseAddress): void {
     updateCustomerBindAction({
-      id: String(this.getAttribute('customer-id')),
+      id: String(this.customer?.id),
       query: {
-        version: Number(this.getAttribute('customer-version')),
+        version: Number(this.customer?.version),
         actions: [
           {
             action: 'changeAddress',
             addressId: String(this.getAttribute('address-id')),
             address: payload,
+          },
+        ],
+      },
+    });
+  }
+
+  private addShippingAddressId(addressId: string): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'addShippingAddressId',
+            addressId,
+          },
+        ],
+      },
+    });
+  }
+
+  private removeShippingAddressId(addressId: string): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'removeShippingAddressId',
+            addressId,
+          },
+        ],
+      },
+    });
+  }
+
+  private setDefaultShippingAddress(addressId: string): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'setDefaultShippingAddress',
+            addressId,
+          },
+        ],
+      },
+    });
+  }
+
+  private addBillingAddressId(addressId: string): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'addBillingAddressId',
+            addressId,
+          },
+        ],
+      },
+    });
+  }
+
+  private removeBillingAddressId(addressId: string): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'removeShippingAddressId',
+            addressId,
+          },
+        ],
+      },
+    });
+  }
+
+  private setDefaultBillingAddress(addressId: string): void {
+    updateCustomerBindAction({
+      id: String(this.customer?.id),
+      query: {
+        version: Number(this.customer?.version),
+        actions: [
+          {
+            action: 'setDefaultBillingAddress',
+            addressId,
           },
         ],
       },
