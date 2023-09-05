@@ -1,8 +1,8 @@
 import { configureStore, combineReducers, bindActionCreators } from '@reduxjs/toolkit';
 import locationSlice from './locationSlice';
 import productSlice from './productSlice';
-import authSlice, { logout, update } from './authSlice';
 import productListSlice from './productListSlice';
+import authSlice, { logout, updateCustomer, updatePassword } from './authSlice';
 
 const rootReducer = combineReducers({
   location: locationSlice.reducer,
@@ -21,6 +21,7 @@ export type Store = typeof store;
 export default store;
 
 const logoutBindAction = bindActionCreators(logout, store.dispatch);
-const updateBindAction = bindActionCreators(update, store.dispatch);
+const updateCustomerBindAction = bindActionCreators(updateCustomer, store.dispatch);
+const updatePasswordBindAction = bindActionCreators(updatePassword, store.dispatch);
 
-export { logoutBindAction, updateBindAction };
+export { logoutBindAction, updateCustomerBindAction, updatePasswordBindAction };

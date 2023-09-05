@@ -28,6 +28,12 @@ export default class extends HTMLElement {
 
   private $addNewButton: HTMLButtonElement | null;
 
+  private customer: Customer | undefined;
+
+  private customerId: string | undefined;
+
+  private customerVersion: number | undefined;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -58,6 +64,7 @@ export default class extends HTMLElement {
     if (!oldState) return;
     if (oldState.location.location !== newState.location.location) {
       if (newState.location.location === 'profile' && newState.auth.id) {
+        this.customer = newState.auth;
         this.render(newState.auth);
       }
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
@@ -69,6 +76,7 @@ export default class extends HTMLElement {
       this.changeLocation({ location: 'login' });
     }
     if (newState.location.location === 'profile' && oldState.auth.version !== newState.auth.version) {
+      this.customer = newState.auth;
       this.render(newState.auth);
     }
   }
@@ -87,6 +95,9 @@ export default class extends HTMLElement {
   }
 
   private render(customer: Customer): void {
+    this.customerId = customer.id;
+    this.customerVersion = customer.version;
+
     if (this.$profileMenu) {
       this.$profileMenu.innerHTML = '';
       const $menu = document.createElement('menu-card');
@@ -100,6 +111,7 @@ export default class extends HTMLElement {
       $contact.setAttribute('first-name', customer.firstName || 'Default');
       $contact.setAttribute('last-name', customer.lastName || 'Default');
       $contact.setAttribute('birth-date', customer.dateOfBirth || 'Default');
+      $contact.setAttribute('email', customer.email || 'Default');
       $contact.setAttribute('customer-id', `${customer.id}`);
       $contact.setAttribute('customer-version', `${customer.version}`);
       this.$contacts.appendChild($contact);
@@ -108,12 +120,14 @@ export default class extends HTMLElement {
     if (this.$addresses) {
       this.$addresses.innerHTML = '';
       customer.addresses.forEach((address) => {
-        const $address = document.createElement('address-card');
+        const $address = new AddressCard();
+        $address.currentCustomer = customer;
         $address.classList.add('block__card');
         $address.setAttribute('zip', `${address.postalCode}`);
         $address.setAttribute('country', `${address.country}`);
         $address.setAttribute('city', `${address.city}`);
         $address.setAttribute('street', `${address.streetName}`);
+        $address.setAttribute('address-id', `${address.id}`);
         $address.setAttribute('customer-id', `${customer.id}`);
         $address.setAttribute('customer-version', `${customer.version}`);
 
@@ -138,8 +152,9 @@ export default class extends HTMLElement {
   }
 
   private addNewHandle(): void {
-    const $modal = document.createElement('address-modal');
-    $modal.setAttribute('name', 'Add New Address');
+    const $modal = new AddressModal();
+    if (this.customer) $modal.currentCustomer = this.customer;
+    $modal.setAttribute('type', 'new');
     document.querySelector('#body')?.appendChild($modal);
   }
 }

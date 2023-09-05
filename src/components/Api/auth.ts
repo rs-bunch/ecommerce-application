@@ -4,9 +4,11 @@ import type {
   CustomerSignInResult,
   Customer,
   CustomerUpdate,
+  CustomerChangePassword,
+  BaseAddress,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from './apiRoot';
-import { AuthPayload } from '../../dto/types';
+import type { AuthPayload } from '../../dto/types';
 
 // Request Flow: request -> execute -> then -> catch
 // Examples: https://docs.commercetools.com/sdk/sdk-example-code
@@ -24,4 +26,12 @@ const updateCustomerById = (payload: { id: string; query: CustomerUpdate }): Pro
   return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
 };
 
-export { createCustomer, loginCustomer, updateCustomerById };
+const updateCustomerPassword = (payload: CustomerChangePassword): Promise<ClientResponse<Customer>> => {
+  return apiRoot.customers().password().post({ body: payload }).execute();
+};
+
+// const addAddress = (payload: { id: string; query: CustomerUpdate }): Promise<ClientResponse<Customer>> => {
+//   return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
+// };
+
+export { createCustomer, loginCustomer, updateCustomerById, updateCustomerPassword };

@@ -26,12 +26,54 @@
   height: 24px;
 }
 
-.line__input {
-  display: none;
-  height: 24px;
+.line__label {
+  font-size: 15px;
 }
 
-.line__edit, .line__save {
+.line__field {
+  position: relative;
+  display: none;
+}
+
+.line__input {
+  height: 25px;
+  width: 250px;
+  border: 1.5px solid #3C4242;
+
+  &.invalid {
+    border-color: #dc3545;
+  }
+
+  &.valid {
+    border-color: #3ddb28;
+  }
+
+  & + .invalid-tooltip {
+    display: none;
+  }
+
+  &.invalid + .invalid-tooltip {
+    display: block;
+  }
+}
+
+.invalid-tooltip {
+  top: 25px;
+  font-size: 12px;
+
+  .field__with-title & {
+    top: 46px;
+  }
+}
+
+.line__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  row-gap: 8px;
+}
+
+.line__button {
   border: none;
   background: none;
   font: 600 18px 'Causten';
@@ -46,6 +88,6 @@
   }
 }
 
-.line__save {
+.line__save, .line__cancel {
   display: none;
 }

@@ -12,6 +12,9 @@ export default (attrName: string, attrValue: string): CustomerUpdateAction | und
     case 'dateOfBirth':
       customerUpdateAction = { action: 'setDateOfBirth', dateOfBirth: attrValue };
       break;
+    case 'email':
+      customerUpdateAction = { action: 'changeEmail', email: attrValue };
+      break;
     default:
       break;
   }
