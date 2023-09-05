@@ -19,6 +19,7 @@ import LocalStorage from './components/LocalStorage/LocalStorage';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import LoadingPage from './components/LoadingPage/LoadingPage';
 import ProductList from './components/ProductList/ProductList';
+import ProductsFilter from './components/ProductsFilter/ProductsFilter';
 import ProductPage from './components/ProductsPage/ProductsPage';
 import Breadcrumb from './components/BreadcrumbNavigation/BreadcrumbNavigation';
 
@@ -71,6 +72,9 @@ customElements.define('loading-element', LoadingPage);
 
 connect(ProductList, store);
 customElements.define('product-list', ProductList);
+
+connect(ProductsFilter, store);
+customElements.define('products-filter', ProductsFilter);
 
 connect(ProductPage, store);
 customElements.define('product-page', ProductPage);

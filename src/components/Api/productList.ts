@@ -17,6 +17,49 @@ const getCategoryProductList = (categoryId: string): Promise<ClientResponse<Prod
     .execute();
 };
 
+const getSortedCategoryProductList = (
+  categoryId: string,
+  criteria: string
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { filter: `${categoryId}`, sort: criteria } })
+    .execute();
+};
+
+const getFilteredCategoryProductList = (
+  categoryId: string,
+  criteria: string[]
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { filter: [`${categoryId}`, ...criteria] } })
+    .execute();
+};
+
+const getFilteredSortedCategoryProductList = (
+  categoryId: string,
+  filter: string[],
+  sort: string
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { filter: [`${categoryId}`, ...filter], sort } })
+    .execute();
+};
+
+const getSearchProductList = (text: string): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  console.log('search');
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true } })
+    .execute();
+};
+
 const getCategoriesPath = async (id: string, LOCALE_STRING: string): Promise<CategoiesPathData> => {
   const path: CategoiesPathData = [];
   const getParentCategory = async (categoryId: string): Promise<void> => {
@@ -32,4 +75,11 @@ const getCategoriesPath = async (id: string, LOCALE_STRING: string): Promise<Cat
 // const getWomenClothingList = getCategoryProductList('categories.id:subtree("e53f22b1-2fe3-4c30-991b-c7006c0562c1")');
 // const getAccessoriesList = getCategoryProductList('categories.id:subtree("7c904e55-c3de-4c8c-814f-e073222b4187")');
 
-export { getCategoryProductList, getCategoriesPath };
+export {
+  getCategoryProductList,
+  getSortedCategoryProductList,
+  getFilteredCategoryProductList,
+  getFilteredSortedCategoryProductList,
+  getSearchProductList,
+  getCategoriesPath,
+};
