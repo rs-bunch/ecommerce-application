@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getCategoryProductList } from '../Api/productList';
-import { notifyError, notifyInfo } from '../../utils/notify/notify';
+import { notifyError } from '../../utils/notify/notify';
 import { ProductListState } from '../../dto/types';
 
 const getProducts = createAsyncThunk('/products/accessories/', async (payload: { categoryId: string }) => {
