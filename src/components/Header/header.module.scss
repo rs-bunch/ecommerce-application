@@ -6,6 +6,7 @@ a {
 .header-container {
   position: relative;
   z-index: 1;
+  padding: 0 0 30px 0;
 }
 
 .wrapper {
@@ -97,6 +98,12 @@ a {
 
 .header__logo {
   cursor: pointer;
+}
+
+dropdown-nav {
+  position: absolute;
+  top: 58px;
+  border-bottom: $color-light solid 2px;
 }
 
 .header__shop-details {

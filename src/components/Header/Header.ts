@@ -6,6 +6,9 @@ import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
 import { logout } from '../Store/authSlice';
 import { changeLocation } from '../Store/locationSlice';
+import DropdownNav from './DropdownNav/DropdownNav';
+
+customElements.define('dropdown-nav', DropdownNav);
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -46,6 +49,12 @@ export default class ShopHeader extends HTMLElement {
 
   public $myOrdersBtn: HTMLElement | null | undefined;
 
+  public $men: HTMLElement | null | undefined;
+
+  public $women: HTMLElement | null | undefined;
+
+  public $dropdownNav: DropdownNav | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -67,6 +76,9 @@ export default class ShopHeader extends HTMLElement {
     this.$logOutBtn = this.$element?.querySelector('.login__link_logout');
     this.$myAccBtn = this.$element?.querySelector('.login__button_my-account');
     this.$myOrdersBtn = this.$element?.querySelector('.login__button_my-cart');
+    this.$men = this.$element?.querySelector('.link__men');
+    this.$women = this.$element?.querySelector('.link__women');
+    this.$dropdownNav = this.$element?.querySelector('dropdown-nav');
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
@@ -142,6 +154,9 @@ export default class ShopHeader extends HTMLElement {
       store.dispatch(changeLocation({ location: 'main' }));
       window.history.pushState({}, '', String('/'));
     });
+    console.log(this.$dropdownNav, this.$men);
+    this.$men?.addEventListener('click', () => this.$dropdownNav?.setAttribute('category', 'men'));
+    this.$women?.addEventListener('click', () => this.$dropdownNav?.setAttribute('category', 'women'));
     if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
   }
 
