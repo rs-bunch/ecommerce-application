@@ -79,7 +79,7 @@ class Router {
           payload.location = 'error';
           break;
         }
-        this.store.dispatch(getProducts({ categoryId: `categories.id:subtree("${categoriesId}")` }));
+        this.store.dispatch(getProducts({ categoryId: categoriesId }));
         break;
       }
       default:

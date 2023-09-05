@@ -20,6 +20,7 @@ import ProductDetails from './components/ProductDetails/ProductDetails';
 import LoadingPage from './components/LoadingPage/LoadingPage';
 import ProductList from './components/ProductList/ProductList';
 import ProductPage from './components/ProductsPage/ProductsPage';
+import Breadcrumb from './components/BreadcrumbNavigation/BreadcrumbNavigation';
 
 document.adoptedStyleSheets = [bootstrap];
 
@@ -29,6 +30,8 @@ const router: Router = new Router(store, localStoarge);
 window.addEventListener('beforeunload', () => {
   localStoarge.saveState(store.getState());
 });
+
+customElements.define('breadcrumb-nav', Breadcrumb);
 
 connect(CustomOverlay, store);
 customElements.define('custom-overlay', CustomOverlay);

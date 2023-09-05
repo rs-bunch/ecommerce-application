@@ -5,8 +5,11 @@ import type { RootState, AppDispatch } from '../Store/store';
 import { changeLocation } from '../Store/locationSlice';
 import { getProducts } from '../Store/productListSlice';
 import ProductCard from '../ProductCard/ProductCard';
-
 import productsContainer from './product-list.module.scss';
+import { getCategoriesPath } from '../Api/productList';
+import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
+
+const LOCALE_STRING = 'en-US';
 
 customElements.define('product-card', ProductCard);
 
@@ -48,7 +51,7 @@ export default class ProductList extends HTMLElement {
 
       const { id } = productsData[i];
       const imageUrl = imagesObj[0].url;
-      const name = product.name['en-US'];
+      const name = product.name[LOCALE_STRING];
       if (!product.metaTitle) return;
       const brand = product.masterVariant.attributes?.find((atr) => atr.name === 'Brand')?.value as string | undefined;
       if (!product.masterVariant.prices) return;
@@ -60,7 +63,7 @@ export default class ProductList extends HTMLElement {
       const { description } = product;
       if (description) {
         if (!card.shadowRoot) return;
-        card.setAttribute('data-desc', description['en-US']);
+        card.setAttribute('data-desc', description[LOCALE_STRING]);
       }
 
       card.setAttribute('slot', 'cards-slot');
@@ -83,13 +86,22 @@ export default class ProductList extends HTMLElement {
     }
   }
 
+  private renderNavigation(id: string): void {
+    getCategoriesPath(id, LOCALE_STRING).then((res) => {
+      const breadcrumb = new Breadcrumb(res, 'productList');
+      this.shadowRoot?.querySelector('breadcrumb-nav')?.remove();
+      this.shadowRoot?.querySelector('.wrapper')?.append(breadcrumb);
+    });
+  }
+
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
-    const { location } = newState.location;
-    const { products } = newState.productList;
+    const { location, productList } = newState;
+    const { products } = productList;
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));
     }
+    if (productList.id) this.renderNavigation(productList.id as string);
     if (products) {
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);
     }

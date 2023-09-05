@@ -1,0 +1,52 @@
+.breadcrumb__line {
+  display: flex;
+  gap: 10px;
+}
+
+.breadcrumb-nav__link {
+  text-decoration: none;
+  font-family: Causten;
+  color: $color-light;
+  transition: all ease-in-out .3s;
+
+  &_productList {
+    font-weight: 600;
+    font-size: 22px;
+    @media (hover: hover) {
+      &:hover {
+      text-shadow:
+      -0.25px -0.25px 0 $color-dark,
+      0.25px -0.25px 0 $color-dark,
+      -0.25px 0.25px 0 $color-dark,
+      0.25px 0.25px 0 $color-dark;
+      color: $color-dark;
+      }
+    }
+  }
+
+  &_productDetails {
+    font-weight: 500;
+    font-size: 18px;
+    @media (hover: hover) {
+      &:hover {
+      color: $color-dark;
+      }
+    }
+  }
+}
+
+.breadcrumb-nav__arrow {
+  text-decoration: none;
+  font-family: Causten;
+  color: $color-light;
+
+  &_productList {
+    font-weight: 600;
+    font-size: 22px;
+  }
+
+  &_productDetails {
+    font-weight: 500;
+    font-size: 18px;
+  }
+}

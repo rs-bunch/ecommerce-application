@@ -10,8 +10,9 @@ import { ProductState } from '../../dto/types';
 import store from '../Store/store';
 import { selectProductVariant } from '../Store/productSlice';
 import Carousel from './Carousel/Carousel';
-import { getCategoriesById } from '../Api/product';
 import ImageModal from './ImageModal/ImageModal';
+import { getCategoriesPath } from '../Api/productList';
+import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
 
 const LOCALE_STRING = 'en-US';
 
@@ -156,9 +157,7 @@ export default class ProductDetails extends HTMLElement {
       this.modalSlider.updateImages(images, { carouselName: 'modalSlider', isModal: true });
     }
     this.initSizes(data);
-    this.updateCategoriesPath(data.categories[0].id).then((path) => {
-      if (this.$productPath) this.$productPath.textContent = path;
-    });
+    this.updateCategoriesPath(data.categories[0].id);
   }
 
   private updatePrices(prices: Price, discount?: DiscountedPrice | undefined): void {
@@ -230,14 +229,11 @@ export default class ProductDetails extends HTMLElement {
     });
   }
 
-  private async updateCategoriesPath(id: string): Promise<string> {
-    const path: string[] = [];
-    const getParentCategory = async (categoryId: string): Promise<void> => {
-      const category = (await getCategoriesById(categoryId)).body;
-      path.push(category.name[LOCALE_STRING]);
-      if (category.parent) await getParentCategory(category.parent.id);
-    };
-    await getParentCategory(id);
-    return path.reverse().join(' > ');
+  private async updateCategoriesPath(id: string): Promise<void> {
+    this.$productPath?.querySelector('breadcrumb-nav')?.remove();
+    getCategoriesPath(id, LOCALE_STRING).then((res) => {
+      const breadcrumb = new Breadcrumb(res, 'productDetails');
+      this.$productPath?.append(breadcrumb);
+    });
   }
 }
