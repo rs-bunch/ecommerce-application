@@ -7,6 +7,7 @@ import store, { RootState } from '../Store/store';
 import { logout } from '../Store/authSlice';
 import { changeLocation } from '../Store/locationSlice';
 import DropdownNav from './DropdownNav/DropdownNav';
+import { createElement } from '../../utils/createElement';
 
 customElements.define('dropdown-nav', DropdownNav);
 
@@ -55,6 +56,12 @@ export default class ShopHeader extends HTMLElement {
 
   public $dropdownNav: DropdownNav | null | undefined;
 
+  public $dropdownNavSide: DropdownNav;
+
+  public $menSide: Element | null | undefined;
+
+  public $womenSide: Element | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -78,7 +85,10 @@ export default class ShopHeader extends HTMLElement {
     this.$myOrdersBtn = this.$element?.querySelector('.login__button_my-cart');
     this.$men = this.$element?.querySelector('.link__men');
     this.$women = this.$element?.querySelector('.link__women');
-    this.$dropdownNav = this.$element?.querySelector('dropdown-nav');
+    this.$menSide = this.$sideBar?.querySelector('.link__men');
+    this.$womenSide = this.$sideBar?.querySelector('.link__women');
+    this.$dropdownNav = this.$element?.querySelector('#dropdown-nav_main');
+    this.$dropdownNavSide = createElement('dropdown-nav', 'dropdown-nav_side', []) as DropdownNav;
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
     this.initSizeChangeListener();
@@ -88,7 +98,10 @@ export default class ShopHeader extends HTMLElement {
   private connectedCallback(): void {
     this.attachShadow({ mode: 'open' });
     if (this.node) this.shadowRoot?.append(this.node);
-    if (this.$sideBar) this.shadowRoot?.append(this.$sideBar);
+    if (this.$sideBar) {
+      this.shadowRoot?.append(this.$sideBar);
+      this.$sideBar.append(this.$dropdownNavSide);
+    }
     if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [stylesheet];
   }
 
@@ -142,7 +155,11 @@ export default class ShopHeader extends HTMLElement {
   }
 
   private initButtons(): void {
-    const sideLinks: NodeListOf<Element> | undefined = this.$sideBar?.querySelectorAll('.link__side-bar');
+    if (this.$dropdownNavSide instanceof DropdownNav) {
+      this.$dropdownNavSide.$element
+        .querySelectorAll('.dropdown-nav__link')
+        .forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
+    }
     this.$profileBtn?.addEventListener('click', () => this.$loginDropdown?.classList.toggle('active'));
     [this.$joinBtn, this.$myOrdersBtn, this.$myAccBtn, this.$signInBtn].forEach(
       (btn) => btn?.addEventListener('click', this.closeLoginDropdown.bind(this))
@@ -154,10 +171,10 @@ export default class ShopHeader extends HTMLElement {
       store.dispatch(changeLocation({ location: 'main' }));
       window.history.pushState({}, '', String('/'));
     });
-    console.log(this.$dropdownNav, this.$men);
     this.$men?.addEventListener('click', () => this.$dropdownNav?.setAttribute('category', 'men'));
     this.$women?.addEventListener('click', () => this.$dropdownNav?.setAttribute('category', 'women'));
-    if (sideLinks) sideLinks.forEach((link: Element) => link.addEventListener('click', this.bindedCloseMenu));
+    this.$menSide?.addEventListener('click', () => this.$dropdownNavSide?.setAttribute('category', 'men'));
+    this.$womenSide?.addEventListener('click', () => this.$dropdownNavSide?.setAttribute('category', 'women'));
   }
 
   private initSizeChangeListener(): void {

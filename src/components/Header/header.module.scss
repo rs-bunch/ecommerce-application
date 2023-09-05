@@ -39,6 +39,17 @@ a {
   }
 }
 
+.side-bar__blocks {
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+  & > * {
+    width: 48%;
+    border: $color-light 1px solid;
+    border-radius: 8px;
+  }
+}
+
 .header__burger {
   display: none;
   cursor: pointer;
@@ -104,6 +115,9 @@ dropdown-nav {
   position: absolute;
   top: 58px;
   border-bottom: $color-light solid 2px;
+  &.dropdown-nav_side {
+    top: 200px;
+  }
 }
 
 .header__shop-details {
