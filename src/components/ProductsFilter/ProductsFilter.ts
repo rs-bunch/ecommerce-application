@@ -33,7 +33,7 @@ export default class ProductsFilter extends HTMLElement {
       (check as HTMLElement).addEventListener('click', () => {
         const val = check.textContent;
         const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('Size', `${val}`);
+        searchParams.set('size', `${val}`);
         window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
       });
     });
@@ -75,6 +75,7 @@ export default class ProductsFilter extends HTMLElement {
       if (!this.$priceRange) return;
 
       const val = this.$priceRange.value;
+      if (+val === 0) return;
       const location = `${window.location.origin}${window.location.pathname}`;
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.set('price', `${Number(val) * 100}`);
