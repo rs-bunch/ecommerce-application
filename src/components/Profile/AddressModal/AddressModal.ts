@@ -1,9 +1,11 @@
+import type { BaseAddress } from '@commercetools/platform-sdk';
 import ElementHTML from './address-modal.html';
 import stylesheet from './address-modal.module.scss';
 import { bootstrap } from '../../../styles/styles';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 import { validateStreet, validateZipCode, validateName } from '../../../utils/validation/textValidation';
 import type { TextValidator } from '../../../dto/types';
+import { updateCustomerBindAction } from '../../Store/store';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;
@@ -93,7 +95,7 @@ export default class extends HTMLElement {
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['name', 'zip', 'country', 'city', 'street', 'type'];
+    return ['name', 'zip', 'country', 'city', 'street', 'type', 'customer-id', 'customer-version'];
   }
 
   private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
@@ -122,7 +124,7 @@ export default class extends HTMLElement {
         case 'city':
           this.validateTextInput(field, validateName);
           break;
-        case 'street':
+        case 'streetName':
           this.validateTextInput(field, validateStreet);
           break;
         case 'zip':
@@ -140,7 +142,36 @@ export default class extends HTMLElement {
   }
 
   private saveHandler(): void {
-    document.getElementById('body')?.style.setProperty('position', 'static');
-    this.remove();
+    const country = this.$country?.value || '';
+    this.validateHandle(this.$zipField, country);
+    this.validateHandle(this.$streetField);
+    this.validateHandle(this.$cityField);
+
+    if (
+      !this.$zip?.classList.contains('invalid') &&
+      !this.$city?.classList.contains('invalid') &&
+      !this.$street?.classList.contains('invalid')
+    ) {
+      const payload: BaseAddress = {
+        country: `${this.$country?.value}`,
+        city: `${this.$city?.value}`,
+        streetName: `${this.$street?.value}`,
+        postalCode: `${this.$zip?.value}`,
+      };
+      updateCustomerBindAction({
+        id: String(this.getAttribute('customer-id')),
+        query: {
+          version: Number(this.getAttribute('customer-version')),
+          actions: [
+            {
+              action: 'addAddress',
+              address: payload,
+            },
+          ],
+        },
+      });
+      document.getElementById('body')?.style.setProperty('position', 'static');
+      this.remove();
+    }
   }
 }

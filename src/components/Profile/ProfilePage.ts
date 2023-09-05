@@ -28,6 +28,10 @@ export default class extends HTMLElement {
 
   private $addNewButton: HTMLButtonElement | null;
 
+  private customerId: string | undefined;
+
+  private customerVersion: number | undefined;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -87,6 +91,9 @@ export default class extends HTMLElement {
   }
 
   private render(customer: Customer): void {
+    this.customerId = customer.id;
+    this.customerVersion = customer.version;
+
     if (this.$profileMenu) {
       this.$profileMenu.innerHTML = '';
       const $menu = document.createElement('menu-card');
@@ -141,6 +148,8 @@ export default class extends HTMLElement {
   private addNewHandle(): void {
     const $modal = document.createElement('address-modal');
     $modal.setAttribute('type', 'new');
+    $modal.setAttribute('customer-id', `${this.customerId}`);
+    $modal.setAttribute('customer-version', `${this.customerVersion}`);
     document.querySelector('#body')?.appendChild($modal);
   }
 }

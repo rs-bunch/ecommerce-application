@@ -5,6 +5,7 @@ import type {
   Customer,
   CustomerUpdate,
   CustomerChangePassword,
+  BaseAddress,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from './apiRoot';
 import type { AuthPayload } from '../../dto/types';
@@ -28,5 +29,9 @@ const updateCustomerById = (payload: { id: string; query: CustomerUpdate }): Pro
 const updateCustomerPassword = (payload: CustomerChangePassword): Promise<ClientResponse<Customer>> => {
   return apiRoot.customers().password().post({ body: payload }).execute();
 };
+
+// const addAddress = (payload: { id: string; query: CustomerUpdate }): Promise<ClientResponse<Customer>> => {
+//   return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
+// };
 
 export { createCustomer, loginCustomer, updateCustomerById, updateCustomerPassword };
