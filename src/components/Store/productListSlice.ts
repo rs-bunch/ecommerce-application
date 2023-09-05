@@ -4,6 +4,7 @@ import {
   getSortedCategoryProductList,
   getFilteredCategoryProductList,
   getFilteredSortedCategoryProductList,
+  getSearchProductList,
 } from '../Api/productList';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
 import { ProductListState } from '../../dto/types';
@@ -56,6 +57,16 @@ const getFilteredSortedProducts = createAsyncThunk(
       });
   }
 );
+
+const getSearchedProducts = createAsyncThunk('/products/accessories/', async (payload: { text: string }) => {
+  return getSearchProductList(payload.text)
+    .then((response) => {
+      return response.body;
+    })
+    .catch((error) => {
+      notifyError(String(error.message)).showToast();
+    });
+});
 
 const productListSlice = createSlice({
   name: 'productList',
@@ -110,8 +121,17 @@ const productListSlice = createSlice({
     ) => {
       Object.assign(state, { id: null });
     },
+    [getSearchedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { products: payload });
+    },
+    [getSearchedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { id: null, products: null });
+    },
+    [getSearchedProducts.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { id: null });
+    },
   },
 });
 
-export { getProducts, getSortedProducts, getFilteredProducts, getFilteredSortedProducts };
+export { getProducts, getSortedProducts, getFilteredProducts, getFilteredSortedProducts, getSearchedProducts };
 export default productListSlice;

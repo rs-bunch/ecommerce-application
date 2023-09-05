@@ -49,6 +49,15 @@ const getFilteredSortedCategoryProductList = (
     .execute();
 };
 
+const getSearchProductList = (text: string): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  console.log('search');
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true } })
+    .execute();
+};
+
 // const getMenClothingList = getCategoryProductList('categories.id:subtree("94038ccd-10f8-4ccc-a616-cfa5438bcc9a")');
 // const getWomenClothingList = getCategoryProductList('categories.id:subtree("e53f22b1-2fe3-4c30-991b-c7006c0562c1")');
 // const getAccessoriesList = getCategoryProductList('categories.id:subtree("7c904e55-c3de-4c8c-814f-e073222b4187")');
@@ -58,4 +67,5 @@ export {
   getSortedCategoryProductList,
   getFilteredCategoryProductList,
   getFilteredSortedCategoryProductList,
+  getSearchProductList,
 };

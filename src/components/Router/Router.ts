@@ -11,6 +11,7 @@ import {
   getSortedProducts,
   getFilteredProducts,
   getFilteredSortedProducts,
+  getSearchedProducts,
 } from '../Store/productListSlice';
 
 const location: { [index: string]: string } = {
@@ -85,6 +86,15 @@ class Router {
           const priceRange = urlParams.get('price');
           const color = urlParams.get('color');
           const size = urlParams.get('size');
+
+          const search = urlParams.get('text.en');
+          if (search) {
+            this.store.dispatch(
+              getSearchedProducts({
+                text: search,
+              })
+            );
+          }
 
           const filter = [];
 

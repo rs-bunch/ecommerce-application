@@ -165,6 +165,14 @@ export default class ShopHeader extends HTMLElement {
       const { value } = $inputSide;
       $input.value = value;
     });
+
+    const $searchIcon = this.$searchLine?.querySelector('.search__icon');
+    if ($searchIcon) {
+      $searchIcon.addEventListener('click', () => {
+        const { value } = $input;
+        window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
+      });
+    }
   }
 
   private closeMenu(): void {
