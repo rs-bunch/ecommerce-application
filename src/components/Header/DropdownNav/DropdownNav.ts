@@ -25,6 +25,7 @@ export default class DropdownNav extends HTMLElement {
   private disconnectedCallback(): void {}
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
+    console.log(attributeName);
     if (attributeName === 'category')
       switch (newValue) {
         case 'men': {
@@ -45,11 +46,15 @@ export default class DropdownNav extends HTMLElement {
           this.$men?.classList.remove('visible');
         }
       }
+    if (attributeName === 'side' && newValue === 'true') {
+      this.$men?.classList.add('side');
+      this.$women?.classList.add('side');
+    }
   }
 
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['category'];
+    return ['category', 'side'];
   }
 }

@@ -111,13 +111,28 @@ a {
   cursor: pointer;
 }
 
-dropdown-nav {
+.dropdown-nav_main {
   position: absolute;
-  top: 58px;
+  top: 18px;
   border-bottom: $color-light solid 2px;
-  &.dropdown-nav_side {
-    top: 200px;
+  transition: all ease-in-out .2s;
+  z-index: -1;
+  &[category="men"],
+  &[category="women"] {
+    top: 58px;
   }
+}
+
+.dropdown-nav_side {
+  position: absolute;
+  top: 200px;
+  width: 100%;
+  border-bottom: none;
+}
+
+.dropdown-nav_side {
+  width: 100%;
+  border-bottom: none;
 }
 
 .header__shop-details {

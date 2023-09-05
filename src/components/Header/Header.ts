@@ -87,7 +87,7 @@ export default class ShopHeader extends HTMLElement {
     this.$women = this.$element?.querySelector('.link__women');
     this.$menSide = this.$sideBar?.querySelector('.link__men');
     this.$womenSide = this.$sideBar?.querySelector('.link__women');
-    this.$dropdownNav = this.$element?.querySelector('#dropdown-nav_main');
+    this.$dropdownNav = this.$element?.querySelector('.dropdown-nav_main');
     this.$dropdownNavSide = createElement('dropdown-nav', 'dropdown-nav_side', []) as DropdownNav;
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
@@ -139,6 +139,11 @@ export default class ShopHeader extends HTMLElement {
     if (oldState.auth.id !== newState.auth.id) this.attributeChangedCallback('id', oldState.auth.id, newState.auth.id);
     if (oldState.auth.firstName !== newState.auth.firstName)
       this.attributeChangedCallback('firstName', oldState.auth.firstName || null, newState.auth.firstName || null);
+    if (
+      oldState.location.location !== newState.location.location &&
+      ['main', 'error', 'signup', 'login', 'favourites'].includes(newState.location.location)
+    )
+      this.$dropdownNav?.setAttribute('category', 'none');
   }
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
@@ -173,8 +178,14 @@ export default class ShopHeader extends HTMLElement {
     });
     this.$men?.addEventListener('click', () => this.$dropdownNav?.setAttribute('category', 'men'));
     this.$women?.addEventListener('click', () => this.$dropdownNav?.setAttribute('category', 'women'));
-    this.$menSide?.addEventListener('click', () => this.$dropdownNavSide?.setAttribute('category', 'men'));
-    this.$womenSide?.addEventListener('click', () => this.$dropdownNavSide?.setAttribute('category', 'women'));
+    this.$menSide?.addEventListener('click', () => {
+      this.$dropdownNavSide?.setAttribute('category', 'men');
+      this.$dropdownNavSide?.setAttribute('side', 'true');
+    });
+    this.$womenSide?.addEventListener('click', () => {
+      this.$dropdownNavSide?.setAttribute('category', 'women');
+      this.$dropdownNavSide?.setAttribute('side', 'true');
+    });
   }
 
   private initSizeChangeListener(): void {
