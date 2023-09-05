@@ -122,6 +122,7 @@ export default class extends HTMLElement {
         $address.setAttribute('country', `${address.country}`);
         $address.setAttribute('city', `${address.city}`);
         $address.setAttribute('street', `${address.streetName}`);
+        $address.setAttribute('address-id', `${address.id}`);
         $address.setAttribute('customer-id', `${customer.id}`);
         $address.setAttribute('customer-version', `${customer.version}`);
 

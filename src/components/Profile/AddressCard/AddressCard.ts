@@ -1,7 +1,9 @@
+import type { CustomerUpdate } from '@commercetools/platform-sdk';
 import ElementHTML from './address-card.html';
 import stylesheet from './address-card.module.scss';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 import { CountryCodes } from '../../../dto/types';
+import { updateCustomerBindAction } from '../../Store/store';
 
 export default class extends HTMLElement {
   private $element: DocumentFragment;
@@ -103,10 +105,25 @@ export default class extends HTMLElement {
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['zip', 'country', 'city', 'street', 'type', 'default'];
+    return ['zip', 'country', 'city', 'street', 'type', 'default', 'customer-id', 'customer-version', 'address-id'];
   }
 
-  private removeHandler(): void {}
+  private removeHandler(): void {
+    const query: CustomerUpdate = {
+      version: Number(this.getAttribute('customer-version')),
+      actions: [
+        {
+          action: 'removeAddress',
+          addressId: String(this.getAttribute('address-id')),
+        },
+      ],
+    };
+    const payload = {
+      id: String(this.getAttribute('customer-id')),
+      query,
+    };
+    updateCustomerBindAction(payload);
+  }
 
   private editHandler(): void {
     const $modal = document.createElement('address-modal');
@@ -115,6 +132,9 @@ export default class extends HTMLElement {
     $modal.setAttribute('city', `${this.$city?.innerHTML}`);
     $modal.setAttribute('street', `${this.$street?.innerHTML}`);
     $modal.setAttribute('country', `${this.countryCode}`);
+    $modal.setAttribute('address-id', `${this.getAttribute('address-id')}`);
+    $modal.setAttribute('customer-id', `${this.getAttribute('customer-id')}`);
+    $modal.setAttribute('customer-version', `${this.getAttribute('customer-version')}`);
     document.querySelector('#body')?.appendChild($modal);
   }
 }
