@@ -95,7 +95,7 @@ export default class extends HTMLElement {
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['name', 'zip', 'country', 'city', 'street', 'type', 'customer-id', 'customer-version'];
+    return ['name', 'zip', 'country', 'city', 'street', 'type', 'customer-id', 'customer-version', 'address-id'];
   }
 
   private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
@@ -158,20 +158,47 @@ export default class extends HTMLElement {
         streetName: `${this.$street?.value}`,
         postalCode: `${this.$zip?.value}`,
       };
-      updateCustomerBindAction({
-        id: String(this.getAttribute('customer-id')),
-        query: {
-          version: Number(this.getAttribute('customer-version')),
-          actions: [
-            {
-              action: 'addAddress',
-              address: payload,
-            },
-          ],
-        },
-      });
+
+      if (this.getAttribute('type') === 'new') {
+        this.createNewAddress(payload);
+      }
+      if (this.getAttribute('type') === 'edit') {
+        this.changeAddress(payload);
+      }
+
       document.getElementById('body')?.style.setProperty('position', 'static');
       this.remove();
     }
+  }
+
+  private createNewAddress(payload: BaseAddress): void {
+    updateCustomerBindAction({
+      id: String(this.getAttribute('customer-id')),
+      query: {
+        version: Number(this.getAttribute('customer-version')),
+        actions: [
+          {
+            action: 'addAddress',
+            address: payload,
+          },
+        ],
+      },
+    });
+  }
+
+  private changeAddress(payload: BaseAddress): void {
+    updateCustomerBindAction({
+      id: String(this.getAttribute('customer-id')),
+      query: {
+        version: Number(this.getAttribute('customer-version')),
+        actions: [
+          {
+            action: 'changeAddress',
+            addressId: String(this.getAttribute('address-id')),
+            address: payload,
+          },
+        ],
+      },
+    });
   }
 }
