@@ -49,7 +49,11 @@ const getFilteredProducts = createAsyncThunk(
 const getFilteredSortedProducts = createAsyncThunk(
   '/products/getfs/',
   async (payload: { categoryId: string; filter: string[]; sort: string }) => {
-    return getFilteredSortedCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.filter, payload.sort)
+    return getFilteredSortedCategoryProductList(
+      `categories.id:subtree("${payload.categoryId}")`,
+      payload.filter,
+      payload.sort
+    )
       .then((response) => {
         return { id: payload.categoryId, products: response.body };
       })
