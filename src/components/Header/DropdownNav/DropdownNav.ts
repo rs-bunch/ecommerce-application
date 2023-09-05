@@ -25,7 +25,6 @@ export default class DropdownNav extends HTMLElement {
   private disconnectedCallback(): void {}
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
-    console.log(attributeName);
     if (attributeName === 'category')
       switch (newValue) {
         case 'men': {
