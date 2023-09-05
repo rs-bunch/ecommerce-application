@@ -1,4 +1,4 @@
-import type { BaseAddress, Customer } from '@commercetools/platform-sdk';
+import type { BaseAddress, Customer, CustomerUpdateAction } from '@commercetools/platform-sdk';
 import ElementHTML from './address-modal.html';
 import stylesheet from './address-modal.module.scss';
 import { bootstrap } from '../../../styles/styles';
@@ -42,6 +42,14 @@ export default class extends HTMLElement {
 
   private $billingAsDefault: HTMLInputElement | null;
 
+  private $shippingField: HTMLElement | null;
+
+  private $shippingAsDefaultField: HTMLElement | null;
+
+  private $billingField: HTMLElement | null;
+
+  private $billingAsDefaultField: HTMLElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -64,6 +72,11 @@ export default class extends HTMLElement {
     this.$billing = this.$element.querySelector('#billing');
     this.$billingAsDefault = this.$element.querySelector('#billing-as-default');
 
+    this.$shippingField = this.$element.querySelector('#shipping-field');
+    this.$shippingAsDefaultField = this.$element.querySelector('#shipping-as-default-field');
+    this.$billingField = this.$element.querySelector('#billing-field');
+    this.$billingAsDefaultField = this.$element.querySelector('#billing-as-default-field');
+
     this.$closeButton?.addEventListener('click', () => this.closeHandler());
     this.$saveButton?.addEventListener('click', () => this.saveHandler());
 
@@ -77,6 +90,53 @@ export default class extends HTMLElement {
       const payload = this.$country?.value || '';
       this.validateHandle(this.$zipField, payload);
     });
+
+    this.$shipping?.addEventListener('change', () => this.shippingCheckboxHandle());
+    this.$billing?.addEventListener('change', () => this.billingCheckboxHandle());
+  }
+
+  private shippingCheckboxHandle(): void {
+    if (this.$shipping?.checked) {
+      if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'flex';
+
+      if (this.$billingField) this.$billingField.style.display = 'none';
+      if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'none';
+
+      if (this.$billing) this.$billing.checked = false;
+      if (this.$billingAsDefault) this.$billingAsDefault.checked = false;
+    }
+    if (!this.$shipping?.checked) {
+      if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'none';
+
+      if (this.$billingField) this.$billingField.style.display = 'flex';
+      if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'none';
+
+      if (this.$billing) this.$billing.checked = false;
+      if (this.$billingAsDefault) this.$billingAsDefault.checked = false;
+      if (this.$shippingAsDefault) this.$shippingAsDefault.checked = false;
+    }
+  }
+
+  private billingCheckboxHandle(): void {
+    if (this.$billing?.checked) {
+      if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'flex';
+
+      if (this.$shippingField) this.$shippingField.style.display = 'none';
+      if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'none';
+
+      if (this.$shipping) this.$shipping.checked = false;
+      if (this.$shippingAsDefault) this.$shippingAsDefault.checked = false;
+    }
+    if (!this.$billing?.checked) {
+      if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'none';
+
+      if (this.$shippingField) this.$shippingField.style.display = 'flex';
+      if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'none';
+
+      if (this.$shipping) this.$shipping.checked = false;
+      if (this.$shippingAsDefault) this.$shippingAsDefault.checked = false;
+      if (this.$billingAsDefault) this.$billingAsDefault.checked = false;
+    }
   }
 
   public get currentCustomer(): Customer {
@@ -98,12 +158,36 @@ export default class extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'type' && this.$title) {
+      console.log('type: ', newValue);
       switch (newValue) {
         case 'new':
           this.$title.innerText = 'Add New Address';
+          if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'none';
+          if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'none';
           break;
         case 'edit':
           this.$title.innerText = 'Edit Address';
+          break;
+        default:
+          break;
+      }
+    }
+
+    console.log(attributeName);
+    if (attributeName === 'address-type') {
+      console.log('address-type: ', newValue);
+      switch (newValue) {
+        case 'shipping':
+          if (this.$billingField) this.$billingField.style.display = 'none';
+          if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'none';
+          break;
+        case 'billing':
+          if (this.$shippingField) this.$shippingField.style.display = 'none';
+          if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'none';
+          break;
+        case 'none':
+          if (this.$shippingAsDefaultField) this.$shippingAsDefaultField.style.display = 'none';
+          if (this.$billingAsDefaultField) this.$billingAsDefaultField.style.display = 'none';
           break;
         default:
           break;
@@ -133,7 +217,7 @@ export default class extends HTMLElement {
   private adoptedCallback(): void {}
 
   private static get observedAttributes(): string[] {
-    return ['name', 'zip', 'country', 'city', 'street', 'type', 'address-id'];
+    return ['name', 'zip', 'country', 'city', 'street', 'type', 'address-id', 'address-type'];
   }
 
   private validateTextInput(field: HTMLElement | null, validator: TextValidator, payload?: string | number): void {
@@ -190,37 +274,57 @@ export default class extends HTMLElement {
       !this.$city?.classList.contains('invalid') &&
       !this.$street?.classList.contains('invalid')
     ) {
-      const payload: BaseAddress = {
+      const address: BaseAddress = {
         country: `${this.$country?.value}`,
         city: `${this.$city?.value}`,
         streetName: `${this.$street?.value}`,
         postalCode: `${this.$zip?.value}`,
       };
 
-      if (this.getAttribute('type') === 'new') {
-        this.createNewAddress(payload);
-      }
-      if (this.getAttribute('type') === 'edit') {
-        this.changeAddress(payload);
-        // const addressId = String(this.getAttribute('address-id'));
-        // if (this.customer?.shippingAddressIds?.find((el) => el === addressId) && !this.$shipping?.checked)
-        //   this.removeShippingAddressId(addressId);
-        // if (this.customer?.defaultShippingAddressId === addressId && !this.$shippingAsDefault?.checked)
-        //   this.removeShippingAddressId(addressId);
-        // if (this.customer?.billingAddressIds?.find((el) => el === addressId) && !this.$shipping?.checked)
-        //   this.removeShippingAddressId(addressId);
-        // if (this.customer?.defaultBillingAddressId === addressId && !this.$billingAsDefault?.checked)
-        //   this.removeShippingAddressId(addressId);
+      const actions: CustomerUpdateAction[] = [];
 
-        // if (!this.customer?.shippingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
-        //   this.addShippingAddressId(addressId);
-        // if (this.customer?.defaultShippingAddressId !== addressId && this.$shippingAsDefault?.checked)
-        //   this.addShippingAddressId(addressId);
-        // if (!this.customer?.billingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
-        //   this.addShippingAddressId(addressId);
-        // if (this.customer?.defaultBillingAddressId !== addressId && this.$billingAsDefault?.checked)
-        //   this.addShippingAddressId(addressId);
+      if (this.getAttribute('type') === 'new') {
+        actions.push({ action: 'addAddress', address });
       }
+
+      if (this.getAttribute('type') === 'edit') {
+        const addressId = String(this.getAttribute('address-id'));
+        actions.push({
+          action: 'changeAddress',
+          addressId: String(addressId),
+          address,
+        });
+
+        if (!this.customer?.shippingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
+          actions.push({ action: 'addShippingAddressId', addressId });
+        if (this.customer?.shippingAddressIds?.find((el) => el === addressId) && !this.$shipping?.checked)
+          actions.push({ action: 'removeShippingAddressId', addressId });
+
+        if (this.customer?.defaultShippingAddressId !== addressId && this.$shippingAsDefault?.checked)
+          actions.push({ action: 'setDefaultShippingAddress', addressId });
+        // if (this.customer?.defaultShippingAddressId === addressId && !this.$shippingAsDefault?.checked)
+        //   actions.push({ action: 'setDefaultShippingAddress', addressId: '' });
+
+        if (!this.customer?.billingAddressIds?.find((el) => el === addressId) && this.$billing?.checked)
+          actions.push({ action: 'addBillingAddressId', addressId });
+        if (this.customer?.billingAddressIds?.find((el) => el === addressId) && !this.$billing?.checked)
+          actions.push({ action: 'removeBillingAddressId', addressId });
+
+        if (this.customer?.defaultBillingAddressId !== addressId && this.$billingAsDefault?.checked)
+          actions.push({ action: 'setDefaultBillingAddress', addressId });
+        // if (this.customer?.defaultBillingAddressId === addressId && !this.$billingAsDefault?.checked)
+        //   actions.push({ action: 'setDefaultBillingAddress', addressId: '' });
+      }
+
+      const payload = {
+        id: String(this.customer?.id),
+        query: {
+          version: Number(this.customer?.version),
+          actions,
+        },
+      };
+
+      updateCustomerBindAction(payload);
 
       document.getElementById('body')?.style.setProperty('position', 'static');
       this.remove();

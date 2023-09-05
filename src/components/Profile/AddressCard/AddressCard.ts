@@ -143,6 +143,7 @@ export default class extends HTMLElement {
     const $modal = new AddressModal();
     if (this.customer) $modal.currentCustomer = this.customer;
     $modal.setAttribute('type', 'edit');
+    $modal.setAttribute('address-type', `${this.getAttribute('type')}`);
     $modal.setAttribute('zip', `${this.$zip?.innerHTML}`);
     $modal.setAttribute('city', `${this.$city?.innerHTML}`);
     $modal.setAttribute('street', `${this.$street?.innerHTML}`);
