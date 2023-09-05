@@ -4,8 +4,9 @@
 }
 
 product-list{
-    width: 70%;
-    display: block;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 products-filter{

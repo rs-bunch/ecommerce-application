@@ -5,8 +5,11 @@ import type { RootState, AppDispatch } from '../Store/store';
 import { changeLocation } from '../Store/locationSlice';
 import { getProducts } from '../Store/productListSlice';
 import ProductCard from '../ProductCard/ProductCard';
-
 import productsContainer from './product-list.module.scss';
+import { getCategoriesPath } from '../Api/productList';
+import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
+
+const LOCALE_STRING = 'en-US';
 
 customElements.define('product-card', ProductCard);
 
@@ -34,6 +37,8 @@ export default class ProductList extends HTMLElement {
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
 
   private renderProductCards(productsData: ProductProjection[]): void {
+    console.log(productsData, 'render');
+
     if (!this.shadowRoot) return;
     const cards = this.querySelectorAll('[slot="cards-slot"]');
     for (let i = 0; i < cards.length; i += 1) {
@@ -43,14 +48,14 @@ export default class ProductList extends HTMLElement {
     for (let i = 0; i < productsData.length; i += 1) {
       const product = productsData[i];
       const card = document.createElement('product-card');
-
       const imagesObj = product.masterVariant.images;
       if (!imagesObj) return;
 
+      const { id } = productsData[i];
       const imageUrl = imagesObj[0].url;
-      const name = product.name['en-US'];
+      const name = product.name[LOCALE_STRING];
       if (!product.metaTitle) return;
-      const brand = product.metaTitle['en-US'];
+      const brand = product.masterVariant.attributes?.find((atr) => atr.name === 'Brand')?.value as string | undefined;
       if (!product.masterVariant.prices) return;
       const price = product.masterVariant.prices[0].value.centAmount / 100;
       let discount = null;
@@ -60,14 +65,15 @@ export default class ProductList extends HTMLElement {
       const { description } = product;
       if (description) {
         if (!card.shadowRoot) return;
-        card.setAttribute('data-desc', description['en-US']);
+        card.setAttribute('data-desc', description[LOCALE_STRING]);
       }
 
       card.setAttribute('slot', 'cards-slot');
 
+      card.setAttribute('data-link', id);
       card.setAttribute('data-image', imageUrl);
       card.setAttribute('data-name', name);
-      card.setAttribute('data-brand', brand);
+      if (brand) card.setAttribute('data-brand', brand);
 
       if (discount) {
         card.setAttribute('data-price', `${discount}$`);
@@ -82,14 +88,25 @@ export default class ProductList extends HTMLElement {
     }
   }
 
+  private renderNavigation(id: string): void {
+    getCategoriesPath(id, LOCALE_STRING).then((res) => {
+      const breadcrumb = new Breadcrumb(res, 'productList');
+      this.shadowRoot?.querySelector('breadcrumb-nav')?.remove();
+      this.shadowRoot?.querySelector('.wrapper')?.append(breadcrumb);
+    });
+  }
+
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
-    const { location } = newState.location;
-    const { products } = newState.productList;
+    const { location, productList } = newState;
+    const { products } = productList;
+    console.log('productList', productList);
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));
     }
+    if (productList.id) this.renderNavigation(productList.id as string);
     if (products) {
+      console.log('products', products);
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);
     }
   }

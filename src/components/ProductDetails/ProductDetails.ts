@@ -10,18 +10,28 @@ import { ProductState } from '../../dto/types';
 import store from '../Store/store';
 import { selectProductVariant } from '../Store/productSlice';
 import Carousel from './Carousel/Carousel';
-import { getCategoriesById } from '../Api/product';
+import ImageModal from './ImageModal/ImageModal';
+import { getCategoriesPath } from '../Api/productList';
+import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
 
 const LOCALE_STRING = 'en-US';
+
+customElements.define('image-modal', ImageModal);
 
 export default class ProductDetails extends HTMLElement {
   private $element: DocumentFragment;
 
+  public $modalElement: ImageModal;
+
   private carousel: Carousel;
+
+  private modalSlider: Carousel;
 
   private $carouselIndicators: HTMLElement;
 
   private $carouselInner: HTMLElement;
+
+  private $modalInner: HTMLElement;
 
   private $productPath: Element | null;
 
@@ -47,16 +57,23 @@ export default class ProductDetails extends HTMLElement {
 
   private sizeBtns: { [key: string]: Element | null };
 
-  private $carouselContainer: Element | null;
+  private $carouselContainer: HTMLElement | null;
+
+  private $modalContainer: HTMLElement | null;
 
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
-    this.carousel = new Carousel();
+    this.$modalElement = document.createElement('image-modal') as ImageModal;
     this.$carouselContainer = this.$element.querySelector('.content-gallery__carousel-container');
+    this.$modalContainer = this.$modalElement.$element;
+    this.carousel = new Carousel('productCarousel', this.$modalElement);
+    this.modalSlider = new Carousel('modalSlider', this.$modalElement);
     if (this.carousel.$element) this.$carouselContainer?.appendChild(this.carousel.$element);
+    if (this.modalSlider.$element) this.$modalContainer?.appendChild(this.modalSlider.$element);
     this.$carouselIndicators = createElement('div', 'carousel-indicators', []) as HTMLElement;
     this.$carouselInner = createElement('div', 'carousel-inner', []) as HTMLElement;
+    this.$modalInner = createElement('div', 'carousel-inner', []) as HTMLElement;
     this.$productPath = this.$element.querySelector('.details-layout__path');
     this.$productName = this.$element.querySelector('.details-layout__product-name');
     this.$productDescr = this.$element.querySelector('.descr-section__descr-text');
@@ -86,6 +103,7 @@ export default class ProductDetails extends HTMLElement {
   private disconnectedCallback(): void {}
 
   private attributeChangedCallback(attributeName: string, oldValue: ProductState, newValue: ProductState): void {
+    this.carousel.closeModal();
     if (attributeName === 'product') {
       if (newValue.product && oldValue.product !== newValue.product) this.updateProductDetails(newValue.product);
       else if (newValue.id && oldValue.id !== newValue.id) {
@@ -93,12 +111,21 @@ export default class ProductDetails extends HTMLElement {
           newValue.id === 1
             ? newValue.product?.masterVariant
             : newValue.product?.variants.find((e) => e.id === newValue.id);
-        const oldData =
-          oldValue.id === 1
-            ? oldValue.product?.masterVariant
-            : oldValue.product?.variants.find((e) => e.id === oldValue.id);
         if (data && data.prices) this.updatePrices(data.prices[0], data.prices[0].discounted);
-        if (data && !this.checkForSameUrls(oldData?.images, data.images)) this.carousel?.updateImages(data.images);
+        if (data && data.images?.length) {
+          this.carousel.updateImages(data.images, { carouselName: 'productCarousel', isModal: false });
+          this.modalSlider.updateImages(data.images, { carouselName: 'modalSlider', isModal: true });
+        }
+        if (data && !data.images?.length && newValue.product?.masterVariant.images) {
+          this.carousel.updateImages(newValue.product?.masterVariant.images, {
+            carouselName: 'productCarousel',
+            isModal: false,
+          });
+          this.modalSlider.updateImages(newValue.product?.masterVariant.images, {
+            carouselName: 'modalSlider',
+            isModal: true,
+          });
+        }
       }
     }
   }
@@ -125,11 +152,12 @@ export default class ProductDetails extends HTMLElement {
     if (this.$productName) this.$productName.textContent = name;
     if (this.$productDescr && descr) this.$productDescr.textContent = descr;
     if (prices) this.updatePrices(prices, prices.discounted);
-    if (images) this.carousel?.updateImages(images);
+    if (images) {
+      this.carousel.updateImages(images, { carouselName: 'productCarousel', isModal: false });
+      this.modalSlider.updateImages(images, { carouselName: 'modalSlider', isModal: true });
+    }
     this.initSizes(data);
-    this.updateCategoriesPath(data.categories[0].id).then((path) => {
-      if (this.$productPath) this.$productPath.textContent = path;
-    });
+    this.updateCategoriesPath(data.categories[0].id);
   }
 
   private updatePrices(prices: Price, discount?: DiscountedPrice | undefined): void {
@@ -196,18 +224,16 @@ export default class ProductDetails extends HTMLElement {
       if (copy instanceof Element) {
         this.sizeBtns[key] = copy;
         this.$sizeBtns?.appendChild(copy);
+        copy.classList.remove('selected', 'shown');
       }
     });
   }
 
-  private async updateCategoriesPath(id: string): Promise<string> {
-    const path: string[] = [];
-    const getParentCategory = async (categoryId: string): Promise<void> => {
-      const category = (await getCategoriesById(categoryId)).body;
-      path.push(category.name[LOCALE_STRING]);
-      if (category.parent) await getParentCategory(category.parent.id);
-    };
-    await getParentCategory(id);
-    return path.reverse().join(' > ');
+  private async updateCategoriesPath(id: string): Promise<void> {
+    this.$productPath?.querySelector('breadcrumb-nav')?.remove();
+    getCategoriesPath(id, LOCALE_STRING).then((res) => {
+      const breadcrumb = new Breadcrumb(res, 'productDetails');
+      this.$productPath?.append(breadcrumb);
+    });
   }
 }

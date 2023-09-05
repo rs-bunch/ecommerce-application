@@ -9,10 +9,10 @@ import {
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
 import { ProductListState } from '../../dto/types';
 
-const getProducts = createAsyncThunk('/products/accessories/', async (payload: { categoryId: string }) => {
-  return getCategoryProductList(payload.categoryId)
+const getProducts = createAsyncThunk('/products/getall/', async (payload: { categoryId: string }) => {
+  return getCategoryProductList(`categories.id:subtree("${payload.categoryId}")`)
     .then((response) => {
-      return response.body;
+      return { id: payload.categoryId, products: response.body };
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
@@ -20,11 +20,11 @@ const getProducts = createAsyncThunk('/products/accessories/', async (payload: {
 });
 
 const getSortedProducts = createAsyncThunk(
-  '/products/accessories/',
+  '/products/getsorted/',
   async (payload: { categoryId: string; criteria: string }) => {
-    return getSortedCategoryProductList(payload.categoryId, payload.criteria)
+    return getSortedCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.criteria)
       .then((response) => {
-        return response.body;
+        return { id: payload.categoryId, products: response.body };
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();
@@ -33,11 +33,12 @@ const getSortedProducts = createAsyncThunk(
 );
 
 const getFilteredProducts = createAsyncThunk(
-  '/products/accessories/',
+  '/products/getfiltered/',
   async (payload: { categoryId: string; criteria: string[] }) => {
-    return getFilteredCategoryProductList(payload.categoryId, payload.criteria)
+    console.log('filter', payload);
+    return getFilteredCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.criteria)
       .then((response) => {
-        return response.body;
+        return { id: payload.categoryId, products: response.body };
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();
@@ -46,11 +47,11 @@ const getFilteredProducts = createAsyncThunk(
 );
 
 const getFilteredSortedProducts = createAsyncThunk(
-  '/products/accessories/',
+  '/products/getfs/',
   async (payload: { categoryId: string; filter: string[]; sort: string }) => {
-    return getFilteredSortedCategoryProductList(payload.categoryId, payload.filter, payload.sort)
+    return getFilteredSortedCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.filter, payload.sort)
       .then((response) => {
-        return response.body;
+        return { id: payload.categoryId, products: response.body };
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();
@@ -58,10 +59,10 @@ const getFilteredSortedProducts = createAsyncThunk(
   }
 );
 
-const getSearchedProducts = createAsyncThunk('/products/accessories/', async (payload: { text: string }) => {
+const getSearchedProducts = createAsyncThunk('/products/getsearched/', async (payload: { text: string }) => {
   return getSearchProductList(payload.text)
     .then((response) => {
-      return response.body;
+      return { id: null, products: response.body };
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
@@ -77,7 +78,7 @@ const productListSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-      Object.assign(state, { products: payload });
+      Object.assign(state, payload);
     },
     [getProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
       Object.assign(state, { id: null, products: null });
@@ -86,7 +87,7 @@ const productListSlice = createSlice({
       Object.assign(state, { id: null });
     },
     [getSortedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-      Object.assign(state, { products: payload });
+      Object.assign(state, payload);
     },
     [getSortedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
       Object.assign(state, { id: null, products: null });
@@ -95,7 +96,7 @@ const productListSlice = createSlice({
       Object.assign(state, { id: null });
     },
     [getFilteredProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-      Object.assign(state, { products: payload });
+      Object.assign(state, payload);
     },
     [getFilteredProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
       Object.assign(state, { id: null, products: null });
@@ -107,7 +108,7 @@ const productListSlice = createSlice({
       state: ProductListState,
       { payload }: PayloadAction<ProductListState>
     ) => {
-      Object.assign(state, { products: payload });
+      Object.assign(state, payload);
     },
     [getFilteredSortedProducts.pending.type]: (
       state: ProductListState,
@@ -122,7 +123,7 @@ const productListSlice = createSlice({
       Object.assign(state, { id: null });
     },
     [getSearchedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-      Object.assign(state, { products: payload });
+      Object.assign(state, payload);
     },
     [getSearchedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
       Object.assign(state, { id: null, products: null });
