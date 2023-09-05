@@ -14,8 +14,11 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 25px;
+  gap: 15px;
   padding: 5px 15px 0px 15px;
+  @media screen and (min-width: $tablet-width) {
+    gap: 25px;
+  }
 }
 
 .side-bar {
