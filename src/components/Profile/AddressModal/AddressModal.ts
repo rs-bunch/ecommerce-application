@@ -173,9 +173,8 @@ export default class extends HTMLElement {
       }
     }
 
-    console.log(attributeName);
     if (attributeName === 'address-type') {
-      console.log('address-type: ', newValue);
+      console.log('customer.key', this.customer?.key);
       switch (newValue) {
         case 'shipping':
           if (this.$billingField) this.$billingField.style.display = 'none';
@@ -274,17 +273,27 @@ export default class extends HTMLElement {
       !this.$city?.classList.contains('invalid') &&
       !this.$street?.classList.contains('invalid')
     ) {
+      const addressKey = String(Math.random).slice(0, 9);
       const address: BaseAddress = {
         country: `${this.$country?.value}`,
         city: `${this.$city?.value}`,
         streetName: `${this.$street?.value}`,
         postalCode: `${this.$zip?.value}`,
+        key: addressKey,
       };
 
       const actions: CustomerUpdateAction[] = [];
 
       if (this.getAttribute('type') === 'new') {
         actions.push({ action: 'addAddress', address });
+
+        if (this.$shipping?.checked) actions.push({ action: 'addShippingAddressId', addressKey });
+        if (this.$shippingAsDefault?.checked && this.$shipping?.checked)
+          actions.push({ action: 'setDefaultShippingAddress', addressKey });
+
+        if (this.$billing?.checked) actions.push({ action: 'addBillingAddressId', addressKey });
+        if (this.$billingAsDefault?.checked && this.$billing?.checked)
+          actions.push({ action: 'setDefaultBillingAddress', addressKey });
       }
 
       if (this.getAttribute('type') === 'edit') {
@@ -295,25 +304,29 @@ export default class extends HTMLElement {
           address,
         });
 
-        if (!this.customer?.shippingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
-          actions.push({ action: 'addShippingAddressId', addressId });
         if (this.customer?.shippingAddressIds?.find((el) => el === addressId) && !this.$shipping?.checked)
           actions.push({ action: 'removeShippingAddressId', addressId });
-
-        if (this.customer?.defaultShippingAddressId !== addressId && this.$shippingAsDefault?.checked)
-          actions.push({ action: 'setDefaultShippingAddress', addressId });
-        // if (this.customer?.defaultShippingAddressId === addressId && !this.$shippingAsDefault?.checked)
-        //   actions.push({ action: 'setDefaultShippingAddress', addressId: '' });
-
-        if (!this.customer?.billingAddressIds?.find((el) => el === addressId) && this.$billing?.checked)
-          actions.push({ action: 'addBillingAddressId', addressId });
         if (this.customer?.billingAddressIds?.find((el) => el === addressId) && !this.$billing?.checked)
           actions.push({ action: 'removeBillingAddressId', addressId });
 
-        if (this.customer?.defaultBillingAddressId !== addressId && this.$billingAsDefault?.checked)
+        if (!this.customer?.shippingAddressIds?.find((el) => el === addressId) && this.$shipping?.checked)
+          actions.push({ action: 'addShippingAddressId', addressId });
+        if (!this.customer?.billingAddressIds?.find((el) => el === addressId) && this.$billing?.checked)
+          actions.push({ action: 'addBillingAddressId', addressId });
+
+        if (
+          this.customer?.defaultShippingAddressId !== addressId &&
+          this.$shippingAsDefault?.checked &&
+          this.$shipping?.checked
+        )
+          actions.push({ action: 'setDefaultShippingAddress', addressId });
+
+        if (
+          this.customer?.defaultBillingAddressId !== addressId &&
+          this.$billingAsDefault?.checked &&
+          this.$billing?.checked
+        )
           actions.push({ action: 'setDefaultBillingAddress', addressId });
-        // if (this.customer?.defaultBillingAddressId === addressId && !this.$billingAsDefault?.checked)
-        //   actions.push({ action: 'setDefaultBillingAddress', addressId: '' });
       }
 
       const payload = {
