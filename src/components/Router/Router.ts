@@ -11,7 +11,11 @@ import {
   getSortedProducts,
   getFilteredProducts,
   getFilteredSortedProducts,
-  getSearchedProducts,
+  // getSearchedProducts,
+  getSearchedProductsTotal,
+  getSortedProductsTotal,
+  getFilteredProductsTotal,
+  getFilteredSortedProductsTotal,
 } from '../Store/productListSlice';
 
 const location: { [index: string]: string } = {
@@ -25,6 +29,7 @@ const location: { [index: string]: string } = {
   '/women': 'women',
   '/product': 'product',
   '/products': 'products',
+  '/search': 'search',
   '/404': 'error',
 };
 
@@ -105,15 +110,15 @@ class Router {
           const color = urlParams.get('color');
           const size = urlParams.get('size');
 
-          const search = urlParams.get('text.en');
-          if (search) {
-            this.store.dispatch(
-              getSearchedProducts({
-                categoryId: categoriesId,
-                text: search,
-              })
-            );
-          }
+          // const search = urlParams.get('text.en');
+          // if (search) {
+          //   this.store.dispatch(
+          //     getSearchedProducts({
+          //       categoryId: categoriesId,
+          //       text: search,
+          //     })
+          //   );
+          // }
 
           const filter = [];
 
@@ -149,6 +154,54 @@ class Router {
         // this.store.dispatch(getProducts({ categoryId: categoriesId }));
         break;
       }
+      case 'search': {
+        payload.location = 'search';
+        const search = urlParams.get('text.en');
+
+        const sort = urlParams.get('sort');
+        const order = urlParams.get('order');
+        const priceRange = urlParams.get('price');
+        const color = urlParams.get('color');
+        const size = urlParams.get('size');
+
+        const filter = [];
+
+        if (priceRange) filter.push(`variants.price.centAmount:range (* to ${priceRange})`);
+        if (color) filter.push(`variants.attributes.Color:"${color}"`);
+        if (size) filter.push(`variants.attributes.Size:"${size}"`);
+
+        if (search && filter.length && sort) {
+          this.store.dispatch(
+            getFilteredSortedProductsTotal({
+              text: search,
+              filter,
+              sort: `${sort} ${order}`,
+            })
+          );
+        } else if (search && filter.length) {
+          this.store.dispatch(
+            getFilteredProductsTotal({
+              text: search,
+              criteria: filter,
+            })
+          );
+        } else if (search && sort) {
+          this.store.dispatch(
+            getSortedProductsTotal({
+              text: search,
+              sort: `${sort} ${order}`,
+            })
+          );
+        } else if (search) {
+          this.store.dispatch(
+            getSearchedProductsTotal({
+              text: search,
+            })
+          );
+        }
+        break;
+      }
+
       default:
         payload.location = location[locationPath];
     }

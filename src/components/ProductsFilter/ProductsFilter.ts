@@ -132,7 +132,7 @@ export default class ProductsFilter extends HTMLElement {
           order === 'asc' ? 'desc' : 'asc'
         }`;
       }
-      this.style.display = newValue === 'products' ? '' : 'none';
+      this.style.display = newValue === 'products' || newValue === 'search' ? '' : 'none';
     }
   }
 }

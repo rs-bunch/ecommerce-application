@@ -37,7 +37,7 @@ export default class ProductPage extends HTMLElement {
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (!this.$element) return;
     if (attributeName === 'location') {
-      this.style.display = newValue === 'products' ? '' : 'none';
+      this.style.display = newValue === 'products' || newValue === 'search' ? '' : 'none';
     }
   }
 }

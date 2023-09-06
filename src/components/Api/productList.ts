@@ -51,15 +51,58 @@ const getFilteredSortedCategoryProductList = (
     .execute();
 };
 
-const getSearchProductList = (
-  categoryId: string,
-  text: string
-): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+// const getSearchProductList = (
+//   categoryId: string,
+//   text: string
+// ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+//   console.log('search');
+//   return apiRoot
+//     .productProjections()
+//     .search()
+//     .get({ queryArgs: { filter: categoryId, 'text.en-US': text, fuzzy: true, staged: true } })
+//     .execute();
+// };
+
+const getSearchProductListTotal = (text: string): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   console.log('search');
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { filter: categoryId, 'text.en-US': text, fuzzy: true, staged: true } })
+    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true } })
+    .execute();
+};
+
+const getSortedProductList = (
+  text: string,
+  criteria: string
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { sort: criteria, 'text.en-US': text, fuzzy: true, staged: true } })
+    .execute();
+};
+
+const getFilteredProductList = (
+  text: string,
+  criteria: string[]
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true, filter: [...criteria] } })
+    .execute();
+};
+
+const getFilteredSortedProductList = (
+  text: string,
+  filter: string[],
+  sort: string
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+  return apiRoot
+    .productProjections()
+    .search()
+    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true, filter: [...filter], sort } })
     .execute();
 };
 
@@ -83,6 +126,10 @@ export {
   getSortedCategoryProductList,
   getFilteredCategoryProductList,
   getFilteredSortedCategoryProductList,
-  getSearchProductList,
+  // getSearchProductList,
   getCategoriesPath,
+  getSearchProductListTotal,
+  getSortedProductList,
+  getFilteredProductList,
+  getFilteredSortedProductList,
 };
