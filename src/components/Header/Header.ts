@@ -213,7 +213,29 @@ export default class ShopHeader extends HTMLElement {
     if ($searchIcon) {
       $searchIcon.addEventListener('click', () => {
         const { value } = $input;
-        window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
+        if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
+      });
+
+      $input.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+
+        const { value } = $input;
+        if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
+      });
+
+      $inputSide.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+
+        const { value } = $input;
+        if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
+      });
+    }
+
+    const $searchSideIcon = this.$searchLineSide?.querySelector('.search__icon');
+    if ($searchSideIcon) {
+      $searchSideIcon.addEventListener('click', () => {
+        const { value } = $inputSide;
+        if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
       });
     }
   }

@@ -51,12 +51,15 @@ const getFilteredSortedCategoryProductList = (
     .execute();
 };
 
-const getSearchProductList = (text: string): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+const getSearchProductList = (
+  categoryId: string,
+  text: string
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   console.log('search');
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true } })
+    .get({ queryArgs: { filter: categoryId, 'text.en-US': text, fuzzy: true, staged: true } })
     .execute();
 };
 

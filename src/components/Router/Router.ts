@@ -109,6 +109,7 @@ class Router {
           if (search) {
             this.store.dispatch(
               getSearchedProducts({
+                categoryId: categoriesId,
                 text: search,
               })
             );

@@ -63,15 +63,18 @@ const getFilteredSortedProducts = createAsyncThunk(
   }
 );
 
-const getSearchedProducts = createAsyncThunk('/products/getsearched/', async (payload: { text: string }) => {
-  return getSearchProductList(payload.text)
-    .then((response) => {
-      return { id: null, products: response.body };
-    })
-    .catch((error) => {
-      notifyError(String(error.message)).showToast();
-    });
-});
+const getSearchedProducts = createAsyncThunk(
+  '/products/getsearched/',
+  async (payload: { categoryId: string; text: string }) => {
+    return getSearchProductList(`categories.id:subtree("${payload.categoryId}")`, payload.text)
+      .then((response) => {
+        return { id: payload.categoryId, products: response.body };
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+);
 
 const productListSlice = createSlice({
   name: 'productList',
