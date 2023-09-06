@@ -273,18 +273,19 @@ export default class extends HTMLElement {
       !this.$city?.classList.contains('invalid') &&
       !this.$street?.classList.contains('invalid')
     ) {
-      const addressKey = String(Math.random).slice(0, 9);
       const address: BaseAddress = {
         country: `${this.$country?.value}`,
         city: `${this.$city?.value}`,
         streetName: `${this.$street?.value}`,
         postalCode: `${this.$zip?.value}`,
-        key: addressKey,
       };
 
       const actions: CustomerUpdateAction[] = [];
 
       if (this.getAttribute('type') === 'new') {
+        const addressKey = String(Math.random).slice(0, 9);
+        Object.assign(address, { key: addressKey });
+
         actions.push({ action: 'addAddress', address });
 
         if (this.$shipping?.checked) actions.push({ action: 'addShippingAddressId', addressKey });
