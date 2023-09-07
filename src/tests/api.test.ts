@@ -5,15 +5,19 @@ import { getCategoriesById, getProductDetailsById, getProductDetailsByKey } from
 import {
   getCategoryProductList,
   getFilteredCategoryProductList,
+  getFilteredProductList,
   getFilteredSortedCategoryProductList,
+  getFilteredSortedProductList,
   getSearchProductListTotal,
   getSortedCategoryProductList,
+  getSortedProductList,
 } from '../components/Api/productList';
 
 const TEST_PRODUCT_ID = 'b33865b0-c943-498b-a30e-e8edcd03255b';
 const TEST_CATEGORY_ID = '94038ccd-10f8-4ccc-a616-cfa5438bcc9a';
 const SORT_TEST_CRITERIA = `price desc`;
 const FILTER_TEST_CRITERIA = [`variants.attributes.Size:"M"`, `variants.attributes.Color:"Red"`];
+const TEST_SEARCHSTRING = 'jacket';
 
 describe('Testing customer API', () => {
   it('Try to recieve a customer', async () => {
@@ -75,6 +79,18 @@ describe('Testing ProductList API', () => {
   });
   it('Try to recieve a searched product list', async () => {
     const productList = await getSearchProductListTotal('test');
+    expect(productList.statusCode).toEqual(200);
+  });
+  it('Try to recieve a sorted product list', async () => {
+    const productList = await getSortedProductList(TEST_SEARCHSTRING, SORT_TEST_CRITERIA);
+    expect(productList.statusCode).toEqual(200);
+  });
+  it('Try to recieve a filtered product list', async () => {
+    const productList = await getFilteredProductList(TEST_SEARCHSTRING, FILTER_TEST_CRITERIA);
+    expect(productList.statusCode).toEqual(200);
+  });
+  it('Try to recieve a filtered sorted product list', async () => {
+    const productList = await getFilteredSortedProductList(TEST_SEARCHSTRING, FILTER_TEST_CRITERIA, SORT_TEST_CRITERIA);
     expect(productList.statusCode).toEqual(200);
   });
 });
