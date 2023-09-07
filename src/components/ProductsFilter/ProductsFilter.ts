@@ -50,7 +50,11 @@ export default class ProductsFilter extends HTMLElement {
 
     if (this.$clearBtn) {
       this.$clearBtn.addEventListener('click', () => {
-        window.location.href = `${window.location.origin}${window.location.pathname}`;
+        const urlParams = new URLSearchParams(window.location.search);
+        const search = urlParams.get('text.en');
+        window.location.href = `${window.location.origin}${window.location.pathname}${
+          search ? `?text.en=${search}` : ''
+        }`;
       });
     }
 

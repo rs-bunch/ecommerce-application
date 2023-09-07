@@ -214,21 +214,21 @@ export default class ShopHeader extends HTMLElement {
       $searchIcon.addEventListener('click', () => {
         const { value } = $input;
         // if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
-        if (value) window.location.href = `${window.location.origin}/search?text.en="${value}"`;
+        if (value) window.location.href = `${window.location.origin}/search?text.en=${value}`;
       });
 
       $input.addEventListener('keydown', (e) => {
         if (e.key !== 'Enter') return;
 
         const { value } = $input;
-        if (value) window.location.href = `${window.location.origin}/search?text.en="${value}"`;
+        if (value) window.location.href = `${window.location.origin}/search?text.en=${value}`;
       });
 
       $inputSide.addEventListener('keydown', (e) => {
         if (e.key !== 'Enter') return;
 
         const { value } = $input;
-        if (value) window.location.href = `${window.location.origin}/search?text.en="${value}"`;
+        if (value) window.location.href = `${window.location.origin}/search?text.en=${value}`;
       });
     }
 
@@ -236,7 +236,7 @@ export default class ShopHeader extends HTMLElement {
     if ($searchSideIcon) {
       $searchSideIcon.addEventListener('click', () => {
         const { value } = $inputSide;
-        if (value) window.location.href = `${window.location.origin}/search?text.en="${value}"`;
+        if (value) window.location.href = `${window.location.origin}/search?text.en=${value}`;
       });
     }
   }
