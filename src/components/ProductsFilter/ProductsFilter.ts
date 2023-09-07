@@ -50,7 +50,11 @@ export default class ProductsFilter extends HTMLElement {
 
     if (this.$clearBtn) {
       this.$clearBtn.addEventListener('click', () => {
-        window.location.href = `${window.location.origin}${window.location.pathname}`;
+        const urlParams = new URLSearchParams(window.location.search);
+        const search = urlParams.get('text.en');
+        window.location.href = `${window.location.origin}${window.location.pathname}${
+          search ? `?text.en=${search}` : ''
+        }`;
       });
     }
 
@@ -119,7 +123,7 @@ export default class ProductsFilter extends HTMLElement {
 
         if (!order) {
           this.$sortName.dataset.href = `${path}?${searchParams.toString()}&sort=name.en-US&order=asc`;
-          this.$sortPrice.dataset.href = `${path}?${searchParams.toString()}sort=price&order=asc`;
+          this.$sortPrice.dataset.href = `${path}?${searchParams.toString()}&sort=price&order=asc`;
           return;
         }
 
@@ -132,7 +136,7 @@ export default class ProductsFilter extends HTMLElement {
           order === 'asc' ? 'desc' : 'asc'
         }`;
       }
-      this.style.display = newValue === 'products' ? '' : 'none';
+      this.style.display = newValue === 'products' || newValue === 'search' ? '' : 'none';
     }
   }
 }

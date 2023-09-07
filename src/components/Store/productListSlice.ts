@@ -4,7 +4,11 @@ import {
   getSortedCategoryProductList,
   getFilteredCategoryProductList,
   getFilteredSortedCategoryProductList,
-  getSearchProductList,
+  // getSearchProductList,
+  getSearchProductListTotal,
+  getSortedProductList,
+  getFilteredProductList,
+  getFilteredSortedProductList,
 } from '../Api/productList';
 import { notifyError, notifyInfo } from '../../utils/notify/notify';
 import { ProductListState } from '../../dto/types';
@@ -63,15 +67,64 @@ const getFilteredSortedProducts = createAsyncThunk(
   }
 );
 
-const getSearchedProducts = createAsyncThunk('/products/getsearched/', async (payload: { text: string }) => {
-  return getSearchProductList(payload.text)
+// const getSearchedProducts = createAsyncThunk(
+//   '/products/getsearched/',
+//   async (payload: { categoryId: string; text: string }) => {
+//     return getSearchProductList(`categories.id:subtree("${payload.categoryId}")`, payload.text)
+//       .then((response) => {
+//         return { id: payload.categoryId, products: response.body };
+//       })
+//       .catch((error) => {
+//         notifyError(String(error.message)).showToast();
+//       });
+//   }
+// );
+
+const getSearchedProductsTotal = createAsyncThunk('/search/', async (payload: { text: string }) => {
+  return getSearchProductListTotal(payload.text)
     .then((response) => {
-      return { id: null, products: response.body };
+      return { products: response.body };
     })
     .catch((error) => {
       notifyError(String(error.message)).showToast();
     });
 });
+
+const getSortedProductsTotal = createAsyncThunk('/search/sort', async (payload: { text: string; sort: string }) => {
+  return getSortedProductList(payload.text, payload.sort)
+    .then((response) => {
+      return { products: response.body };
+    })
+    .catch((error) => {
+      notifyError(String(error.message)).showToast();
+    });
+});
+
+const getFilteredProductsTotal = createAsyncThunk(
+  '/search/filter/',
+  async (payload: { text: string; criteria: string[] }) => {
+    return getFilteredProductList(payload.text, payload.criteria)
+      .then((response) => {
+        return { products: response.body };
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+);
+
+const getFilteredSortedProductsTotal = createAsyncThunk(
+  '/search/fs/',
+  async (payload: { text: string; filter: string[]; sort: string }) => {
+    return getFilteredSortedProductList(payload.text, payload.filter, payload.sort)
+      .then((response) => {
+        return { products: response.body };
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+);
 
 const productListSlice = createSlice({
   name: 'productList',
@@ -126,17 +179,94 @@ const productListSlice = createSlice({
     ) => {
       Object.assign(state, { id: null });
     },
-    [getSearchedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+    // [getSearchedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+    //   Object.assign(state, payload);
+    // },
+    // [getSearchedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+    //   Object.assign(state, { id: null, products: null });
+    // },
+    // [getSearchedProducts.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+    //   Object.assign(state, { id: null });
+    // },
+    [getSearchedProductsTotal.fulfilled.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
       Object.assign(state, payload);
     },
-    [getSearchedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+    [getSearchedProductsTotal.pending.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
       Object.assign(state, { id: null, products: null });
     },
-    [getSearchedProducts.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+    [getSearchedProductsTotal.rejected.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, { id: null });
+    },
+
+    [getSortedProductsTotal.fulfilled.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, payload);
+    },
+    [getSortedProductsTotal.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { id: null, products: null });
+    },
+    [getSortedProductsTotal.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
+      Object.assign(state, { id: null });
+    },
+    [getFilteredProductsTotal.fulfilled.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, payload);
+    },
+    [getFilteredProductsTotal.pending.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, { id: null, products: null });
+    },
+    [getFilteredProductsTotal.rejected.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, { id: null });
+    },
+    [getFilteredSortedProductsTotal.fulfilled.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, payload);
+    },
+    [getFilteredSortedProductsTotal.pending.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
+      Object.assign(state, { id: null, products: null });
+    },
+    [getFilteredSortedProductsTotal.rejected.type]: (
+      state: ProductListState,
+      { payload }: PayloadAction<ProductListState>
+    ) => {
       Object.assign(state, { id: null });
     },
   },
 });
 
-export { getProducts, getSortedProducts, getFilteredProducts, getFilteredSortedProducts, getSearchedProducts };
+export {
+  getProducts,
+  getSortedProducts,
+  getFilteredProducts,
+  getFilteredSortedProducts,
+  // getSearchedProducts,
+  getSearchedProductsTotal,
+  getSortedProductsTotal,
+  getFilteredProductsTotal,
+  getFilteredSortedProductsTotal,
+};
 export default productListSlice;

@@ -1,0 +1,41 @@
+.dropdown-nav {
+
+}
+
+.dropdown-nav__block {
+  display: flex;
+  gap: 10px;
+  &.side {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.men,
+.women {
+  display: none;
+  &.visible {
+    display: flex;
+  }
+  & a {
+    font-style: Causten;
+    font-weight: 500;
+    font-size: 18px;
+    color: $color-light;
+    transition: all ease-in-out .3s;
+    text-decoration: none;
+    @media (hover: hover) {
+      &:hover {
+      text-shadow:
+       -0.2px -0.2px 0 $color-dark,
+       0.2px -0.2px 0 $color-dark,
+       -0.2px 0.2px 0 $color-dark,
+       0.2px 0.2px 0 $color-dark;
+      color: $color-dark;
+      cursor: pointer;
+      }
+    }
+  }
+}
