@@ -119,7 +119,7 @@ export default class ProductsFilter extends HTMLElement {
 
         if (!order) {
           this.$sortName.dataset.href = `${path}?${searchParams.toString()}&sort=name.en-US&order=asc`;
-          this.$sortPrice.dataset.href = `${path}?${searchParams.toString()}sort=price&order=asc`;
+          this.$sortPrice.dataset.href = `${path}?${searchParams.toString()}&sort=price&order=asc`;
           return;
         }
 
