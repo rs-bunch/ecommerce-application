@@ -102,6 +102,28 @@
             }
         }
     }
+
+    &__cart-btn{
+        width: 32.359px;
+        height: 32.359px;
+        border-radius: 50%;
+        
+        position: absolute;
+        top: 10px;
+        left: 85%;
+
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(-150%);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: $color-brand-main-xxl;
+            }
+        }
+    }
 }
 
 .product-card__image{
