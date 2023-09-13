@@ -1,8 +1,10 @@
 /**
  * @jest-environment jsdom
  */
+import createCustomerUpdateAction from '../utils/createCustomerUpdateAction';
 import { createElement } from '../utils/createElement';
 import { createElementFromHTML } from '../utils/createElementFromHTML';
+import createFragmentFromHTML from '../utils/createFragmentFromHTML';
 import createNodeFromHtml from '../utils/createNodeFromHtml';
 import { removeAllChildNodes } from '../utils/removeAllChildNodes';
 
@@ -43,6 +45,22 @@ describe('Testing createElementFromHTML', () => {
   });
 });
 
+describe('Testing createFragmentFromHTML', () => {
+  it('Test with empty string', () => {
+    const element = createFragmentFromHTML('');
+    expect(element instanceof DocumentFragment).toEqual(true);
+  });
+  it('Test with random letters', () => {
+    const element = createFragmentFromHTML('"№;%:');
+    expect(element instanceof DocumentFragment).toEqual(true);
+  });
+  it('Test with simple html code', () => {
+    const element = createFragmentFromHTML(`<div>test</div>`);
+    const child = element.firstChild;
+    expect(child instanceof HTMLElement).toEqual(true);
+  });
+});
+
 describe('Testing remove all child nodes', () => {
   it('All child elements and text should be removed', () => {
     const element = document.createElement('div');
@@ -73,5 +91,11 @@ describe('Testing createElement', () => {
   });
   it('Testing src attribute', () => {
     expect(element2?.getAttribute('src') === 'url').toEqual(true);
+  });
+});
+
+describe('Testing CustomerUpdateAction', () => {
+  it('CustomerUpdateAction', () => {
+    expect(createCustomerUpdateAction('firstName', 'Vasya') === undefined).not.toEqual(true);
   });
 });
