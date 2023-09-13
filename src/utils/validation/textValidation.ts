@@ -36,8 +36,12 @@ const hasDomainSyntax = (value: string): Error | void => {
   if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value)) throw new Error(`Incorrect. Example: "email@domain.com"`);
 };
 
-const hasNoWitespaces = (value: string): Error | void => {
+const hasNoWitespacesAround = (value: string): Error | void => {
   if (value !== value.trim()) throw new Error(`Must NOT start and end witespaces`);
+};
+
+const hasNoWitespacesInside = (value: string): Error | void => {
+  if (value.split(' ').length > 1) throw new Error(`Must NOT witespaces inside`);
 };
 
 const hasCharsOnly = (value: string): Error | void => {
@@ -69,7 +73,8 @@ const hasPostalCodeCA = (value: string): Error | void => {
 };
 
 const validateEmail = (value: string): Error | void => {
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
+  hasNoWitespacesInside(value);
   hasNoSpecialSymbol(value);
   hasMinimunLength(value, 1);
   hasSymbol(value, '@');
@@ -77,7 +82,8 @@ const validateEmail = (value: string): Error | void => {
 };
 
 const validatePassword = (value: string): Error | void => {
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
+  hasNoWitespacesInside(value);
   hasMinimunLength(value, 8);
   hasLowerCaseCharacter(value);
   hasUpperCaseCharacter(value);
@@ -86,9 +92,11 @@ const validatePassword = (value: string): Error | void => {
 };
 
 const validateName = (value: string): Error | void => {
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
   hasMinimunLength(value, 1);
   hasCharsOnly(value);
+  hasNoDigit(value);
+  hasNoSpecialSymbol(value);
 };
 
 const validateYearOld = (value: string, payload?: string | number): Error | void => {
@@ -97,7 +105,7 @@ const validateYearOld = (value: string, payload?: string | number): Error | void
 
 const validateStreet = (value: string): Error | void => {
   hasMinimunLength(value, 1);
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
 };
 
 const validateZipCode = (value: string, payload?: string | number): Error | void => {
@@ -110,7 +118,7 @@ const validateZipCode = (value: string, payload?: string | number): Error | void
       break;
     default:
   }
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
   hasMinimunLength(value, 1);
 };
 
