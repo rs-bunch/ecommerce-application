@@ -12,7 +12,7 @@
     "format": "prettier -w src/",
     "lint": "eslint --ext .ts src/",
     "fix": "eslint --fix --ext .ts src/",
-    "test": "jest",
+    "test": "jest --coverage",
     "testchanges": "jest -o"
   },
   "author": "",
