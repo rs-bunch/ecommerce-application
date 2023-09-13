@@ -128,3 +128,39 @@ describe('Error 404 page tests', () => {
     expect(element).toBeTruthy();
   });
 });
+
+describe('Address Card tests', () => {
+  it('Shadow root has address-card element', async () => {
+    const customElement = await TestUtils.render('address-card');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.card');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Address Modal tests', () => {
+  it('Shadow root has modal-card element', async () => {
+    const customElement = await TestUtils.render('address-modal');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.modal');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Contact Card tests', () => {
+  it('Shadow root has contact-card element', async () => {
+    const customElement = await TestUtils.render('contact-card');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.contact');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Menu Carsd tests', () => {
+  it('Shadow root has menu-card element', async () => {
+    const customElement = await TestUtils.render('menu-card');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.menu');
+    expect(element).toBeTruthy();
+  });
+});
