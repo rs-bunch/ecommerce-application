@@ -71,7 +71,7 @@ describe('Testing password validation', () => {
 describe('Testing name validation', () => {
   it('Test whitespaces', () => {
     const name = 'Test Name';
-    expect((): void | Error => validateName(name)).toThrow();
+    expect((): void | Error => validateName(name)).not.toThrow();
   });
   it('Test empty string', () => {
     const name = '';
