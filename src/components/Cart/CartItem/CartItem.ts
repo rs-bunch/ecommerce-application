@@ -1,5 +1,5 @@
-import ElementHTML from './element.html';
-import stylesheet from './style.module.scss';
+import ElementHTML from './cart-item.html';
+import stylesheet from './cart-item.module.scss';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
 import { RootState, AppDispatch } from '../../Store/store';
 // import { action } from '../Store/actoinSlice';

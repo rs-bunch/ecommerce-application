@@ -1,9 +1,25 @@
+import type { LineItem } from '@commercetools/platform-sdk';
 import { Dispatch } from 'redux';
 import ElementHTML from './cart.html';
 import stylesheet from './cart.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { RootState } from '../Store/store';
+import BreadcrumbElement from './BreadcrumbElement/BreadcrumbElement';
+
+customElements.define('breadcrumb-element', BreadcrumbElement);
+
+type CreateElementOptions = {
+  classList?: string[];
+  attrs?: { attr: string; value: string }[];
+};
+
+const createElement = (tag: string, options?: CreateElementOptions): HTMLElement => {
+  const $element = document.createElement(tag);
+  if (options?.classList) $element.classList.add(...options.classList);
+  if (options?.attrs?.length) options.attrs.forEach((el) => $element.setAttribute(el.attr, el.value));
+  return $element;
+};
 
 export default class Cart extends HTMLElement {
   public $element: HTMLElement | null;
@@ -17,6 +33,32 @@ export default class Cart extends HTMLElement {
     else this.$element = null;
   }
 
+  private createCartItem(lineItem: LineItem): HTMLElement {
+    const $lineRow = createElement('div', { classList: ['line__row'] });
+    const $lineItem = createElement('cart-item', {
+      attrs: [
+        {
+          attr: 'id',
+          value: lineItem.id,
+        },
+        {
+          attr: 'productId',
+          value: lineItem.productId,
+        },
+        {
+          attr: 'name',
+          value: `${lineItem.name}`,
+        },
+        // {
+        //   attr: 'size',
+        //   value: lineItem.variant.attributes,
+        // },
+      ],
+    });
+    $lineRow.appendChild($lineItem);
+    return $lineRow;
+  }
+
   private connectedCallback(): void {
     this.attachShadow({ mode: 'open' });
     if (this.$element) this.shadowRoot?.appendChild(this.$element);
@@ -26,8 +68,12 @@ export default class Cart extends HTMLElement {
   private disconnectedCallback(): void {}
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
-    if (attributeName === 'location') {
-      this.style.display = newValue === 'cart' ? '' : 'none';
+    switch (attributeName) {
+      case 'location':
+        this.style.display = newValue === 'cart' ? '' : 'none';
+        break;
+      default:
+        break;
     }
   }
 

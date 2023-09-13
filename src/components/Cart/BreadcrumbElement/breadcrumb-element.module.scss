@@ -1,0 +1,32 @@
+.breadcrumb {
+  display: flex;
+}
+
+::slotted(*) {  
+  font-family: "Causten";
+  font-weight: 500;  
+  font-size: 16px;
+  color: #B6B6B6;
+  text-decoration: none;
+  cursor: pointer;
+
+  &::after {
+    content: ">";
+    padding: 0 10px;
+    cursor: auto;
+  }
+}
+
+::slotted(span:hover) {
+  color: #8A33FD;
+
+  &::after {
+    color: #B6B6B6;
+  }
+}
+
+::slotted(*:last-child) {
+  &::after {
+    content: "";
+  }
+}
