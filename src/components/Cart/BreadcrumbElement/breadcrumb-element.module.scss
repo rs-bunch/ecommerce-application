@@ -2,13 +2,20 @@
   display: flex;
 }
 
-::slotted(*) {  
+.breadcrumb__link {
   font-family: "Causten";
   font-weight: 500;  
   font-size: 16px;
   color: #B6B6B6;
   text-decoration: none;
   cursor: pointer;
+
+  &:hover {
+    color: #8A33FD;
+    &::after {
+      color: #B6B6B6;
+    }
+  }
 
   &::after {
     content: ">";
@@ -17,7 +24,28 @@
   }
 }
 
-::slotted(span:hover) {
+// .breadcrumb__link:has(+ slot[name=link]::slotted(*):empty)::after {
+//   content: ">";
+//   padding: 0 10px;
+//   cursor: auto;
+// }
+
+::slotted(*) {  
+  font-family: "Causten";
+  font-weight: 500;  
+  font-size: 16px;
+  color: #B6B6B6;
+  text-decoration: none;
+
+  &::after {
+    content: ">";
+    padding: 0 10px;
+    cursor: auto;
+  }
+}
+
+::slotted([data-href]:hover) {
+  cursor: pointer;
   color: #8A33FD;
 
   &::after {
