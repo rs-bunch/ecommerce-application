@@ -231,9 +231,17 @@ export default class ProductDetails extends HTMLElement {
 
   private async updateCategoriesPath(id: string): Promise<void> {
     this.$productPath?.querySelector('breadcrumb-nav')?.remove();
+    this.$productPath?.querySelector('breadcrumb-element')?.remove();
+    const $breadcrumbElement = document.createElement('breadcrumb-element');
     getCategoriesPath(id, LOCALE_STRING).then((res) => {
-      const breadcrumb = new Breadcrumb(res, 'productDetails');
-      this.$productPath?.append(breadcrumb);
+      res.forEach((el) => {
+        const $link = document.createElement('span');
+        $link.setAttribute('slot', 'link');
+        $link.setAttribute('data-href', `/products/${el.id}`);
+        $link.innerText = el.name;
+        $breadcrumbElement.appendChild($link);
+      });
     });
+    this.$productPath?.append($breadcrumbElement);
   }
 }
