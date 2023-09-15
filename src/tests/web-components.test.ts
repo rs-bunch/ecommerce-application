@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+
 import 'whatwg-fetch';
 import '../styles/vars.scss';
 import '../styles/mixins.scss';
@@ -8,7 +9,7 @@ import Cart from '../components/Cart/Cart';
 import FavouriteItems from '../components/FavouriteItems/FavouriteItems';
 import ShopHeader from '../components/Header/Header';
 import CustomOverlay from '../components/Overlay/Overlay';
-import MyAccount from '../components/Profile/Profile';
+import ProfilePage from '../components/Profile/ProfilePage';
 import StartPage from '../components/StartPage/StartPage';
 import LoginForm from '../components/LoginForm/LoginForm';
 import TestUtils from './utils/test-utils';
@@ -35,7 +36,7 @@ customElements.define('login-form', LoginForm);
 customElements.define('start-page', StartPage);
 customElements.define('favourite-items', FavouriteItems);
 customElements.define('cart-element', Cart);
-customElements.define('account-element', MyAccount);
+customElements.define('account-element', ProfilePage);
 customElements.define('error-element', Page404);
 
 describe('Cart element tests', () => {
@@ -124,6 +125,42 @@ describe('Error 404 page tests', () => {
     const customElement = await TestUtils.render('error-element');
     const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
     const element: HTMLElement | null = shadowRoot.querySelector('.page404');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Address Card tests', () => {
+  it('Shadow root has address-card element', async () => {
+    const customElement = await TestUtils.render('address-card');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.card');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Address Modal tests', () => {
+  it('Shadow root has modal-card element', async () => {
+    const customElement = await TestUtils.render('address-modal');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.modal');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Contact Card tests', () => {
+  it('Shadow root has contact-card element', async () => {
+    const customElement = await TestUtils.render('contact-card');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.contact');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Menu Carsd tests', () => {
+  it('Shadow root has menu-card element', async () => {
+    const customElement = await TestUtils.render('menu-card');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.menu');
     expect(element).toBeTruthy();
   });
 });

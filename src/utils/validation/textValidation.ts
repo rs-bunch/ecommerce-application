@@ -1,3 +1,5 @@
+import type { TextValidator } from '../../dto/types';
+
 // Length
 const hasMinimunLength = (value: string, length: number): Error | void => {
   if (value.length < length)
@@ -18,24 +20,32 @@ const hasSpecialSymbol = (value: string): Error | void => {
 };
 
 const hasNoSpecialSymbol = (value: string): Error | void => {
-  if (/[!#$%^&*]/.test(value)) throw new Error(`Must NOT include special characters (!#$%^&*)`);
+  if (/[!#$%^&*?]/.test(value)) throw new Error(`Must NOT include special characters (!#$%^&*)`);
 };
 
 // Characters
 const hasLowerCaseCharacter = (value: string): Error | void => {
-  if (!/[a-z]/g.test(value)) throw new Error(`Must include a lowercase character`);
+  if (!/[a-z]/g.test(value)) throw new Error(`Must include a lowercase character on English`);
 };
 
 const hasUpperCaseCharacter = (value: string): Error | void => {
-  if (!/[A-Z]/g.test(value)) throw new Error(`Must include a uppercase character`);
+  if (!/[A-Z]/g.test(value)) throw new Error(`Must include a uppercase character on English`);
 };
 
 const hasDomainSyntax = (value: string): Error | void => {
-  if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value)) throw new Error(`Must include a domain name`);
+  if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value)) throw new Error(`Incorrect. Example: "email@domain.com"`);
 };
 
-const hasNoWitespaces = (value: string): Error | void => {
+const hasNoWitespacesAround = (value: string): Error | void => {
   if (value !== value.trim()) throw new Error(`Must NOT start and end witespaces`);
+};
+
+const hasNoWitespacesInside = (value: string): Error | void => {
+  if (value.split(' ').length > 1) throw new Error(`Must NOT witespaces inside`);
+};
+
+const hasCharsOnly = (value: string): Error | void => {
+  if (!/[a-zA-Z]/g.test(value)) throw new Error(`English characters only`);
 };
 
 // Digits
@@ -55,12 +65,16 @@ const moreThanYearsOld = (value: number, years: number): Error | void => {
 };
 
 // Postcode
-const hasPostalCode = (value: string): Error | void => {
-  if (!/^(\d{5})$|^([a-zA-Z]\d){3}$/gi.test(value)) throw new Error(`Format must be 12345 or A1B2C3`);
+const hasPostalCodeUS = (value: string): Error | void => {
+  if (!/^(\d{5})$/gi.test(value)) throw new Error(`Format must be 12345`);
+};
+const hasPostalCodeCA = (value: string): Error | void => {
+  if (!/^[a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d$/gi.test(value)) throw new Error(`Format must be "A1B 2C3"`);
 };
 
 const validateEmail = (value: string): Error | void => {
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
+  hasNoWitespacesInside(value);
   hasNoSpecialSymbol(value);
   hasMinimunLength(value, 1);
   hasSymbol(value, '@');
@@ -68,7 +82,8 @@ const validateEmail = (value: string): Error | void => {
 };
 
 const validatePassword = (value: string): Error | void => {
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
+  hasNoWitespacesInside(value);
   hasMinimunLength(value, 8);
   hasLowerCaseCharacter(value);
   hasUpperCaseCharacter(value);
@@ -77,26 +92,34 @@ const validatePassword = (value: string): Error | void => {
 };
 
 const validateName = (value: string): Error | void => {
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
   hasMinimunLength(value, 1);
-  hasNoSpecialSymbol(value);
-  hasNoSymbol(value, '@');
+  hasCharsOnly(value);
   hasNoDigit(value);
+  hasNoSpecialSymbol(value);
 };
 
-const validateYearOld = (value: string, years = 13): Error | void => {
-  moreThanYearsOld(new Date(value).valueOf(), years);
+const validateYearOld = (value: string, payload?: string | number): Error | void => {
+  moreThanYearsOld(new Date(value).valueOf(), Number(payload));
 };
 
 const validateStreet = (value: string): Error | void => {
   hasMinimunLength(value, 1);
-  hasNoWitespaces(value);
+  hasNoWitespacesAround(value);
 };
 
-const validateZipCode = (value: string): Error | void => {
-  hasNoWitespaces(value);
+const validateZipCode = (value: string, payload?: string | number): Error | void => {
+  switch (payload) {
+    case 'US':
+      hasPostalCodeUS(value);
+      break;
+    case 'CA':
+      hasPostalCodeCA(value);
+      break;
+    default:
+  }
+  hasNoWitespacesAround(value);
   hasMinimunLength(value, 1);
-  hasPostalCode(value);
 };
 
 export { validateEmail, validatePassword, validateName, validateStreet, validateYearOld, validateZipCode };

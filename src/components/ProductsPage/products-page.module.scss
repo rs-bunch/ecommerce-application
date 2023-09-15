@@ -1,0 +1,33 @@
+.wrapper{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    @media screen and (min-width: 470px) {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: flex-start;
+    }
+}
+product-list{
+    width: calc(100% - 180px);
+    display: flex;
+    justify-content: center;
+    @media screen and (min-width: $laptop-width) {
+        width: calc(100% - 230px);
+    }
+}
+
+products-filter{
+    width: 100%;
+    @media screen and (min-width: 470px) {
+        width: 150px;
+        display: block;
+    }
+    @media screen and (min-width: $laptop-width) {
+        width: 200px;
+    }
+}
+

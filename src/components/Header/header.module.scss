@@ -6,6 +6,7 @@ a {
 .header-container {
   position: relative;
   z-index: 1;
+  padding: 0 0 30px 0;
 }
 
 .wrapper {
@@ -14,8 +15,11 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 25px;
+  gap: 15px;
   padding: 5px 15px 0px 15px;
+  @media screen and (min-width: $tablet-width) {
+    gap: 25px;
+  }
 }
 
 .side-bar {
@@ -31,10 +35,21 @@ a {
   text-align: center;
   transition: all ease-in-out .3s;
   padding-top: 55px;
-  z-index: 2;
+  z-index: 3;
   &.open {
     left: 0px;
     display: flex;
+  }
+}
+
+.side-bar__blocks {
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+  & > * {
+    width: 48%;
+    border: $color-light 1px solid;
+    border-radius: 8px;
   }
 }
 
@@ -99,6 +114,30 @@ a {
   cursor: pointer;
 }
 
+.dropdown-nav_main {
+  position: absolute;
+  top: 18px;
+  border-bottom: $color-light solid 2px;
+  transition: all ease-in-out .2s;
+  z-index: -1;
+  &[category="men"],
+  &[category="women"] {
+    top: 58px;
+  }
+}
+
+.dropdown-nav_side {
+  position: absolute;
+  top: 200px;
+  width: 100%;
+  border-bottom: none;
+}
+
+.dropdown-nav_side {
+  width: 100%;
+  border-bottom: none;
+}
+
 .header__shop-details {
   display: flex;
   width: 150px;
@@ -110,16 +149,16 @@ a {
   font-weight: 500;
   font-size: 22px;
   line-height: 26px;
-  color: #807D7E;
+  color: $color-light;
   transition: all ease-in-out .3s;
   @media (hover: hover) {
     &:hover {
     text-shadow:
-    -0.25px -0.25px 0 #3C4242,
-    0.25px -0.25px 0 #3C4242,
-    -0.25px 0.25px 0 #3C4242,
-    0.25px 0.25px 0 #3C4242;
-    color: #3C4242;
+    -0.25px -0.25px 0 $color-dark,
+    0.25px -0.25px 0 $color-dark,
+    -0.25px 0.25px 0 $color-dark,
+    0.25px 0.25px 0 $color-dark;
+    color: $color-dark;
     cursor: pointer;
     }
   }
@@ -206,6 +245,7 @@ a {
 .login__links {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .login__links > * {

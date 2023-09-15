@@ -3,7 +3,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: hidden;
 }
 
 .header {}
@@ -13,7 +12,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: hidden;
   box-sizing: border-box;
   height: 100%;
 }

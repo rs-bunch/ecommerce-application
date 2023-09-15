@@ -1,6 +1,14 @@
-import type { CustomerDraft, ClientResponse, CustomerSignInResult } from '@commercetools/platform-sdk';
+import type {
+  CustomerDraft,
+  ClientResponse,
+  CustomerSignInResult,
+  Customer,
+  CustomerUpdate,
+  CustomerChangePassword,
+  BaseAddress,
+} from '@commercetools/platform-sdk';
 import { apiRoot } from './apiRoot';
-import { AuthPayload } from '../../dto/types';
+import type { AuthPayload } from '../../dto/types';
 
 // Request Flow: request -> execute -> then -> catch
 // Examples: https://docs.commercetools.com/sdk/sdk-example-code
@@ -14,4 +22,16 @@ const loginCustomer = (payload: AuthPayload): Promise<ClientResponse<CustomerSig
   return apiRoot.login().post({ body: payload }).execute();
 };
 
-export { createCustomer, loginCustomer };
+const updateCustomerById = (payload: { id: string; query: CustomerUpdate }): Promise<ClientResponse<Customer>> => {
+  return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
+};
+
+const updateCustomerPassword = (payload: CustomerChangePassword): Promise<ClientResponse<Customer>> => {
+  return apiRoot.customers().password().post({ body: payload }).execute();
+};
+
+// const addAddress = (payload: { id: string; query: CustomerUpdate }): Promise<ClientResponse<Customer>> => {
+//   return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
+// };
+
+export { createCustomer, loginCustomer, updateCustomerById, updateCustomerPassword };

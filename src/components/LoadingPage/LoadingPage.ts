@@ -1,20 +1,19 @@
 import { Dispatch } from 'redux';
-import ElementHTML from './profile.html';
-import stylesheet from './profile.module.scss';
+import stylesheet from './loading-page.module.scss';
 import { bootstrap } from '../../styles/styles';
-import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import { RootState } from '../Store/store';
+import { createElement } from '../../utils/createElement';
 
-export default class MyAccount extends HTMLElement {
+export default class LoadingPage extends HTMLElement {
   public $element: HTMLElement | null;
 
-  public node: Node | null;
+  private $loader: HTMLElement | null;
 
   constructor() {
     super();
-    this.node = createNodeFromHtml(ElementHTML);
-    if (this.node && this.node.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
-    else this.$element = null;
+    this.$element = createElement('div', 'loader-wrapper', []);
+    this.$loader = createElement('div', 'loader', []);
+    if (this.$loader) this.$element?.append(this.$loader);
   }
 
   private connectedCallback(): void {
@@ -27,7 +26,7 @@ export default class MyAccount extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'location') {
-      this.style.display = newValue === 'profile' ? '' : 'none';
+      this.style.display = newValue === 'loading' ? '' : 'none';
     }
   }
 

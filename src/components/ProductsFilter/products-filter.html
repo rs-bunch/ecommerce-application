@@ -1,0 +1,50 @@
+<div class="wrapper">
+    <div class="products-filter">
+        <h3 class="products-filter__title">Filter</h3>
+        <div class="products-filter__categories"></div>
+        <div class="products-filter__price">
+            <h3 class="products-filter__price-title">Price</h3>
+            <label for="price-range" class="form-label" id="price-label">0$</label>
+            <input type="range" class="form-range" min="0" max="1000" step="1" id="price-range" value="0">
+        </div>
+        <div class="products-filter__colors">
+            <h3 class="products-filter__colors-title">Colors</h3>
+            <div class="products-filter__colors-container">
+                <div class="products-filter__color-check products-filter__color-check_purple" data-color="Purple"></div>
+                <div class="products-filter__color-check products-filter__color-check_black" data-color="Black"></div>
+                <div class="products-filter__color-check products-filter__color-check_red" data-color="Red"></div>
+                <div class="products-filter__color-check products-filter__color-check_orange" data-color="Orange"></div>
+                <div class="products-filter__color-check products-filter__color-check_navy" data-color="Navy"></div>
+                <div class="products-filter__color-check products-filter__color-check_white" data-color="White"></div>
+                <div class="products-filter__color-check products-filter__color-check_broom" data-color="Broom"></div>
+                <div class="products-filter__color-check products-filter__color-check_green" data-color="Green"></div>
+                <div class="products-filter__color-check products-filter__color-check_yellow" data-color="Yellow"></div>
+                <div class="products-filter__color-check products-filter__color-check_grey" data-color="Grey"></div>
+                <div class="products-filter__color-check products-filter__color-check_pink" data-color="Pink"></div>
+                <div class="products-filter__color-check products-filter__color-check_blue" data-color="Blue"></div>
+            </div>
+        </div>
+        <div class="products-filter__size">
+            <h3 class="products-filter__size-title">Size</h3>
+            <div class="products-filter__size-container">
+                <div class="products-filter__size-check">XXS</div>
+                <div class="products-filter__size-check">XL</div>
+                <div class="products-filter__size-check">XS</div>
+                <div class="products-filter__size-check">S</div>
+                <div class="products-filter__size-check">M</div>
+                <div class="products-filter__size-check">L</div>
+                <div class="products-filter__size-check">XXL</div>
+                <div class="products-filter__size-check">3XL</div>
+                <div class="products-filter__size-check">4XL</div>
+            </div>
+        </div>
+        <div class="products-filter__sort">
+            <h3 class="products-filter__sort-title">Sort</h3>
+            <div class="products-filter__sort-option" id="sort-name">Name</div>
+            <div class="products-filter__sort-option" id="sort-price">Price</div>
+        </div>
+        <div class="products-filter__clear-check">
+            <button type="button" class="btn btn-danger products-filter__clear-btn" id="clear-btn">Clear</button>
+        </div>
+    </div>
+</div>

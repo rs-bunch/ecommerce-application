@@ -1,0 +1,64 @@
+.card {
+  border-radius: 12px;
+  background: #F6F6F6;
+  padding: 25px;
+  font: 15px 'Causten';
+
+  &:hover {
+    cursor: default;
+  }
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+.card__line {
+  display: flex;
+  flex-direction: column;
+  color: #807D7E;
+  row-gap: 5px;
+  
+  @include media-mobile {
+    column-gap: 12px;
+    flex-direction: row;
+  }
+}
+
+.card__prop {
+  display: none;
+}
+
+.card__title {
+  color: #3C4242;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+// .card__address { }
+
+.card__badge {
+  padding: 5px 10px;
+  border: 1px solid #a7a7a7;
+  color: #a7a7a7;
+  border-radius: 8px;
+  text-align: center;
+}
+.card__button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #807D7E;
+  font: 15px 'Causten';
+
+  @media (hover: hover) {
+    &:hover {
+      cursor: pointer;
+      color: #8A33FD;
+      transition: .5 ease;
+      text-decoration: underline;
+    }    
+  }
+}
