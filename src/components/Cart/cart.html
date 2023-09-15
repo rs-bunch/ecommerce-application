@@ -1,6 +1,79 @@
 <div class="container-fluid cart">
-  <div class="cart__no-items">
-    <h3 class="no-items__title">Your bag is empty</h3>
-    <h4 class="no-items__title no-items__title_small"><small>Sign in to see your bag and get shopping!</small></h4>
+  <div class="wrapper">
+    <div class="cart__header">
+      <div class="cart__breadcrumb">
+        <breadcrumb-element>
+          <span slot="link">Cart</span>
+        </breadcrumb-element>
+      </div>
+      <div id="cart-auth" class="cart__auth">
+        <span>Please fill in the fields below and click place order to complete your purchase!</span>
+        <span>Already registered? <a class="cart__link" data-href="/login" href="/login">Please login here</a></span>
+      </div>
+    </div>
+  </div>
+  <div class="cart__list list">
+    <div class="list__header">
+      <div class="wrapper">
+        <div class="list__container">
+          <div class="list__col list__col-1">Poduct Details</div>
+          <div class="list__col list__col-2">Price</div>
+          <div class="list__col list__col-3">Quantity</div>
+          <div class="list__col list__col-4">Shipping</div>
+          <div class="list__col list__col-5">Subtotal</div>
+          <div class="list__col list__col-6">Action</div>
+        </div>
+      </div>
+    </div>
+    <div class="list__content">
+      <div class="wrapper">
+        <div class="list__rows" id="list-content">
+          <div class="list__row">
+            <cart-item></cart-item>
+          </div>
+          <div class="list__row">
+            <cart-item></cart-item>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list__footer footer">
+      <div class="wrapper">
+        <div class="footer__container">
+          <div class="list__discount discount">
+            <div class="discount__title">Discount Codes</div>
+            <div class="discount__subtitle">Enter your coupon code if you have one</div>
+            <div class="discount__coupon coupon">
+              <input type="text" class="coupon__input" id="coupon-input">
+              <button class="coupon__button" id="coupon-button">Apply Coupon</button>
+            </div>
+            <button class="discount__button footer__button" id="discount-button">Continue Shopping</button>
+          </div>
+          <div class="list__total total">
+            <div class="total__container">
+              <div class="total__content">
+                <div class="total__row">
+                  <div class="total__row-title">Sub Total</div>
+                  <div id="subtotal-price" class="total__row-content">$000.00</div>
+                </div>
+                <div class="total__row">
+                  <div class="total__row-title">Shipping</div>
+                  <div id="shipping-price" class="total__row-content">$0.00</div>
+                </div>
+                <div class="total__row total__row-grand">
+                  <div class="total__row-title">Grand Total</div>
+                  <div id="total-price" class="total__row-content">$000.00</div>
+                </div>
+              </div>
+            </div>
+            <div class="total__container">
+              <div class="total__action">
+                <button id="total-button" class="total__button footer__button">Proceed To Checkout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
