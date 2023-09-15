@@ -6,6 +6,7 @@ export interface LocationState {
 
 export interface AuthState extends Customer {
   inProgress?: boolean;
+  tokenCache: TokenCache;
 }
 
 export interface AuthPayload {
@@ -31,3 +32,9 @@ export interface ProductListState {
 }
 
 export type CategoiesPathData = { name: string; id: string }[];
+
+export interface TokenCache {
+  token: string | null;
+  expirationTime: number | null;
+  refreshToken?: string | null | undefined;
+}

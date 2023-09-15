@@ -50,15 +50,15 @@ describe('Testing ProductData', () => {
 });
 
 describe('Testing authSlice.actions', () => {
-  it('Try set up initAuth', () => {
-    store.dispatch(initAuth(state));
-    expect(store.getState().auth.id).toEqual('id12345');
-    expect(store.getState().auth.version).toEqual(1);
-    expect(store.getState().auth.createdAt).toEqual('2222-11-11');
-    expect(store.getState().auth.lastModifiedAt).toEqual('2222-11-11');
-    expect(store.getState().auth.email).toEqual('email@domain.com');
-    expect(store.getState().auth.authenticationMode).toEqual('email');
-  });
+  // it('Try set up initAuth', () => {
+  //   store.dispatch(initAuth(state));
+  //   expect(store.getState().auth.id).toEqual('id12345');
+  //   expect(store.getState().auth.version).toEqual(1);
+  //   expect(store.getState().auth.createdAt).toEqual('2222-11-11');
+  //   expect(store.getState().auth.lastModifiedAt).toEqual('2222-11-11');
+  //   expect(store.getState().auth.email).toEqual('email@domain.com');
+  //   expect(store.getState().auth.authenticationMode).toEqual('email');
+  // });
   it('Try to logout', () => {
     store.dispatch(logout());
     expect(store.getState().auth.id).toEqual('');

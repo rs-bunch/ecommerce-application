@@ -37,7 +37,7 @@ export default class ProductList extends HTMLElement {
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
 
   private renderProductCards(productsData: ProductProjection[]): void {
-    console.log(productsData, 'render');
+    // console.log(productsData, 'render');
 
     if (!this.shadowRoot) return;
     const cards = this.querySelectorAll('[slot="cards-slot"]');
@@ -100,13 +100,13 @@ export default class ProductList extends HTMLElement {
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     const { location, productList } = newState;
     const { products } = productList;
-    console.log('productList', productList);
+    // console.log('productList', productList);
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));
     }
     if (productList.id) this.renderNavigation(productList.id as string);
     if (products) {
-      console.log('products', products);
+      // console.log('products', products);
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);
     }
   }
