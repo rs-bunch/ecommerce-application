@@ -6,6 +6,14 @@
 }
 
 .about-us__title {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.about-us__title-text {
   padding: 20px 22px;
   position: relative;
   font-family: 'Core Sans C';
@@ -20,6 +28,10 @@
     border-radius: 10px;
     left: 5px;
   }
+}
+
+.about-us__title-img {
+  height: 50px;
 }
 
 .about-us__text {
