@@ -52,11 +52,13 @@ class Router {
 
     document.addEventListener('click', (e) => {
       const eventPathArr = e.composedPath();
-      if (eventPathArr.find((el) => el instanceof HTMLAnchorElement)) e.preventDefault();
-      const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
-      if (target instanceof HTMLElement) {
-        window.history.pushState({}, '', String(target.dataset.href));
-        this.handleLocation('CHANGE_LOCATION');
+      if (eventPathArr.find((el) => el instanceof HTMLAnchorElement && !el.getAttribute('outer-link'))) {
+        e.preventDefault();
+        const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
+        if (target instanceof HTMLElement) {
+          window.history.pushState({}, '', String(target.dataset.href));
+          this.handleLocation('CHANGE_LOCATION');
+        }
       }
     });
   }
@@ -68,7 +70,6 @@ class Router {
     const payload = {
       location: location[locationPath] || location['/404'],
     };
-    console.log(payload);
     switch (payload.location) {
       case 'product': {
         const productId = path.split('/')[2];
@@ -207,7 +208,6 @@ class Router {
       default:
         payload.location = location[locationPath] || location['/404'];
     }
-    console.log(payload);
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
   }
