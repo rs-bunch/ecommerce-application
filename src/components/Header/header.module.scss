@@ -326,6 +326,13 @@ svg path {
   }
 }
 
+.button__fav {
+  display: none;
+  @media screen and (min-width: $tablet-width) {
+    display: flex;
+  }
+}
+
 @media screen and (max-width: $laptop-width) {
   .header__shop-details {
     display: none;
