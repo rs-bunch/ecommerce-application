@@ -1,0 +1,54 @@
+.about-us {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-us__title {
+  padding: 20px 22px;
+  position: relative;
+  font-family: 'Core Sans C';
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: $color-brand-main;
+    width: 6px;
+    height: 30px;
+    border-radius: 10px;
+    left: 5px;
+  }
+}
+
+.about-us__text {
+  color: $color-light;
+  font-family: Causten;
+  font-weight: 400;
+  font-size: 16px;
+  text-align: justify;
+}
+
+.about-us__team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  @media screen and (min-width: $tablet-width) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: $laptop-width) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: $desktop-width) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.team__member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 230px;
+}

@@ -31,6 +31,7 @@ const location: { [index: string]: string } = {
   '/products': 'products',
   '/search': 'search',
   '/404': 'error',
+  '/about-us': 'about-us',
 };
 
 class Router {
