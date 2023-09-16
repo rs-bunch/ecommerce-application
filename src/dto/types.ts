@@ -48,3 +48,9 @@ export interface CartState {
   error: string;
   cart: Cart;
 }
+
+export interface LineItemPayload {
+  productId: string;
+  quantity: number;
+  variantId: number;
+}

@@ -5,7 +5,6 @@ import {
   type Customer,
   type CustomerUpdate,
   type CustomerChangePassword,
-  type BaseAddress,
   CustomerToken,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from '../apiRoot';

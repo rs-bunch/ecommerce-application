@@ -8,6 +8,7 @@ import cartSlice, { activeCart } from './slices/cartSlice';
 // import { TokenState } from '../../dto/types';
 import authMiddleware from './middlewares/authMiddleware';
 import initMiddleware from './middlewares/initMiddleware';
+import cartMiddleware from './middlewares/cartMiddleware';
 
 const rootReducer = combineReducers({
   location: locationSlice.reducer,
@@ -20,7 +21,7 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(initMiddleware, authMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(initMiddleware, authMiddleware, cartMiddleware),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
