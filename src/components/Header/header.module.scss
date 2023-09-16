@@ -210,7 +210,7 @@ a {
 .user-buttons {
   order: 3;
   display: flex;
-  gap: 5%;
+  gap: 5px;
   position: relative;
 }
 
@@ -297,6 +297,7 @@ svg path {
   transition: all ease-in-out .3s;
 }
 
+.button__about-us,
 .button__fav,
 .button__profile,
 .button__cart {
@@ -309,11 +310,17 @@ svg path {
   background-color: #F6F6F6;
   border-radius: 8px;
   transition: all ease-in-out .3s;
+  & svg .about-us {
+    fill: #807D7E;
+  }
   @media (hover: hover) {
     &:hover {
       background-color: #8A33FD;
       & svg path {
         stroke: white !important;
+      }
+      & svg .about-us {
+        fill: white !important;;
       }
     }
   }
