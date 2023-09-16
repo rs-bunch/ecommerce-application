@@ -1,12 +1,15 @@
 .about-us {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
 }
 
 .about-us__title {
   padding: 20px 22px;
   position: relative;
   font-family: 'Core Sans C';
+  align-self: flex-start;
   &::before {
     content: '';
     display: block;
@@ -30,8 +33,8 @@
 .about-us__team {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 15px;
+  width: 100%;
   @media screen and (min-width: $tablet-width) {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -46,9 +49,41 @@
   }
 }
 
-.team__member {
+.team__member-wrapper {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+}
+
+.team__member{
   width: 230px;
 }
+
+.member__name,
+.member__role,
+.member__bio {
+  font-family: Causten;
+  text-align: center;
+  padding: 5px 0;
+  margin: 0;
+}
+
+.member__name {
+  font-weight: 600;
+  font-size: 18px;
+  color: $color-dark;
+}
+
+.member__role {
+  font-weight: 600;
+  font-size: 14px;
+  color: $color-light;
+}
+
+.member__bio {
+  text-align: justify;
+  font-weight: 500;
+  font-size: 14px;
+  color: $color-light;
+}
+
