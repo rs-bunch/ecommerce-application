@@ -1,7 +1,7 @@
 import { ProductData } from '@commercetools/platform-sdk';
-import { initLocation } from '../components/Store/locationSlice';
-import { selectProduct, selectProductVariant } from '../components/Store/productSlice';
-import { initAuth, logout } from '../components/Store/authSlice';
+import { initLocation } from '../components/Store/slices/locationSlice';
+import { selectProduct, selectProductVariant } from '../components/Store/slices/productSlice';
+import { initAuth, logout } from '../components/Store/slices/authSlice';
 import store from '../components/Store/store';
 
 const productMock = {

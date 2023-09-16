@@ -1,10 +1,11 @@
 import type { Store } from '../Store/store';
-import { initLocation, changeLocation } from '../Store/locationSlice';
-import { initAuth } from '../Store/authSlice';
+import { initLocation, changeLocation } from '../Store/slices/locationSlice';
+import { initAuth } from '../Store/slices/authSlice';
 import type LocalStorage from '../LocalStorage/LocalStorage';
 import { getProductDetailsById } from '../Api/product';
 import { notifyError } from '../../utils/notify/notify';
-import { selectProduct } from '../Store/productSlice';
+import { selectProduct } from '../Store/slices/productSlice';
+import { activeCartBindAction } from '../Store/store';
 
 import {
   getProducts,
@@ -16,7 +17,7 @@ import {
   getSortedProductsTotal,
   getFilteredProductsTotal,
   getFilteredSortedProductsTotal,
-} from '../Store/productListSlice';
+} from '../Store/slices/productListSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -42,6 +43,7 @@ class Router {
     window.addEventListener('DOMContentLoaded', () => {
       const localState = localStorage.loadState();
       if (localState) this.store.dispatch(initAuth(localState.auth));
+      // this.store.dispatch(initAuth());
       this.handleLocation('INIT_LOCATION');
     });
 

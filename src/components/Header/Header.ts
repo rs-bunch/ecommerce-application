@@ -4,8 +4,8 @@ import SideBarHTML from './side-bar.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
-import { logout } from '../Store/authSlice';
-import { changeLocation } from '../Store/locationSlice';
+import { logout } from '../Store/slices/authSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 import DropdownNav from './DropdownNav/DropdownNav';
 import { createElement } from '../../utils/createElement';
 

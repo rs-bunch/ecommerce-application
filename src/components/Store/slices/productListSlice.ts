@@ -9,9 +9,9 @@ import {
   getSortedProductList,
   getFilteredProductList,
   getFilteredSortedProductList,
-} from '../Api/productList';
-import { notifyError, notifyInfo } from '../../utils/notify/notify';
-import { ProductListState } from '../../dto/types';
+} from '../../Api/productList';
+import { notifyError, notifyInfo } from '../../../utils/notify/notify';
+import { ProductListState } from '../../../dto/types';
 
 const getProducts = createAsyncThunk('/products/getall/', async (payload: { categoryId: string }) => {
   return getCategoryProductList(`categories.id:subtree("${payload.categoryId}")`)

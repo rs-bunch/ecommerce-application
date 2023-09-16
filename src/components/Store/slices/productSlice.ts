@@ -1,6 +1,6 @@
 import { ProductData } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ProductState } from '../../dto/types';
+import { ProductState } from '../../../dto/types';
 
 const productSlice = createSlice({
   name: 'product',

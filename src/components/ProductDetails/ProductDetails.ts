@@ -8,7 +8,7 @@ import { removeAllChildNodes } from '../../utils/removeAllChildNodes';
 import { createElement } from '../../utils/createElement';
 import { ProductState } from '../../dto/types';
 import store from '../Store/store';
-import { selectProductVariant } from '../Store/productSlice';
+import { selectProductVariant } from '../Store/slices/productSlice';
 import Carousel from './Carousel/Carousel';
 import ImageModal from './ImageModal/ImageModal';
 import { getCategoriesPath } from '../Api/productList';

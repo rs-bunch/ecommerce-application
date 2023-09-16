@@ -2,8 +2,8 @@ import { ProductProjection, ProductProjectionPagedSearchResponse } from '@commer
 import ElementHTML from './product-list.html';
 import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import type { RootState, AppDispatch } from '../Store/store';
-import { changeLocation } from '../Store/locationSlice';
-import { getProducts } from '../Store/productListSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
+import { getProducts } from '../Store/slices/productListSlice';
 import ProductCard from '../ProductCard/ProductCard';
 import productsContainer from './product-list.module.scss';
 import { getCategoriesPath } from '../Api/productList';

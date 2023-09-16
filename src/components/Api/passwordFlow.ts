@@ -1,9 +1,11 @@
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import {
-  Client,
-  ClientBuilder,
   type PasswordAuthMiddlewareOptions,
   type HttpMiddlewareOptions,
-  type TokenStore,
+  Client,
+  ClientBuilder,
+  TokenStore,
 } from '@commercetools/sdk-client-v2';
 import { AuthPayload } from '../../dto/types';
 
@@ -31,17 +33,16 @@ const passwordFlowCtpClient = (options: AuthPayload): Client => {
         password: options.password,
       },
     },
-    tokenCache: {
-      get: () => {
-        return { token: 'string', expirationTime: 0 };
-      },
-      set: (cache: TokenStore) => {
-        // dispatch(updateToken(cache));
-        console.log('Token is: ', cache);
-      },
-    },
     scopes: [SCOPES],
     fetch,
+    tokenCache: {
+      get: (): TokenStore => {
+        return { token: '', expirationTime: 0 };
+      },
+      set: (cache: TokenStore): void => {
+        localStorage.setItem('tokenCache', JSON.stringify(cache));
+      },
+    },
   };
 
   return new ClientBuilder()
@@ -51,7 +52,8 @@ const passwordFlowCtpClient = (options: AuthPayload): Client => {
     .build();
 };
 
-export { passwordFlowCtpClient };
+const passwordFlowApiRoot = (options: AuthPayload): ByProjectKeyRequestBuilder => {
+  return createApiBuilderFromCtpClient(passwordFlowCtpClient(options)).withProjectKey({ projectKey: PROJECT_KEY });
+};
 
-// const ctpClientCredentialFlow = getCredentialFlowCtpClient();
-// const apiRoot = createApiBuilderFromCtpClient(ctpClientCredentialFlow).withProjectKey({ projectKey: PROJECT_KEY });
+export { passwordFlowCtpClient, passwordFlowApiRoot, PROJECT_KEY };

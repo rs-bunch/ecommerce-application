@@ -1,18 +1,20 @@
 import { configureStore, combineReducers, bindActionCreators } from '@reduxjs/toolkit';
-import locationSlice from './locationSlice';
-import productSlice from './productSlice';
-import productListSlice from './productListSlice';
-import authSlice, { logout, updateCustomer, updatePassword } from './authSlice';
+import locationSlice from './slices/locationSlice';
+import productSlice from './slices/productSlice';
+import productListSlice from './slices/productListSlice';
+import authSlice, { logout, updateCustomer, updatePassword } from './slices/authSlice';
+import cartSlice, { activeCart } from './slices/cartSlice';
 // import tokenSlice from './tokenSlice';
 // import { TokenState } from '../../dto/types';
-import authMiddleware from './authMiddleware';
-import initMiddleware from './initMiddleware';
+import authMiddleware from './middlewares/authMiddleware';
+import initMiddleware from './middlewares/initMiddleware';
 
 const rootReducer = combineReducers({
   location: locationSlice.reducer,
   auth: authSlice.reducer,
   product: productSlice.reducer,
   productList: productListSlice.reducer,
+  cart: cartSlice.reducer,
   // token: tokenSlice.reducer,
 });
 
@@ -29,5 +31,6 @@ export default store;
 const logoutBindAction = bindActionCreators(logout, store.dispatch);
 const updateCustomerBindAction = bindActionCreators(updateCustomer, store.dispatch);
 const updatePasswordBindAction = bindActionCreators(updatePassword, store.dispatch);
+const activeCartBindAction = bindActionCreators(activeCart, store.dispatch);
 
-export { logoutBindAction, updateCustomerBindAction, updatePasswordBindAction };
+export { activeCartBindAction, logoutBindAction, updateCustomerBindAction, updatePasswordBindAction };

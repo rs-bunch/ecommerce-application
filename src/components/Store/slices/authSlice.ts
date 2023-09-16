@@ -1,9 +1,17 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import type { Customer, CustomerDraft, CustomerUpdate, CustomerChangePassword } from '@commercetools/platform-sdk';
-import type { AuthState } from '../../dto/types';
-import { getToken, getCustomerByToken, createCustomer, updateCustomerById, updateCustomerPassword } from '../Api/auth';
-import { notifyError, notifyInfo } from '../../utils/notify/notify';
-import { AuthPayload } from '../../dto/types';
+import type { AuthState } from '../../../dto/types';
+import {
+  getToken,
+  getCustomerByToken,
+  createCustomer,
+  updateCustomerById,
+  updateCustomerPassword,
+  loginCustomer,
+} from '../../Api/rest/auth';
+import { notifyError, notifyInfo } from '../../../utils/notify/notify';
+import { AuthPayload } from '../../../dto/types';
+import { meLogin } from '../../Api/rest/me';
 
 const signup = createAsyncThunk('auth/signup', async (payload: CustomerDraft) => {
   return createCustomer(payload)
@@ -21,38 +29,8 @@ const signup = createAsyncThunk('auth/signup', async (payload: CustomerDraft) =>
     });
 });
 
-const login = createAsyncThunk('auth/login', async (payload: AuthPayload) => {
-  return getToken(payload)
-    .then((response) => {
-      if (response.statusCode !== 200) {
-        let message = '';
-        if ('message' in response) message = String(response.message);
-        throw new Error(message);
-      }
-      console.log('customerToken', response.body);
-      return response.body;
-    })
-    .then((customerToken) => {
-      return getCustomerByToken(customerToken);
-    })
-    .then((response) => {
-      if (response.statusCode !== 200) {
-        let message = '';
-        if ('message' in response) message = String(response.message);
-        throw new Error(message);
-      }
-      notifyInfo('Successful login!').showToast();
-      console.log('customer', response.body);
-      return response.body;
-    })
-    .catch((error) => {
-      notifyError(String(error.message)).showToast();
-    });
-});
-
 // const login = createAsyncThunk('auth/login', async (payload: AuthPayload) => {
-//   console.log('login action func');
-//   return loginCustomer(payload)
+//   return meLogin(payload)
 //     .then((response) => {
 //       if (response.statusCode !== 200) {
 //         let message = '';
@@ -123,12 +101,23 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    // initAuth(state) {
+    //   Object.assign(state, {});
+    // },
     initAuth(state: AuthState, action: PayloadAction<AuthState>) {
+      Object.assign(state, { ...action.payload });
+    },
+
+    updateAuth(state: AuthState, action: PayloadAction<Customer>) {
       Object.assign(state, { ...action.payload });
     },
 
     logout(state: AuthState) {
       Object.assign(state, initialState);
+    },
+
+    login(state: AuthState, action: PayloadAction<AuthPayload>) {
+      Object.assign(state, {});
     },
   },
   extraReducers: (builder) => {
@@ -142,15 +131,15 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state) => {
         Object.assign(state, initialState);
       })
-      .addCase(login.pending, (state) => {
-        Object.assign(state, { inProgress: true });
-      })
-      .addCase(login.fulfilled, (state, action) => {
-        Object.assign(state, { inProgress: false }, action.payload);
-      })
-      .addCase(login.rejected, (state) => {
-        Object.assign(state, initialState);
-      })
+      // .addCase(login.pending, (state) => {
+      //   Object.assign(state, { inProgress: true });
+      // })
+      // .addCase(login.fulfilled, (state, action) => {
+      //   Object.assign(state, { inProgress: false }, action.payload);
+      // })
+      // .addCase(login.rejected, (state) => {
+      //   Object.assign(state, initialState);
+      // })
       .addCase(updateCustomer.pending, (state) => {
         Object.assign(state, { inProgress: true });
       })
@@ -172,6 +161,6 @@ const authSlice = createSlice({
   },
 });
 
-export { signup, login, updateCustomer, updatePassword };
-export const { initAuth, logout } = authSlice.actions;
+export { signup, updateCustomer, updatePassword };
+export const { login, initAuth, updateAuth, logout } = authSlice.actions;
 export default authSlice;
