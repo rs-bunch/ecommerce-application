@@ -1,17 +1,18 @@
 import { DiscountedPrice, Image, Price, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import type { RootState } from '../Store/store';
+import type { AppDispatch, RootState } from '../Store/store';
 import ElementHTML from './product-details.html';
 import stylesheet from './product-details.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { removeAllChildNodes } from '../../utils/removeAllChildNodes';
 import { createElement } from '../../utils/createElement';
-import { ProductState } from '../../dto/types';
+import { LineItemPayload, ProductState } from '../../dto/types';
 import store from '../Store/store';
 import { selectProductVariant } from '../Store/slices/productSlice';
 import Carousel from './Carousel/Carousel';
 import ImageModal from './ImageModal/ImageModal';
 import { getCategoriesPath } from '../Api/rest/productList';
+import { addLineItem } from '../Store/slices/cartSlice';
 
 const LOCALE_STRING = 'en-US';
 
@@ -60,6 +61,12 @@ export default class ProductDetails extends HTMLElement {
 
   private $modalContainer: HTMLElement | null;
 
+  private productState: ProductState | undefined;
+
+  private addToCartButton: HTMLButtonElement | null;
+
+  private addLineItem: ((payload: LineItemPayload) => void) | undefined;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -91,6 +98,19 @@ export default class ProductDetails extends HTMLElement {
       L: this.$btnSizeL,
       XL: this.$btnSizeXL,
     };
+
+    this.addToCartButton = this.$element.querySelector('#add-to-cart');
+    this.addToCartButton?.addEventListener('click', () => this.addToCartHandler());
+  }
+
+  private addToCartHandler(): void {
+    const payload: LineItemPayload = {
+      productId: `${this.productState?.productId}`,
+      variantId: this.productState?.variantId || 1,
+      quantity: 1,
+    };
+    console.log(payload);
+    if (this.addLineItem) this.addLineItem(payload);
   }
 
   private connectedCallback(): void {
@@ -133,10 +153,18 @@ export default class ProductDetails extends HTMLElement {
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
     if (oldState.product !== newState.product) {
+      this.productState = newState.product;
       this.attributeChangedCallback('product', oldState.product, newState.product);
     }
     if (oldState.location !== newState.location)
       this.style.display = newState.location.location === 'product' ? '' : 'none';
+  }
+
+  // redux dispath action
+  private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
+    return {
+      addLineItem: (payload: LineItemPayload) => dispatch(addLineItem(payload)),
+    };
   }
 
   private static get observedAttributes(): string[] {
