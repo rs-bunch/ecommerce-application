@@ -57,6 +57,10 @@ const cartSlice = createSlice({
       Object.assign(state, {});
     },
 
+    removeLineItem(state, action: PayloadAction<{ lineItemId: string }>) {
+      Object.assign(state, {});
+    },
+
     clearCart(state) {
       Object.assign(state, initialState);
     },
@@ -76,5 +80,5 @@ const cartSlice = createSlice({
 });
 
 export { activeCart };
-export const { initCart, clearCart, addLineItem } = cartSlice.actions;
+export const { initCart, clearCart, addLineItem, removeLineItem } = cartSlice.actions;
 export default cartSlice;
