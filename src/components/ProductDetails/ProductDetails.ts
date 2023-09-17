@@ -12,7 +12,6 @@ import { selectProductVariant } from '../Store/slices/productSlice';
 import Carousel from './Carousel/Carousel';
 import ImageModal from './ImageModal/ImageModal';
 import { getCategoriesPath } from '../Api/rest/productList';
-import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
 
 const LOCALE_STRING = 'en-US';
 
@@ -106,11 +105,11 @@ export default class ProductDetails extends HTMLElement {
     this.carousel.closeModal();
     if (attributeName === 'product') {
       if (newValue.product && oldValue.product !== newValue.product) this.updateProductDetails(newValue.product);
-      else if (newValue.id && oldValue.id !== newValue.id) {
+      else if (newValue.variantId && oldValue.variantId !== newValue.variantId) {
         const data =
-          newValue.id === 1
+          newValue.variantId === 1
             ? newValue.product?.masterVariant
-            : newValue.product?.variants.find((e) => e.id === newValue.id);
+            : newValue.product?.variants.find((variant) => variant.id === newValue.variantId);
         if (data && data.prices) this.updatePrices(data.prices[0], data.prices[0].discounted);
         if (data && data.images?.length) {
           this.carousel.updateImages(data.images, { carouselName: 'productCarousel', isModal: false });
@@ -133,8 +132,9 @@ export default class ProductDetails extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.product !== newState.product)
+    if (oldState.product !== newState.product) {
       this.attributeChangedCallback('product', oldState.product, newState.product);
+    }
     if (oldState.location !== newState.location)
       this.style.display = newState.location.location === 'product' ? '' : 'none';
   }
@@ -200,7 +200,7 @@ export default class ProductDetails extends HTMLElement {
         if (attr.name === 'Size') {
           this.sizeBtns[attr.value]?.classList.add('shown');
           this.sizeBtns[attr.value]?.addEventListener('click', (event: Event) => {
-            store.dispatch(selectProductVariant({ id: variant.id }));
+            store.dispatch(selectProductVariant({ variantId: variant.id }));
             Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
             if (event.target instanceof HTMLElement) event.target.classList.add('selected');
           });
@@ -210,7 +210,7 @@ export default class ProductDetails extends HTMLElement {
     data.masterVariant.attributes?.forEach((attr: { name: string; value: string }) => {
       if (attr.name === 'Size') this.sizeBtns[attr.value]?.classList.add('shown', 'selected');
       this.sizeBtns[attr.value]?.addEventListener('click', (event: Event) => {
-        store.dispatch(selectProductVariant({ id: data.masterVariant.id }));
+        store.dispatch(selectProductVariant({ variantId: data.masterVariant.id }));
         Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
         if (event.target instanceof HTMLElement) event.target.classList.add('selected');
       });
@@ -234,11 +234,11 @@ export default class ProductDetails extends HTMLElement {
     this.$productPath?.querySelector('breadcrumb-element')?.remove();
     const $breadcrumbElement = document.createElement('breadcrumb-element');
     getCategoriesPath(id, LOCALE_STRING).then((res) => {
-      res.forEach((el) => {
+      res.forEach((category) => {
         const $link = document.createElement('span');
         $link.setAttribute('slot', 'link');
-        $link.setAttribute('data-href', `/products/${el.id}`);
-        $link.innerText = el.name;
+        $link.setAttribute('data-href', `/products/${category.id}`);
+        $link.innerText = category.name;
         $breadcrumbElement.appendChild($link);
       });
     });

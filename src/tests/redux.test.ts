@@ -43,12 +43,12 @@ describe('Testing Location', () => {
 
 describe('Testing ProductData', () => {
   it('Try set product', () => {
-    store.dispatch(selectProduct({ product: productMock }));
+    store.dispatch(selectProduct({ productId: '12345', variantId: 1, product: productMock }));
     expect(store.getState().product.product).toBeTruthy();
   });
   it('Try change variant', () => {
-    store.dispatch(selectProductVariant({ id: 2 }));
-    expect(store.getState().product.id).toEqual(2);
+    store.dispatch(selectProductVariant({ variantId: 2 }));
+    expect(store.getState().product.variantId).toEqual(2);
   });
 });
 
