@@ -4,8 +4,8 @@ import type { RootState, AppDispatch } from '../Store/store';
 import ElementHTML from './signup-form.html';
 import signupStyleSheet from './signup-form.module.scss';
 import { bootstrap } from '../../styles/styles';
-import { signup } from '../Store/authSlice';
-import { changeLocation } from '../Store/locationSlice';
+import { signup } from '../Store/slices/authSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 import {
   validateEmail,
   validatePassword,

@@ -2,7 +2,7 @@ import elementHTML from './products-filter.html';
 import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import productsFilter from './products-filter.module.scss';
 import type { RootState, AppDispatch } from '../Store/store';
-import { changeLocation } from '../Store/locationSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 import { bootstrap } from '../../styles/styles';
 
 export default class ProductsFilter extends HTMLElement {

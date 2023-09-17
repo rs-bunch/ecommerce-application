@@ -8,7 +8,7 @@ import MenuCard from './MenuCard/MenuCard';
 import AddressCard from './AddressCard/AddressCard';
 import ContactCard from './ContactCard/ContactCard';
 import AddressModal from './AddressModal/AddressModal';
-import { changeLocation } from '../Store/locationSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 
 customElements.define('menu-card', MenuCard);
 customElements.define('address-card', AddressCard);

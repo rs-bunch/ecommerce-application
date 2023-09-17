@@ -1,10 +1,9 @@
 import type { Store } from '../Store/store';
-import { initLocation, changeLocation } from '../Store/locationSlice';
-import { initAuth } from '../Store/authSlice';
-import type LocalStorage from '../LocalStorage/LocalStorage';
-import { getProductDetailsById } from '../Api/product';
+import { initLocation, changeLocation } from '../Store/slices/locationSlice';
+import { initAuth } from '../Store/slices/authSlice';
+import { getProductDetailsById } from '../Api/rest/product';
 import { notifyError } from '../../utils/notify/notify';
-import { selectProduct } from '../Store/productSlice';
+import { selectProduct } from '../Store/slices/productSlice';
 
 import {
   getProducts,
@@ -16,7 +15,7 @@ import {
   getSortedProductsTotal,
   getFilteredProductsTotal,
   getFilteredSortedProductsTotal,
-} from '../Store/productListSlice';
+} from '../Store/slices/productListSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -36,12 +35,11 @@ const location: { [index: string]: string } = {
 class Router {
   private store;
 
-  constructor(store: Store, localStorage: LocalStorage) {
+  constructor(store: Store) {
     this.store = store;
 
     window.addEventListener('DOMContentLoaded', () => {
-      const localState = localStorage.loadState();
-      if (localState) this.store.dispatch(initAuth(localState.auth));
+      this.store.dispatch(initAuth());
       this.handleLocation('INIT_LOCATION');
     });
 

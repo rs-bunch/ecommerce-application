@@ -1,5 +1,5 @@
 import { Category, ClientResponse, Product } from '@commercetools/platform-sdk';
-import { apiRoot } from './apiRoot';
+import { apiRoot } from '../apiRoot';
 
 const getProductDetailsByKey = (key: string): Promise<ClientResponse<Product>> => {
   return apiRoot.products().withKey({ key }).get().execute();
