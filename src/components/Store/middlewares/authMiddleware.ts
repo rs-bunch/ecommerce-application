@@ -36,6 +36,12 @@ const authMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
         notifyError(String(error.message)).showToast();
       });
   }
+
+  if (action.type === 'auth/logout') {
+    localStorage.clear();
+    store.dispatch(clearCart());
+    store.dispatch(initAuth());
+  }
   return next(action);
 };
 
