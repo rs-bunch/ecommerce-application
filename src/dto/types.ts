@@ -22,6 +22,7 @@ export interface ProductState {
   productId: string;
   product: ProductData | null;
   variantId: number;
+  lineItemId?: string;
 }
 
 export type TextValidator = (value: string, payload?: string | number) => Error | void;

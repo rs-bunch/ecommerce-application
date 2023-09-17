@@ -1,4 +1,4 @@
-import { DiscountedPrice, Image, Price, ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import { Cart, DiscountedPrice, Image, Price, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import type { AppDispatch, RootState } from '../Store/store';
 import ElementHTML from './product-details.html';
@@ -12,7 +12,7 @@ import { selectProductVariant } from '../Store/slices/productSlice';
 import Carousel from './Carousel/Carousel';
 import ImageModal from './ImageModal/ImageModal';
 import { getCategoriesPath } from '../Api/rest/productList';
-import { addLineItem } from '../Store/slices/cartSlice';
+import { addLineItem, removeLineItem } from '../Store/slices/cartSlice';
 
 const LOCALE_STRING = 'en-US';
 
@@ -63,9 +63,13 @@ export default class ProductDetails extends HTMLElement {
 
   private productState: ProductState | undefined;
 
-  private addToCartButton: HTMLButtonElement | null;
+  private $addToCartButton: HTMLButtonElement | null;
+
+  private $removeFromCartButton: HTMLButtonElement | null;
 
   private addLineItem: ((payload: LineItemPayload) => void) | undefined;
+
+  private removeLineItem: ((payload: { lineItemId: string }) => void) | undefined;
 
   constructor() {
     super();
@@ -99,8 +103,11 @@ export default class ProductDetails extends HTMLElement {
       XL: this.$btnSizeXL,
     };
 
-    this.addToCartButton = this.$element.querySelector('#add-to-cart');
-    this.addToCartButton?.addEventListener('click', () => this.addToCartHandler());
+    this.$addToCartButton = this.$element.querySelector('#add-to-cart');
+    this.$addToCartButton?.addEventListener('click', () => this.addToCartHandler());
+
+    this.$removeFromCartButton = this.$element.querySelector('#remove-from-cart');
+    this.$removeFromCartButton?.addEventListener('click', () => this.removeFromCartHandler());
   }
 
   private addToCartHandler(): void {
@@ -109,8 +116,12 @@ export default class ProductDetails extends HTMLElement {
       variantId: this.productState?.variantId || 1,
       quantity: 1,
     };
-    console.log(payload);
     if (this.addLineItem) this.addLineItem(payload);
+  }
+
+  private removeFromCartHandler(): void {
+    if (this.productState?.lineItemId && this.removeLineItem)
+      this.removeLineItem({ lineItemId: this.productState.lineItemId });
   }
 
   private connectedCallback(): void {
@@ -152,8 +163,24 @@ export default class ProductDetails extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.product !== newState.product) {
-      this.productState = newState.product;
+    if (
+      oldState.product !== newState.product ||
+      oldState.cart.cart.lineItems.length !== newState.cart.cart.lineItems.length
+    ) {
+      this.productState = { ...newState.product };
+
+      const lineItemId = this.getLineItemId(newState.product.productId, newState.cart.cart);
+      if (lineItemId) {
+        Object.assign(this.productState, { lineItemId });
+        if (this.$addToCartButton) this.$addToCartButton.style.display = 'none';
+        if (this.$removeFromCartButton) this.$removeFromCartButton.style.display = '';
+      }
+
+      if (!lineItemId) {
+        if (this.$addToCartButton) this.$addToCartButton.style.display = '';
+        if (this.$removeFromCartButton) this.$removeFromCartButton.style.display = 'none';
+      }
+
       this.attributeChangedCallback('product', oldState.product, newState.product);
     }
     if (oldState.location !== newState.location)
@@ -164,6 +191,7 @@ export default class ProductDetails extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       addLineItem: (payload: LineItemPayload) => dispatch(addLineItem(payload)),
+      removeLineItem: (payload: { lineItemId: string }) => dispatch(removeLineItem(payload)),
     };
   }
 
@@ -271,5 +299,9 @@ export default class ProductDetails extends HTMLElement {
       });
     });
     this.$productPath?.append($breadcrumbElement);
+  }
+
+  private getLineItemId(productId: string, cart: Cart): string | null {
+    return cart.lineItems.find((item) => item.productId === productId)?.id || null;
   }
 }
