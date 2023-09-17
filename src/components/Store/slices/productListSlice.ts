@@ -9,7 +9,7 @@ import {
   getSortedProductList,
   getFilteredProductList,
   getFilteredSortedProductList,
-} from '../../Api/productList';
+} from '../../Api/rest/productList';
 import { notifyError, notifyInfo } from '../../../utils/notify/notify';
 import { ProductListState } from '../../../dto/types';
 

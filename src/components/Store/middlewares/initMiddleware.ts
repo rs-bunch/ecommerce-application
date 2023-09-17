@@ -1,13 +1,12 @@
 import type { Middleware, Dispatch } from 'redux';
-import { anonymousSessionFlowApiRoot } from '../../Api/anonymousSessionFlow';
-import { tokenCache } from '../../Api/tokenCache';
-import { getActiveCart, createCart } from '../../Api/rest/me';
+import { anonymousSessionFlowApiRoot } from '../../Api/clients/anonymousSessionFlow';
+import { tokenCache } from '../../Api/tokenCache/tokenCache';
+import { getActiveCart, createCart, getCustomer } from '../../Api/rest/me';
 import { notifyError } from '../../../utils/notify/notify';
 import { initCart } from '../slices/cartSlice';
 
 const initMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (action) => {
   if (action.type === 'auth/initAuth') {
-    console.log('initMiddleware: auth/initAuth');
     const cache = tokenCache.get();
     if (!cache) {
       anonymousSessionFlowApiRoot

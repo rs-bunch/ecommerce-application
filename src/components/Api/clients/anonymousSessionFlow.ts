@@ -1,6 +1,6 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ClientBuilder, AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { tokenCache } from './tokenCache';
+import { tokenCache } from '../tokenCache/tokenCache';
 
 const PROJECT_KEY = process.env.CTP_PROJECT_KEY || '';
 const CLIENT_SECRET = process.env.CTP_CLIENT_SECRET || '';

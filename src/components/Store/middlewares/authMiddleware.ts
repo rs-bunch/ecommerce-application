@@ -1,10 +1,10 @@
 import type { Middleware, Dispatch } from 'redux';
 import { meLogin } from '../../Api/rest/me';
-import { updateAuth } from '../slices/authSlice';
+import { updateAuth, initAuth } from '../slices/authSlice';
 import { AuthPayload } from '../../../dto/types';
 import type { RootState } from '../store';
 import { notifyError, notifyInfo } from '../../../utils/notify/notify';
-import { initCart } from '../slices/cartSlice';
+import { initCart, clearCart } from '../slices/cartSlice';
 
 const authMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (action) => {
   if (action.type === 'auth/login') {

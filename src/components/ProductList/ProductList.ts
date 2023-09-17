@@ -6,7 +6,7 @@ import { changeLocation } from '../Store/slices/locationSlice';
 import { getProducts } from '../Store/slices/productListSlice';
 import ProductCard from '../ProductCard/ProductCard';
 import productsContainer from './product-list.module.scss';
-import { getCategoriesPath } from '../Api/productList';
+import { getCategoriesPath } from '../Api/rest/productList';
 import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
 
 const LOCALE_STRING = 'en-US';

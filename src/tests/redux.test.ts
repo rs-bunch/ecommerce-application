@@ -1,7 +1,7 @@
 import { ProductData } from '@commercetools/platform-sdk';
 import { initLocation } from '../components/Store/slices/locationSlice';
 import { selectProduct, selectProductVariant } from '../components/Store/slices/productSlice';
-import { initAuth, logout } from '../components/Store/slices/authSlice';
+import { initAuth, updateAuth, logout } from '../components/Store/slices/authSlice';
 import store from '../components/Store/store';
 
 const productMock = {
@@ -50,15 +50,15 @@ describe('Testing ProductData', () => {
 });
 
 describe('Testing authSlice.actions', () => {
-  // it('Try set up initAuth', () => {
-  //   store.dispatch(initAuth(state));
-  //   expect(store.getState().auth.id).toEqual('id12345');
-  //   expect(store.getState().auth.version).toEqual(1);
-  //   expect(store.getState().auth.createdAt).toEqual('2222-11-11');
-  //   expect(store.getState().auth.lastModifiedAt).toEqual('2222-11-11');
-  //   expect(store.getState().auth.email).toEqual('email@domain.com');
-  //   expect(store.getState().auth.authenticationMode).toEqual('email');
-  // });
+  it('Try set up updateAuth', () => {
+    store.dispatch(updateAuth(state));
+    expect(store.getState().auth.id).toEqual('id12345');
+    expect(store.getState().auth.version).toEqual(1);
+    expect(store.getState().auth.createdAt).toEqual('2222-11-11');
+    expect(store.getState().auth.lastModifiedAt).toEqual('2222-11-11');
+    expect(store.getState().auth.email).toEqual('email@domain.com');
+    expect(store.getState().auth.authenticationMode).toEqual('email');
+  });
   it('Try to logout', () => {
     store.dispatch(logout());
     expect(store.getState().auth.id).toEqual('');

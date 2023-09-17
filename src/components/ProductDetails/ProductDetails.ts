@@ -11,7 +11,7 @@ import store from '../Store/store';
 import { selectProductVariant } from '../Store/slices/productSlice';
 import Carousel from './Carousel/Carousel';
 import ImageModal from './ImageModal/ImageModal';
-import { getCategoriesPath } from '../Api/productList';
+import { getCategoriesPath } from '../Api/rest/productList';
 import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
 
 const LOCALE_STRING = 'en-US';

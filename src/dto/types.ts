@@ -6,7 +6,7 @@ export interface LocationState {
 
 export interface AuthState extends Customer {
   inProgress?: boolean;
-  tokenCache: TokenCache;
+  error: string;
 }
 
 export interface AuthPayload {

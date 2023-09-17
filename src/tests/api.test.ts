@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { CustomerPagedQueryResponse } from '@commercetools/platform-sdk';
 import { apiRoot } from '../components/Api/apiRoot';
-import { getCategoriesById, getProductDetailsById, getProductDetailsByKey } from '../components/Api/product';
+import { getCategoriesById, getProductDetailsById, getProductDetailsByKey } from '../components/Api/rest/product';
 import {
   getCategoryProductList,
   getFilteredCategoryProductList,
@@ -11,7 +11,7 @@ import {
   getSearchProductListTotal,
   getSortedCategoryProductList,
   getSortedProductList,
-} from '../components/Api/productList';
+} from '../components/Api/rest/productList';
 
 const TEST_PRODUCT_ID = 'b33865b0-c943-498b-a30e-e8edcd03255b';
 const TEST_CATEGORY_ID = '94038ccd-10f8-4ccc-a616-cfa5438bcc9a';

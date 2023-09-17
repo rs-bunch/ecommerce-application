@@ -1,7 +1,7 @@
 import type { ClientResponse, ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
-import { apiRoot } from './apiRoot';
+import { apiRoot } from '../apiRoot';
 import { getCategoriesById } from './product';
-import { CategoiesPathData } from '../../dto/types';
+import { CategoiesPathData } from '../../../dto/types';
 
 // Request Flow: request -> execute -> then -> catch
 // Examples: https://docs.commercetools.com/sdk/sdk-example-code

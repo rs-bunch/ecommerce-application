@@ -7,7 +7,7 @@ import {
   ClientBuilder,
   TokenStore,
 } from '@commercetools/sdk-client-v2';
-import { AuthPayload } from '../../dto/types';
+import { AuthPayload } from '../../../dto/types';
 
 const PROJECT_KEY = process.env.CTP_PROJECT_KEY || '';
 const CLIENT_SECRET = process.env.CTP_CLIENT_SECRET || '';

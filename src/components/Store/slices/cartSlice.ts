@@ -56,6 +56,10 @@ const cartSlice = createSlice({
     addLineItem(state, action: PayloadAction<LineItemPayload>) {
       Object.assign(state, {});
     },
+
+    clearCart(state) {
+      Object.assign(state, initialState);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -72,5 +76,5 @@ const cartSlice = createSlice({
 });
 
 export { activeCart };
-export const { initCart, addLineItem } = cartSlice.actions;
+export const { initCart, clearCart, addLineItem } = cartSlice.actions;
 export default cartSlice;

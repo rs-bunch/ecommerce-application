@@ -9,7 +9,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { apiRoot } from '../apiRoot';
 import type { AuthPayload } from '../../../dto/types';
-import { passwordFlowApiRoot } from '../passwordFlow';
+import { passwordFlowApiRoot } from '../clients/passwordFlow';
 
 const createCustomer = (payload: CustomerDraft): Promise<ClientResponse<CustomerSignInResult>> => {
   return apiRoot.customers().post({ body: payload }).execute();

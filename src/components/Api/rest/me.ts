@@ -6,7 +6,7 @@ import {
   MyCartUpdate,
 } from '@commercetools/platform-sdk';
 import { AuthPayload } from '../../../dto/types';
-import { passwordFlowApiRoot } from '../passwordFlow';
+import { passwordFlowApiRoot } from '../clients/passwordFlow';
 import { apiRoot } from '../apiRoot';
 
 const createCart = (): Promise<ClientResponse<Cart>> => {
