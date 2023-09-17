@@ -1,6 +1,6 @@
 import type { Middleware, Dispatch } from 'redux';
 import { meLogin } from '../../Api/rest/me';
-import { updateAuth, initAuth } from '../slices/authSlice';
+import { updateAuth, initAuth, clearAuth } from '../slices/authSlice';
 import { AuthPayload } from '../../../dto/types';
 import type { RootState } from '../store';
 import { notifyError, notifyInfo } from '../../../utils/notify/notify';
@@ -39,6 +39,7 @@ const authMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
 
   if (action.type === 'auth/logout') {
     localStorage.clear();
+    store.dispatch(clearAuth());
     store.dispatch(clearCart());
     store.dispatch(initAuth());
   }

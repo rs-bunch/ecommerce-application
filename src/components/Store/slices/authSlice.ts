@@ -65,6 +65,15 @@ const initialState: AuthState = {
   addresses: [],
   isEmailVerified: false,
   authenticationMode: '',
+  lastModifiedBy: {},
+  createdBy: {},
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
+  password: '',
+  shippingAddressIds: [],
+  billingAddressIds: [],
+  stores: [],
   inProgress: false,
   error: '',
 };
@@ -85,6 +94,10 @@ const authSlice = createSlice({
     },
 
     logout(state: AuthState) {
+      Object.assign(state);
+    },
+
+    clearAuth(state: AuthState) {
       Object.assign(state, initialState);
     },
 
@@ -134,5 +147,5 @@ const authSlice = createSlice({
 });
 
 export { signup, updateCustomer, updatePassword };
-export const { login, initAuth, updateAuth, logout } = authSlice.actions;
+export const { login, initAuth, updateAuth, clearAuth, logout } = authSlice.actions;
 export default authSlice;

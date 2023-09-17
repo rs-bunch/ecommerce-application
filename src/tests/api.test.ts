@@ -12,12 +12,15 @@ import {
   getSortedCategoryProductList,
   getSortedProductList,
 } from '../components/Api/rest/productList';
+import LocalStorageMock from './mocks/LocalStorageMock';
 
 const TEST_PRODUCT_ID = 'b33865b0-c943-498b-a30e-e8edcd03255b';
 const TEST_CATEGORY_ID = '94038ccd-10f8-4ccc-a616-cfa5438bcc9a';
 const SORT_TEST_CRITERIA = `price desc`;
 const FILTER_TEST_CRITERIA = [`variants.attributes.Size:"M"`, `variants.attributes.Color:"Red"`];
 const TEST_SEARCHSTRING = 'jacket';
+
+global.localStorage = new LocalStorageMock();
 
 describe('Testing customer API', () => {
   it('Try to recieve a customer', async () => {

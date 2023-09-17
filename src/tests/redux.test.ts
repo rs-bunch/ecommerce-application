@@ -1,8 +1,9 @@
 import { ProductData } from '@commercetools/platform-sdk';
 import { initLocation } from '../components/Store/slices/locationSlice';
 import { selectProduct, selectProductVariant } from '../components/Store/slices/productSlice';
-import { initAuth, updateAuth, logout } from '../components/Store/slices/authSlice';
+import { initAuth, updateAuth, clearAuth } from '../components/Store/slices/authSlice';
 import store from '../components/Store/store';
+import LocalStorageMock from './mocks/LocalStorageMock';
 
 const productMock = {
   name: { 'en-US': 'test' },
@@ -26,6 +27,8 @@ const state = {
   authenticationMode: 'email',
   inProgress: false,
 };
+
+global.localStorage = new LocalStorageMock();
 
 describe('Testing Location', () => {
   it('Try init location', () => {
@@ -60,7 +63,7 @@ describe('Testing authSlice.actions', () => {
     expect(store.getState().auth.authenticationMode).toEqual('email');
   });
   it('Try to logout', () => {
-    store.dispatch(logout());
+    store.dispatch(clearAuth());
     expect(store.getState().auth.id).toEqual('');
     expect(store.getState().auth.version).toEqual(0);
     expect(store.getState().auth.createdAt).toEqual('');
