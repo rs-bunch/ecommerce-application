@@ -52,13 +52,12 @@ class Router {
 
     document.addEventListener('click', (e) => {
       const eventPathArr = e.composedPath();
-      if (eventPathArr.find((el) => el instanceof HTMLAnchorElement && !el.getAttribute('outer-link'))) {
-        e.preventDefault();
-        const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
-        if (target instanceof HTMLElement) {
-          window.history.pushState({}, '', String(target.dataset.href));
-          this.handleLocation('CHANGE_LOCATION');
-        }
+      const anchor = eventPathArr.find((el) => el instanceof HTMLAnchorElement);
+      if (anchor instanceof HTMLAnchorElement && !anchor.getAttribute('outer-link')) e.preventDefault();
+      const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
+      if (target instanceof HTMLElement) {
+        window.history.pushState({}, '', String(target.dataset.href));
+        this.handleLocation('CHANGE_LOCATION');
       }
     });
   }
