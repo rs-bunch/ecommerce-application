@@ -15,7 +15,6 @@ import ProfilePage from './components/Profile/ProfilePage';
 import AuthPage from './components/AuthPage/AuthPage';
 import SignupForm from './components/SignupForm/SignupForm';
 import LoginForm from './components/LoginForm/LoginForm';
-import LocalStorage from './components/LocalStorage/LocalStorage';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import LoadingPage from './components/LoadingPage/LoadingPage';
 import ProductList from './components/ProductList/ProductList';
@@ -26,12 +25,7 @@ import CartItem from './components/Cart/CartItem/CartItem';
 
 document.adoptedStyleSheets = [bootstrap];
 
-const localStoarge = new LocalStorage();
-const router: Router = new Router(store, localStoarge);
-
-window.addEventListener('beforeunload', () => {
-  localStoarge.saveState(store.getState());
-});
+const router: Router = new Router(store);
 
 customElements.define('breadcrumb-nav', Breadcrumb);
 

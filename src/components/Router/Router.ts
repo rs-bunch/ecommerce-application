@@ -1,11 +1,9 @@
 import type { Store } from '../Store/store';
 import { initLocation, changeLocation } from '../Store/slices/locationSlice';
-import { initAuth, updateAuth } from '../Store/slices/authSlice';
-import type LocalStorage from '../LocalStorage/LocalStorage';
+import { initAuth } from '../Store/slices/authSlice';
 import { getProductDetailsById } from '../Api/rest/product';
 import { notifyError } from '../../utils/notify/notify';
 import { selectProduct } from '../Store/slices/productSlice';
-import { activeCartBindAction } from '../Store/store';
 
 import {
   getProducts,
@@ -37,7 +35,7 @@ const location: { [index: string]: string } = {
 class Router {
   private store;
 
-  constructor(store: Store, localStorage: LocalStorage) {
+  constructor(store: Store) {
     this.store = store;
 
     window.addEventListener('DOMContentLoaded', () => {
