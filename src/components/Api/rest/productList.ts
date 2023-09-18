@@ -2,6 +2,7 @@ import type { ClientResponse, ProductProjectionPagedSearchResponse } from '@comm
 import { apiRoot } from '../apiRoot';
 import { getCategoriesById } from './product';
 import { CategoiesPathData } from '../../../dto/types';
+import { PAGE_SIZE } from '../../../dto/constants';
 
 // Request Flow: request -> execute -> then -> catch
 // Examples: https://docs.commercetools.com/sdk/sdk-example-code
@@ -9,45 +10,51 @@ import { CategoiesPathData } from '../../../dto/types';
 
 // type CategoryProductListFunc = () => Promise<ClientResponse<ProductProjectionPagedSearchResponse>>;
 
-const getCategoryProductList = (categoryId: string): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
+const getCategoryProductList = (
+  categoryId: string,
+  page: number
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { filter: `${categoryId}` } })
+    .get({ queryArgs: { filter: `${categoryId}`, limit: PAGE_SIZE, offset: page * PAGE_SIZE } })
     .execute();
 };
 
 const getSortedCategoryProductList = (
   categoryId: string,
-  criteria: string
+  criteria: string,
+  page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { filter: `${categoryId}`, sort: criteria } })
+    .get({ queryArgs: { filter: `${categoryId}`, sort: criteria, limit: PAGE_SIZE, offset: page * PAGE_SIZE } })
     .execute();
 };
 
 const getFilteredCategoryProductList = (
   categoryId: string,
-  criteria: string[]
+  criteria: string[],
+  page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { filter: [`${categoryId}`, ...criteria] } })
+    .get({ queryArgs: { filter: [`${categoryId}`, ...criteria], limit: PAGE_SIZE, offset: page * PAGE_SIZE } })
     .execute();
 };
 
 const getFilteredSortedCategoryProductList = (
   categoryId: string,
   filter: string[],
-  sort: string
+  sort: string,
+  page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { filter: [`${categoryId}`, ...filter], sort } })
+    .get({ queryArgs: { filter: [`${categoryId}`, ...filter], sort, limit: PAGE_SIZE, offset: page * PAGE_SIZE } })
     .execute();
 };
 
@@ -63,46 +70,79 @@ const getFilteredSortedCategoryProductList = (
 //     .execute();
 // };
 
-const getSearchProductListTotal = (text: string): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
-  console.log('search');
+const getSearchProductListTotal = (
+  text: string,
+  page: number
+): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true } })
+    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true, limit: PAGE_SIZE, offset: page * PAGE_SIZE } })
     .execute();
 };
 
 const getSortedProductList = (
   text: string,
-  criteria: string
+  criteria: string,
+  page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { sort: criteria, 'text.en-US': text, fuzzy: true, staged: true } })
+    .get({
+      queryArgs: {
+        sort: criteria,
+        'text.en-US': text,
+        fuzzy: true,
+        staged: true,
+        limit: PAGE_SIZE,
+        offset: page * PAGE_SIZE,
+      },
+    })
     .execute();
 };
 
 const getFilteredProductList = (
   text: string,
-  criteria: string[]
+  criteria: string[],
+  page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true, filter: [...criteria] } })
+    .get({
+      queryArgs: {
+        'text.en-US': text,
+        fuzzy: true,
+        staged: true,
+        filter: [...criteria],
+        limit: PAGE_SIZE,
+        offset: page * PAGE_SIZE,
+      },
+    })
     .execute();
 };
 
 const getFilteredSortedProductList = (
   text: string,
   filter: string[],
-  sort: string
+  sort: string,
+  page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
   return apiRoot
     .productProjections()
     .search()
-    .get({ queryArgs: { 'text.en-US': text, fuzzy: true, staged: true, filter: [...filter], sort } })
+    .get({
+      queryArgs: {
+        'text.en-US': text,
+        fuzzy: true,
+        staged: true,
+        filter: [...filter],
+        sort,
+        limit: PAGE_SIZE,
+        offset: page * PAGE_SIZE,
+      },
+    })
     .execute();
 };
 

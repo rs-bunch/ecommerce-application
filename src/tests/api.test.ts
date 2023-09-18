@@ -14,6 +14,7 @@ import {
 } from '../components/Api/rest/productList';
 import LocalStorageMock from './mocks/LocalStorageMock';
 
+const TEST_PAGE = 0;
 const TEST_PRODUCT_ID = 'b33865b0-c943-498b-a30e-e8edcd03255b';
 const TEST_CATEGORY_ID = '94038ccd-10f8-4ccc-a616-cfa5438bcc9a';
 const SORT_TEST_CRITERIA = `price desc`;
@@ -55,20 +56,22 @@ describe('Testing productData API', () => {
 
 describe('Testing ProductList API', () => {
   it('Try to recieve a category product list', async () => {
-    const productList = await getCategoryProductList(`categories.id:subtree("${TEST_CATEGORY_ID}")`);
+    const productList = await getCategoryProductList(`categories.id:subtree("${TEST_CATEGORY_ID}")`, TEST_PAGE);
     expect(productList.statusCode).toEqual(200);
   });
   it('Try to recieve a sorted product list', async () => {
     const productList = await getSortedCategoryProductList(
       `categories.id:subtree("${TEST_CATEGORY_ID}")`,
-      SORT_TEST_CRITERIA
+      SORT_TEST_CRITERIA,
+      TEST_PAGE
     );
     expect(productList.statusCode).toEqual(200);
   });
   it('Try to recieve a filtered product list', async () => {
     const productList = await getFilteredCategoryProductList(
       `categories.id:subtree("${TEST_CATEGORY_ID}")`,
-      FILTER_TEST_CRITERIA
+      FILTER_TEST_CRITERIA,
+      TEST_PAGE
     );
     expect(productList.statusCode).toEqual(200);
   });
@@ -76,24 +79,30 @@ describe('Testing ProductList API', () => {
     const productList = await getFilteredSortedCategoryProductList(
       `categories.id:subtree("${TEST_CATEGORY_ID}")`,
       FILTER_TEST_CRITERIA,
-      SORT_TEST_CRITERIA
+      SORT_TEST_CRITERIA,
+      TEST_PAGE
     );
     expect(productList.statusCode).toEqual(200);
   });
   it('Try to recieve a searched product list', async () => {
-    const productList = await getSearchProductListTotal('test');
+    const productList = await getSearchProductListTotal('test', TEST_PAGE);
     expect(productList.statusCode).toEqual(200);
   });
   it('Try to recieve a sorted product list', async () => {
-    const productList = await getSortedProductList(TEST_SEARCHSTRING, SORT_TEST_CRITERIA);
+    const productList = await getSortedProductList(TEST_SEARCHSTRING, SORT_TEST_CRITERIA, TEST_PAGE);
     expect(productList.statusCode).toEqual(200);
   });
   it('Try to recieve a filtered product list', async () => {
-    const productList = await getFilteredProductList(TEST_SEARCHSTRING, FILTER_TEST_CRITERIA);
+    const productList = await getFilteredProductList(TEST_SEARCHSTRING, FILTER_TEST_CRITERIA, TEST_PAGE);
     expect(productList.statusCode).toEqual(200);
   });
   it('Try to recieve a filtered sorted product list', async () => {
-    const productList = await getFilteredSortedProductList(TEST_SEARCHSTRING, FILTER_TEST_CRITERIA, SORT_TEST_CRITERIA);
+    const productList = await getFilteredSortedProductList(
+      TEST_SEARCHSTRING,
+      FILTER_TEST_CRITERIA,
+      SORT_TEST_CRITERIA,
+      TEST_PAGE
+    );
     expect(productList.statusCode).toEqual(200);
   });
 });
