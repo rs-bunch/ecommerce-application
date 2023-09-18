@@ -1,7 +1,7 @@
 import ElementHTML from './cart-item.html';
 import stylesheet from './cart-item.module.scss';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
-import { RootState, AppDispatch } from '../../Store/store';
+import { RootState, AppDispatch, changeLineItemQuantityBindAction } from '../../Store/store';
 // import { action } from '../Store/actoinSlice';
 
 export default class extends HTMLElement {
@@ -45,6 +45,15 @@ export default class extends HTMLElement {
     this.$counterValue = this.$element.querySelector('#counter-value');
     this.$subtotalPrice = this.$element.querySelector('#subtotal-price');
     this.$actionButton = this.$element.querySelector('#action-button');
+
+    this.$reduceButton?.addEventListener('click', () => this.changeQuantity(Number(this.$counterValue?.innerText) - 1));
+    this.$increaseButton?.addEventListener('click', () =>
+      this.changeQuantity(Number(this.$counterValue?.innerText) + 1)
+    );
+  }
+
+  private changeQuantity(quantity: number): void {
+    changeLineItemQuantityBindAction({ quantity, lineItemId: this.lineItemId });
   }
 
   private createItemPriceElement(value: string): HTMLElement {

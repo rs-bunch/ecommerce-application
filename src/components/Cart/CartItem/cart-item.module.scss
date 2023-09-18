@@ -93,6 +93,7 @@
 }
 
 .card__image-container {
+  flex-shrink: 0;
   height: 120px;
   width: 105px;
   border-radius: 12px;
