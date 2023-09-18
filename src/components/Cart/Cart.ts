@@ -3,10 +3,10 @@ import { Dispatch } from 'redux';
 import ElementHTML from './cart.html';
 import stylesheet from './cart.module.scss';
 import { bootstrap } from '../../styles/styles';
-import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { RootState } from '../Store/store';
 import BreadcrumbElement from './BreadcrumbElement/BreadcrumbElement';
+import type { CartState } from '../../dto/types';
 
 customElements.define('breadcrumb-element', BreadcrumbElement);
 
@@ -32,22 +32,20 @@ const createElementFomObj = (options: CreateElementFromObjOptions): HTMLElement 
 };
 
 export default class Cart extends HTMLElement {
-  // public $element: HTMLElement | null;
-
   private $element: DocumentFragment;
 
   private $cartItems: HTMLElement | null;
 
-  // public node: Node | null;
+  private $subtotalPrice: HTMLElement | null;
+
+  private $totalPrice: HTMLElement | null;
 
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
     this.$cartItems = this.$element.querySelector('#cart-items');
-
-    // this.node = createNodeFromHtml(ElementHTML);
-    // if (this.node && this.node.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
-    // else this.$element = null;
+    this.$subtotalPrice = this.$element.querySelector('#subtotal-price');
+    this.$totalPrice = this.$element.querySelector('#total-price');
   }
 
   private createCartItem(lineItem: LineItem): HTMLElement {
@@ -79,15 +77,23 @@ export default class Cart extends HTMLElement {
     return $lineRow;
   }
 
-  private render(lineItems: LineItem[]): void {
+  private render(cartState: CartState): void {
     if (this.$cartItems) this.$cartItems.innerHTML = '';
 
-    if (lineItems.length) {
-      lineItems.forEach((lineItem) => {
+    if (cartState.cart.lineItems.length) {
+      cartState.cart.lineItems.forEach((lineItem) => {
         if (this.$cartItems) this.$cartItems.appendChild(this.createCartItem(lineItem));
       });
+
+      if (this.$subtotalPrice)
+        this.$subtotalPrice.innerText = `$${(Number(cartState.cart.totalPrice.centAmount) / 100).toFixed(2)}`;
+      if (this.$totalPrice)
+        this.$totalPrice.innerText = `$${(Number(cartState.cart.totalPrice.centAmount) / 100).toFixed(2)}`;
     }
-    // if (!lineItems.length) {}
+
+    if (!cartState.cart.lineItems.length) {
+      // implemntation of empty cart
+    }
   }
 
   private connectedCallback(): void {
@@ -111,7 +117,7 @@ export default class Cart extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.cart.cart.version !== newState.cart.cart.version) this.render(newState.cart.cart.lineItems);
+    if (oldState.cart.cart.version !== newState.cart.cart.version) this.render(newState.cart);
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
   }
