@@ -39,6 +39,8 @@ products-filter{
     justify-content: center;
     align-items: center;
 
+    margin: 0px 0px 15px 0px;
+
     @media screen and (min-width: 470px) {
         flex-direction: row;
         align-items: flex-start;
