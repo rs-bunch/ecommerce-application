@@ -29,8 +29,17 @@ const updateCart = (payload: { id: string; options: MyCartUpdate }): Promise<Cli
   return apiRoot.me().carts().withId({ ID: payload.id }).post({ body: payload.options }).execute();
 };
 
+const deleteCart = (payload: { id: string; version: number }): Promise<ClientResponse<Cart>> => {
+  return apiRoot
+    .me()
+    .carts()
+    .withId({ ID: payload.id })
+    .delete({ queryArgs: { version: payload.version } })
+    .execute();
+};
+
 const getCustomer = (): Promise<ClientResponse<Customer>> => {
   return apiRoot.me().get().execute();
 };
 
-export { createCart, getActiveCart, meLogin, getCustomer, updateCart };
+export { createCart, getActiveCart, meLogin, getCustomer, updateCart, deleteCart };

@@ -5,7 +5,7 @@ import type {
   MyCartUpdate,
   MyCartUpdateAction,
 } from '@commercetools/platform-sdk';
-import { updateCart } from '../../Api/rest/me';
+import { updateCart, deleteCart, createCart } from '../../Api/rest/me';
 import { LineItemPayload } from '../../../dto/types';
 import type { RootState } from '../store';
 import { notifyError, notifyInfo } from '../../../utils/notify/notify';
@@ -90,6 +90,24 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
         };
         store.dispatch(updateCartState(payload));
         notifyInfo('Item quantity changed!').showToast();
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+
+  if (action.type === 'cart/deleteCart') {
+    deleteCart({ id, version })
+      .then(() => createCart())
+      .then((response) => response.body)
+      .then((cart) => {
+        const payload = {
+          inProgress: false,
+          error: '',
+          cart,
+        };
+        store.dispatch(updateCartState(payload));
+        notifyInfo('Cart was deleted!').showToast();
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();

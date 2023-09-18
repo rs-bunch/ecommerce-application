@@ -4,7 +4,7 @@ import ElementHTML from './cart.html';
 import stylesheet from './cart.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import { RootState } from '../Store/store';
+import { type RootState, deleteCartBindAction } from '../Store/store';
 import BreadcrumbElement from './BreadcrumbElement/BreadcrumbElement';
 import type { CartState } from '../../dto/types';
 
@@ -48,6 +48,8 @@ export default class Cart extends HTMLElement {
 
   private $loginMessage: HTMLElement | null;
 
+  private $clearCart: HTMLButtonElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -58,6 +60,13 @@ export default class Cart extends HTMLElement {
     this.$cartList = this.$element.querySelector('#cart-list');
     this.$cartAuth = this.$element.querySelector('#cart-auth');
     this.$loginMessage = this.$element.querySelector('#login-message');
+    this.$clearCart = this.$element.querySelector('#clear-cart');
+
+    this.$clearCart?.addEventListener('click', () => this.clearCartHandle());
+  }
+
+  private clearCartHandle(): void {
+    deleteCartBindAction();
   }
 
   private createCartItem(lineItem: LineItem): HTMLElement {

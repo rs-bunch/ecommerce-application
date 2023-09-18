@@ -40,6 +40,18 @@ const initMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
           };
           store.dispatch(initCart(payload));
         })
+        .catch(() =>
+          createCart()
+            .then((response) => response.body)
+            .then((cart) => {
+              const payload = {
+                inProgress: false,
+                error: '',
+                cart,
+              };
+              store.dispatch(initCart(payload));
+            })
+        )
         .catch((error) => {
           notifyError(String(error.message)).showToast();
         });
