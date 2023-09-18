@@ -4,14 +4,12 @@ import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import type { RootState, AppDispatch } from '../Store/store';
 import { changeLocation } from '../Store/slices/locationSlice';
 import { getProducts } from '../Store/slices/productListSlice';
-import ProductCard from '../ProductCard/ProductCard';
+// import ProductCard from '../ProductCard/ProductCard';
 import productsContainer from './product-list.module.scss';
 import { getCategoriesPath } from '../Api/rest/productList';
 import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
 
 const LOCALE_STRING = 'en-US';
-
-customElements.define('product-card', ProductCard);
 
 export default class ProductList extends HTMLElement {
   private $element: HTMLElement | null;
