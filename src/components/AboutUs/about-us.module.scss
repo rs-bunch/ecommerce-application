@@ -28,6 +28,13 @@
     border-radius: 10px;
     left: 5px;
   }
+  &.about-us__title-text_small {
+    &::before {
+      content: '';
+      height: 22px;
+      left: 5px;
+    }
+  }
 }
 
 .about-us__rs-img {
@@ -41,7 +48,14 @@
   font-weight: 400;
   font-size: 16px;
   text-align: justify;
+  margin: 10px 0 0 0;
+  &.about-us__text_contibutions {
+    font-weight: 600;
+    align-self: start;
+    margin: 0 0 2px 0;
+  }
 }
+
 
 .about-us__team {
   display: flex;
@@ -69,6 +83,10 @@
 }
 
 .team__member{
+  width: 230px;
+}
+
+.member__photo {
   width: 230px;
 }
 
@@ -100,3 +118,12 @@
   color: $color-light;
 }
 
+.member__github {
+  color: $color-dark;
+  transition: all ease-in-out .3s;
+  @media (hover: hover) {
+    &:hover {
+    color: #8A33FD;
+    }
+  }
+}
