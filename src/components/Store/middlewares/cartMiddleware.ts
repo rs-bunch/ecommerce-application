@@ -113,6 +113,60 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
         notifyError(String(error.message)).showToast();
       });
   }
+
+  if (action.type === 'cart/addDiscountCode') {
+    const addDiscountCodeAction: MyCartUpdateAction = {
+      action: 'addDiscountCode',
+      code: `${action.payload.code}`,
+    };
+
+    const myCartUpdate: MyCartUpdate = {
+      actions: [addDiscountCodeAction],
+      version,
+    };
+
+    updateCart({ id, options: myCartUpdate })
+      .then((response) => {
+        const payload = {
+          inProgress: false,
+          error: '',
+          cart: response.body,
+        };
+        store.dispatch(updateCartState(payload));
+        notifyInfo('Discount Code Added!').showToast();
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+
+  if (action.type === 'cart/removeDiscountCode') {
+    const removeDiscountCodeAction: MyCartUpdateAction = {
+      action: 'removeDiscountCode',
+      discountCode: { typeId: 'discount-code', id: `${action.payload.id}` },
+    };
+
+    const myCartUpdate: MyCartUpdate = {
+      actions: [removeDiscountCodeAction],
+      version,
+    };
+
+    console.log(myCartUpdate);
+
+    updateCart({ id, options: myCartUpdate })
+      .then((response) => {
+        const payload = {
+          inProgress: false,
+          error: '',
+          cart: response.body,
+        };
+        store.dispatch(updateCartState(payload));
+        notifyInfo('Discount Code Removed!').showToast();
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
   return next(action);
 };
 

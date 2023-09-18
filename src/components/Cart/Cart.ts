@@ -4,7 +4,12 @@ import ElementHTML from './cart.html';
 import stylesheet from './cart.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import { type RootState, deleteCartBindAction } from '../Store/store';
+import {
+  type RootState,
+  deleteCartBindAction,
+  addDiscountCodeBindAction,
+  removeDiscountCodeBindAction,
+} from '../Store/store';
 import BreadcrumbElement from './BreadcrumbElement/BreadcrumbElement';
 import type { CartState } from '../../dto/types';
 
@@ -50,6 +55,14 @@ export default class Cart extends HTMLElement {
 
   private $clearCart: HTMLButtonElement | null;
 
+  private $couponInput: HTMLInputElement | null;
+
+  private $applyCouponButton: HTMLButtonElement | null;
+
+  private $removeDiscount: HTMLElement | null;
+
+  private discountId = '';
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -60,9 +73,25 @@ export default class Cart extends HTMLElement {
     this.$cartList = this.$element.querySelector('#cart-list');
     this.$cartAuth = this.$element.querySelector('#cart-auth');
     this.$loginMessage = this.$element.querySelector('#login-message');
-    this.$clearCart = this.$element.querySelector('#clear-cart');
+    this.$couponInput = this.$element.querySelector('#coupon-input');
 
+    this.$clearCart = this.$element.querySelector('#clear-cart');
     this.$clearCart?.addEventListener('click', () => this.clearCartHandle());
+
+    this.$applyCouponButton = this.$element.querySelector('#apply-coupon');
+    this.$applyCouponButton?.addEventListener('click', () => this.applyCouponHandler());
+
+    this.$removeDiscount = this.$element.querySelector('#remove-discount');
+    this.$removeDiscount?.addEventListener('click', () => this.removeDiscountHandler());
+  }
+
+  private applyCouponHandler(): void {
+    const code = this.$couponInput?.value || '';
+    if (code) addDiscountCodeBindAction({ code });
+  }
+
+  private removeDiscountHandler(): void {
+    removeDiscountCodeBindAction({ id: this.discountId });
   }
 
   private clearCartHandle(): void {
@@ -101,13 +130,21 @@ export default class Cart extends HTMLElement {
   private render(cartState: CartState): void {
     if (this.$cartItems) this.$cartItems.innerHTML = '';
 
+    // if (cartState.cart.discountCodes.length) {
+    //   this.discountId = cartState.cart.discountCodes[0].discountCode.id;
+    //   if (this.$removeDiscount) this.$removeDiscount.style.display = 'flex';
+    // }
+
     if (cartState.cart.lineItems.length) {
       cartState.cart.lineItems.forEach((lineItem) => {
         if (this.$cartItems) this.$cartItems.appendChild(this.createCartItem(lineItem));
       });
 
-      if (this.$subtotalPrice)
-        this.$subtotalPrice.innerText = `$${(Number(cartState.cart.totalPrice.centAmount) / 100).toFixed(2)}`;
+      if (this.$subtotalPrice) {
+        const subtotalPrice = cartState.cart.lineItems.reduce((acc, el) => acc + Number(el.price.value.centAmount), 0);
+        this.$subtotalPrice.innerText = `$${(subtotalPrice / 100).toFixed(2)}`;
+      }
+
       if (this.$totalPrice)
         this.$totalPrice.innerText = `$${(Number(cartState.cart.totalPrice.centAmount) / 100).toFixed(2)}`;
 
@@ -150,6 +187,14 @@ export default class Cart extends HTMLElement {
     }
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
+
+    if (oldState.cart.cart.discountCodes.length !== newState.cart.cart.discountCodes.length) {
+      if (newState.cart.cart.discountCodes.length) {
+        this.discountId = newState.cart.cart.discountCodes[0].discountCode.id;
+      }
+      if (this.$removeDiscount)
+        this.$removeDiscount.style.display = newState.cart.cart.discountCodes.length ? 'flex' : 'none';
+    }
   }
 
   // redux dispath action
