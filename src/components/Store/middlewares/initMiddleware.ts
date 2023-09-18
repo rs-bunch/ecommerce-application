@@ -10,6 +10,7 @@ const initMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
   if (action.type === 'auth/initAuth') {
     const cache = tokenCache.get();
     if (!cache) {
+      localStorage.clear();
       anonymousSessionFlowApiRoot
         .get()
         .execute()
