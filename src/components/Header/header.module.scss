@@ -7,6 +7,7 @@ a {
   position: relative;
   z-index: 1;
   padding: 0 0 30px 0;
+  border-bottom: 2px solid $color-light-xl;
 }
 
 .wrapper {
@@ -117,7 +118,6 @@ a {
 .dropdown-nav_main {
   position: absolute;
   top: 18px;
-  border-bottom: $color-light solid 2px;
   transition: all ease-in-out .2s;
   z-index: -1;
   &[category="men"],
@@ -210,7 +210,7 @@ a {
 .user-buttons {
   order: 3;
   display: flex;
-  gap: 5%;
+  gap: 5px;
   position: relative;
 }
 
@@ -297,6 +297,7 @@ svg path {
   transition: all ease-in-out .3s;
 }
 
+.button__about-us,
 .button__fav,
 .button__profile,
 .button__cart {
@@ -309,13 +310,26 @@ svg path {
   background-color: #F6F6F6;
   border-radius: 8px;
   transition: all ease-in-out .3s;
+  & svg .about-us {
+    fill: #807D7E;
+  }
   @media (hover: hover) {
     &:hover {
       background-color: #8A33FD;
       & svg path {
         stroke: white !important;
       }
+      & svg .about-us {
+        fill: white !important;
+      }
     }
+  }
+}
+
+.button__fav {
+  display: none;
+  @media screen and (min-width: $tablet-width) {
+    display: flex;
   }
 }
 

@@ -92,11 +92,16 @@
   column-gap: 20px;
 }
 
-.card__image {
+.card__image-container {
+  flex-shrink: 0;
   height: 120px;
   width: 105px;
   border-radius: 12px;
-  background: #3C4242;
+  overflow: hidden;
+}
+
+.card__image {
+  width: 100%;
 }
 
 .card__content {
@@ -114,8 +119,7 @@
 }
 // .card__color { }
 // .card__size { }
-// .item__price { }
-.price {
+.item__prices {
   display: flex;
   flex-direction: row;
   column-gap: 5px;
@@ -131,9 +135,12 @@
   font-size: 18px;
   font-weight: 700;
 
-  &_old {
-    text-decoration: line-through;
+  &:nth-child(2) {
     color: #b10000;
+  }
+
+  &:has(+ .price__value:nth-child(2)) {
+    text-decoration: line-through;
   }
 }
 

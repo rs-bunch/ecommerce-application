@@ -11,6 +11,8 @@ import { createElement } from '../../utils/createElement';
 
 customElements.define('dropdown-nav', DropdownNav);
 
+const toCloseDropdownNav = ['main', 'error', 'signup', 'login', 'favourites', 'about-us'];
+
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
 
@@ -141,7 +143,7 @@ export default class ShopHeader extends HTMLElement {
       this.attributeChangedCallback('firstName', oldState.auth.firstName || null, newState.auth.firstName || null);
     if (
       oldState.location.location !== newState.location.location &&
-      ['main', 'error', 'signup', 'login', 'favourites'].includes(newState.location.location)
+      toCloseDropdownNav.includes(newState.location.location)
     )
       this.$dropdownNav?.setAttribute('category', 'none');
   }

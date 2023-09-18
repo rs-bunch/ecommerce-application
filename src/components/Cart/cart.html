@@ -8,11 +8,11 @@
       </div>
       <div id="cart-auth" class="cart__auth">
         <span>Please fill in the fields below and click place order to complete your purchase!</span>
-        <span>Already registered? <a class="cart__link" data-href="/login" href="/login">Please login here</a></span>
+        <span id="login-message">Already registered? <a class="cart__link" data-href="/login" href="/login">Please login here</a></span>
       </div>
     </div>
   </div>
-  <div class="cart__list list">
+  <div id="cart-list" class="cart__list list">
     <div class="list__header">
       <div class="wrapper">
         <div class="list__container">
@@ -27,14 +27,7 @@
     </div>
     <div class="list__content">
       <div class="wrapper">
-        <div class="list__rows" id="list-content">
-          <div class="list__row">
-            <cart-item></cart-item>
-          </div>
-          <div class="list__row">
-            <cart-item></cart-item>
-          </div>
-        </div>
+        <div class="list__rows" id="cart-items"></div>
       </div>
     </div>
     <div class="list__footer footer">
@@ -75,5 +68,15 @@
         </div>
       </div>
     </div>
+  </div>
+  <div id="cart-empty" class="cart__empty empty">
+    <div class="empty__image-container">
+      <img class="empty__image" src="../../assets/images/empty-cart.png" alt="empty-image">
+    </div>
+    <div class="empty__content">
+      <div class="empty__title">Your cart is empty and sad :&#40;</div>
+      <div class="empty__subtitle">Add something to make it happy!</div>
+    </div>
+    <button class="discount__button footer__button" id="empty-button">Continue Shopping</button>
   </div>
 </div>

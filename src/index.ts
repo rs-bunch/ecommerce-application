@@ -22,6 +22,7 @@ import ProductsFilter from './components/ProductsFilter/ProductsFilter';
 import ProductPagination from './components/ProductPagination/ProductPagination';
 import ProductPage from './components/ProductsPage/ProductsPage';
 import Breadcrumb from './components/BreadcrumbNavigation/BreadcrumbNavigation';
+import AboutUs from './components/AboutUs/AboutUs';
 import CartItem from './components/Cart/CartItem/CartItem';
 
 document.adoptedStyleSheets = [bootstrap];
@@ -77,6 +78,9 @@ customElements.define('product-pagination', ProductPagination);
 
 connect(ProductPage, store);
 customElements.define('product-page', ProductPage);
+
+connect(AboutUs, store);
+customElements.define('about-us', AboutUs);
 
 connect(CartItem, store);
 customElements.define('cart-item', CartItem);

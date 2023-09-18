@@ -29,6 +29,7 @@ const location: { [index: string]: string } = {
   '/products': 'products',
   '/search': 'search',
   '/404': 'error',
+  '/about-us': 'about-us',
 };
 
 class Router {
@@ -48,7 +49,8 @@ class Router {
 
     document.addEventListener('click', (e) => {
       const eventPathArr = e.composedPath();
-      if (eventPathArr.find((el) => el instanceof HTMLAnchorElement)) e.preventDefault();
+      const anchor = eventPathArr.find((el) => el instanceof HTMLAnchorElement);
+      if (anchor instanceof HTMLAnchorElement && !anchor.getAttribute('outer-link')) e.preventDefault();
       const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
       if (target instanceof HTMLElement) {
         window.history.pushState({}, '', String(target.dataset.href));
@@ -203,7 +205,7 @@ class Router {
       }
 
       default:
-        payload.location = location[locationPath];
+        payload.location = location[locationPath] || location['/404'];
     }
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));
