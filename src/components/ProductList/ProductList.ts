@@ -115,7 +115,7 @@ export default class ProductList extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       changeLocation: () => dispatch(changeLocation({ location: 'main' })),
-      getProducts: (payload: { categoryId: string }) => dispatch(getProducts(payload)),
+      getProducts: (payload: { categoryId: string; page: number }) => dispatch(getProducts(payload)),
     };
   }
 }

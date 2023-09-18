@@ -13,8 +13,8 @@ import {
 import { notifyError, notifyInfo } from '../../../utils/notify/notify';
 import { ProductListState } from '../../../dto/types';
 
-const getProducts = createAsyncThunk('/products/getall/', async (payload: { categoryId: string }) => {
-  return getCategoryProductList(`categories.id:subtree("${payload.categoryId}")`)
+const getProducts = createAsyncThunk('/products/getall/', async (payload: { categoryId: string; page: number }) => {
+  return getCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.page)
     .then((response) => {
       return { id: payload.categoryId, products: response.body };
     })
@@ -25,8 +25,12 @@ const getProducts = createAsyncThunk('/products/getall/', async (payload: { cate
 
 const getSortedProducts = createAsyncThunk(
   '/products/getsorted/',
-  async (payload: { categoryId: string; criteria: string }) => {
-    return getSortedCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.criteria)
+  async (payload: { categoryId: string; criteria: string; page: number }) => {
+    return getSortedCategoryProductList(
+      `categories.id:subtree("${payload.categoryId}")`,
+      payload.criteria,
+      payload.page
+    )
       .then((response) => {
         return { id: payload.categoryId, products: response.body };
       })
@@ -38,9 +42,13 @@ const getSortedProducts = createAsyncThunk(
 
 const getFilteredProducts = createAsyncThunk(
   '/products/getfiltered/',
-  async (payload: { categoryId: string; criteria: string[] }) => {
+  async (payload: { categoryId: string; criteria: string[]; page: number }) => {
     console.log('filter', payload);
-    return getFilteredCategoryProductList(`categories.id:subtree("${payload.categoryId}")`, payload.criteria)
+    return getFilteredCategoryProductList(
+      `categories.id:subtree("${payload.categoryId}")`,
+      payload.criteria,
+      payload.page
+    )
       .then((response) => {
         return { id: payload.categoryId, products: response.body };
       })
@@ -52,11 +60,12 @@ const getFilteredProducts = createAsyncThunk(
 
 const getFilteredSortedProducts = createAsyncThunk(
   '/products/getfs/',
-  async (payload: { categoryId: string; filter: string[]; sort: string }) => {
+  async (payload: { categoryId: string; filter: string[]; sort: string; page: number }) => {
     return getFilteredSortedCategoryProductList(
       `categories.id:subtree("${payload.categoryId}")`,
       payload.filter,
-      payload.sort
+      payload.sort,
+      payload.page
     )
       .then((response) => {
         return { id: payload.categoryId, products: response.body };
@@ -67,21 +76,8 @@ const getFilteredSortedProducts = createAsyncThunk(
   }
 );
 
-// const getSearchedProducts = createAsyncThunk(
-//   '/products/getsearched/',
-//   async (payload: { categoryId: string; text: string }) => {
-//     return getSearchProductList(`categories.id:subtree("${payload.categoryId}")`, payload.text)
-//       .then((response) => {
-//         return { id: payload.categoryId, products: response.body };
-//       })
-//       .catch((error) => {
-//         notifyError(String(error.message)).showToast();
-//       });
-//   }
-// );
-
-const getSearchedProductsTotal = createAsyncThunk('/search/', async (payload: { text: string }) => {
-  return getSearchProductListTotal(payload.text)
+const getSearchedProductsTotal = createAsyncThunk('/search/', async (payload: { text: string; page: number }) => {
+  return getSearchProductListTotal(payload.text, payload.page)
     .then((response) => {
       return { products: response.body };
     })
@@ -90,20 +86,23 @@ const getSearchedProductsTotal = createAsyncThunk('/search/', async (payload: { 
     });
 });
 
-const getSortedProductsTotal = createAsyncThunk('/search/sort', async (payload: { text: string; sort: string }) => {
-  return getSortedProductList(payload.text, payload.sort)
-    .then((response) => {
-      return { products: response.body };
-    })
-    .catch((error) => {
-      notifyError(String(error.message)).showToast();
-    });
-});
+const getSortedProductsTotal = createAsyncThunk(
+  '/search/sort',
+  async (payload: { text: string; sort: string; page: number }) => {
+    return getSortedProductList(payload.text, payload.sort, payload.page)
+      .then((response) => {
+        return { products: response.body };
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+);
 
 const getFilteredProductsTotal = createAsyncThunk(
   '/search/filter/',
-  async (payload: { text: string; criteria: string[] }) => {
-    return getFilteredProductList(payload.text, payload.criteria)
+  async (payload: { text: string; criteria: string[]; page: number }) => {
+    return getFilteredProductList(payload.text, payload.criteria, payload.page)
       .then((response) => {
         return { products: response.body };
       })
@@ -115,8 +114,8 @@ const getFilteredProductsTotal = createAsyncThunk(
 
 const getFilteredSortedProductsTotal = createAsyncThunk(
   '/search/fs/',
-  async (payload: { text: string; filter: string[]; sort: string }) => {
-    return getFilteredSortedProductList(payload.text, payload.filter, payload.sort)
+  async (payload: { text: string; filter: string[]; sort: string; page: number }) => {
+    return getFilteredSortedProductList(payload.text, payload.filter, payload.sort, payload.page)
       .then((response) => {
         return { products: response.body };
       })
