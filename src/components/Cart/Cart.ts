@@ -40,12 +40,24 @@ export default class Cart extends HTMLElement {
 
   private $totalPrice: HTMLElement | null;
 
+  private $cartEmpty: HTMLElement | null;
+
+  private $cartList: HTMLElement | null;
+
+  private $cartAuth: HTMLElement | null;
+
+  private $loginMessage: HTMLElement | null;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
     this.$cartItems = this.$element.querySelector('#cart-items');
     this.$subtotalPrice = this.$element.querySelector('#subtotal-price');
     this.$totalPrice = this.$element.querySelector('#total-price');
+    this.$cartEmpty = this.$element.querySelector('#cart-empty');
+    this.$cartList = this.$element.querySelector('#cart-list');
+    this.$cartAuth = this.$element.querySelector('#cart-auth');
+    this.$loginMessage = this.$element.querySelector('#login-message');
   }
 
   private createCartItem(lineItem: LineItem): HTMLElement {
@@ -89,10 +101,16 @@ export default class Cart extends HTMLElement {
         this.$subtotalPrice.innerText = `$${(Number(cartState.cart.totalPrice.centAmount) / 100).toFixed(2)}`;
       if (this.$totalPrice)
         this.$totalPrice.innerText = `$${(Number(cartState.cart.totalPrice.centAmount) / 100).toFixed(2)}`;
+
+      if (this.$cartList && this.$cartList.style.display === 'none') this.$cartList.style.display = '';
+      if (this.$cartEmpty && this.$cartEmpty.style.display !== 'none') this.$cartEmpty.style.display = 'none';
+      if (this.$cartAuth && this.$cartAuth.style.display !== 'flex') this.$cartAuth.style.display = 'flex';
     }
 
     if (!cartState.cart.lineItems.length) {
-      // implemntation of empty cart
+      if (this.$cartList && this.$cartList.style.display !== 'none') this.$cartList.style.display = 'none';
+      if (this.$cartEmpty && this.$cartEmpty.style.display !== 'flex') this.$cartEmpty.style.display = 'flex';
+      if (this.$cartAuth && this.$cartAuth.style.display !== 'none') this.$cartAuth.style.display = 'none';
     }
   }
 
@@ -117,7 +135,10 @@ export default class Cart extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.cart.cart.version !== newState.cart.cart.version) this.render(newState.cart);
+    if (oldState.cart.cart.version !== newState.cart.cart.version) {
+      if (this.$loginMessage) this.$loginMessage.style.display = newState.auth.id ? 'none' : 'inline';
+      this.render(newState.cart);
+    }
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
   }
