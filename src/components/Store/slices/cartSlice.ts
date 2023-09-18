@@ -13,6 +13,8 @@ const activeCart = createAsyncThunk('cart/activeCart', async () => {
     });
 });
 
+// type MyCartUpdateAction = MyCartAddDiscountCodeAction | MyCartAddItemShippingAddressAction | MyCartAddLineItemAction | MyCartAddPaymentAction | MyCartApplyDeltaToLineItemShippingDetailsTargetsAction | MyCartChangeLineItemQuantityAction | MyCartChangeTaxModeAction | MyCartRecalculateAction | MyCartRemoveDiscountCodeAction | MyCartRemoveItemShippingAddressAction | MyCartRemoveLineItemAction | MyCartRemovePaymentAction | MyCartSetBillingAddressAction | MyCartSetBusinessUnitAction | MyCartSetCountryAction | MyCartSetCustomFieldAction | MyCartSetCustomTypeAction | MyCartSetCustomerEmailAction | MyCartSetDeleteDaysAfterLastModificationAction | MyCartSetLineItemCustomFieldAction | MyCartSetLineItemCustomTypeAction | MyCartSetLineItemDistributionChannelAction | MyCartSetLineItemShippingDetailsAction | MyCartSetLineItemSupplyChannelAction | MyCartSetLocaleAction | MyCartSetShippingAddressAction | MyCartSetShippingMethodAction | MyCartUpdateItemShippingAddressAction;
+
 // const addLineItem = createAsyncThunk(
 //   'cart/activeCart',
 //   async (payload: { productId: string; quantity: number; variantId: number }) => {

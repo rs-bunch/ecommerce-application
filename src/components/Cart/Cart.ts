@@ -4,59 +4,86 @@ import ElementHTML from './cart.html';
 import stylesheet from './cart.module.scss';
 import { bootstrap } from '../../styles/styles';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
+import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { RootState } from '../Store/store';
 import BreadcrumbElement from './BreadcrumbElement/BreadcrumbElement';
 
 customElements.define('breadcrumb-element', BreadcrumbElement);
 
-type CreateElementOptions = {
+type CreateElementFromObjOptions = {
+  tag: string;
   classList?: string[];
-  attrs?: { attr: string; value: string }[];
+  attributes?: { [name: string]: string };
+  children?: CreateElementFromObjOptions[];
 };
 
-const createElement = (tag: string, options?: CreateElementOptions): HTMLElement => {
-  const $element = document.createElement(tag);
+const createElementFomObj = (options: CreateElementFromObjOptions): HTMLElement => {
+  const $element = document.createElement(options.tag);
+
   if (options?.classList) $element.classList.add(...options.classList);
-  if (options?.attrs?.length) options.attrs.forEach((el) => $element.setAttribute(el.attr, el.value));
+
+  if (options?.attributes)
+    Object.entries(options.attributes).forEach(([key, value]) => $element.setAttribute(key, value));
+
+  if (options?.children?.length)
+    options.children.forEach((childElementOptions) => $element.appendChild(createElementFomObj(childElementOptions)));
+
   return $element;
 };
 
 export default class Cart extends HTMLElement {
-  public $element: HTMLElement | null;
+  // public $element: HTMLElement | null;
 
-  public node: Node | null;
+  private $element: DocumentFragment;
+
+  private $cartItems: HTMLElement | null;
+
+  // public node: Node | null;
 
   constructor() {
     super();
-    this.node = createNodeFromHtml(ElementHTML);
-    if (this.node && this.node.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
-    else this.$element = null;
+    this.$element = createFragmentFromHTML(ElementHTML);
+    this.$cartItems = this.$element.querySelector('#cart-items');
+
+    // this.node = createNodeFromHtml(ElementHTML);
+    // if (this.node && this.node.firstChild instanceof HTMLElement) this.$element = this.node.firstChild;
+    // else this.$element = null;
   }
 
   private createCartItem(lineItem: LineItem): HTMLElement {
-    const $lineRow = createElement('div', { classList: ['line__row'] });
-    const $lineItem = createElement('cart-item', {
-      attrs: [
+    const lineRowOptions: CreateElementFromObjOptions = {
+      tag: 'div',
+      children: [
         {
-          attr: 'id',
-          value: lineItem.id,
+          tag: 'cart-item',
+          attributes: {
+            id: lineItem.id,
+            name: lineItem.name['en-US'],
+            image: `${lineItem.variant.images ? lineItem.variant.images[0].url : ''}`,
+            size: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Size')?.value}` || 'Deafult',
+            color: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Color')?.value}` || 'Deafult',
+            quantity: `${lineItem.quantity}`,
+            'regular-price': `${lineItem.price.value.centAmount}`,
+            'discounted-price': `${lineItem.price.discounted?.value.centAmount || ''}`,
+            'subtotal-price': `${lineItem.totalPrice.centAmount}`,
+          },
         },
-        {
-          attr: 'productId',
-          value: lineItem.productId,
-        },
-        {
-          attr: 'name',
-          value: `${lineItem.name}`,
-        },
-        // {
-        //   attr: 'size',
-        //   value: lineItem.variant.attributes,
-        // },
       ],
-    });
-    $lineRow.appendChild($lineItem);
+    };
+
+    const $lineRow = createElementFomObj(lineRowOptions);
     return $lineRow;
+  }
+
+  private render(lineItems: LineItem[]): void {
+    if (this.$cartItems) this.$cartItems.innerHTML = '';
+
+    if (lineItems.length) {
+      lineItems.forEach((lineItem) => {
+        if (this.$cartItems) this.$cartItems.appendChild(this.createCartItem(lineItem));
+      });
+    }
+    // if (!lineItems.length) {}
   }
 
   private connectedCallback(): void {
@@ -80,6 +107,7 @@ export default class Cart extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
+    if (oldState.cart.cart.version !== newState.cart.cart.version) this.render(newState.cart.cart.lineItems);
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
   }
