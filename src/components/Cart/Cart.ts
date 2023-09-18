@@ -59,7 +59,11 @@ export default class Cart extends HTMLElement {
           attributes: {
             id: lineItem.id,
             name: lineItem.name['en-US'],
-            image: `${lineItem.variant.images ? lineItem.variant.images[0].url : ''}`,
+            image: `${
+              lineItem.variant.images?.length
+                ? lineItem.variant.images[0].url
+                : '/assets/images/placeholder-105x120.png'
+            }`,
             size: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Size')?.value}` || 'Deafult',
             color: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Color')?.value}` || 'Deafult',
             quantity: `${lineItem.quantity}`,
