@@ -31,6 +31,7 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
           cart: response.body,
         };
         store.dispatch(initCart(payload));
+        notifyInfo('Item added to Cart!').showToast();
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();
@@ -56,7 +57,7 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
           cart: response.body,
         };
         store.dispatch(initCart(payload));
-        notifyInfo('Item Deleted!').showToast();
+        notifyInfo('Item deleted from Cart!').showToast();
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();

@@ -79,7 +79,12 @@ class Router {
           payload.location = 'error';
         });
         if (response && response.statusCode === 200) {
-          this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
+          const productState = {
+            productId,
+            product: response.body.masterData.current,
+            variantId: response.body.masterData.current.masterVariant.id,
+          };
+          this.store.dispatch(selectProduct(productState));
           break;
         }
         break;

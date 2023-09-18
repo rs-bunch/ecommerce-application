@@ -26,14 +26,13 @@ const activeCart = createAsyncThunk('cart/activeCart', async () => {
 //   }
 // );
 
-const initialState = {
+const initialState: CartState = {
   inProgress: false,
   error: '',
   cart: {
     id: '',
     customerId: '',
     lineItems: [],
-    totalPrice: '',
     billingAddress: {
       country: '',
     },
@@ -42,6 +41,26 @@ const initialState = {
     },
     discountCodes: [],
     version: 0,
+    customLineItems: [],
+    totalPrice: {
+      type: 'centPrecision',
+      currencyCode: '',
+      centAmount: 0,
+      fractionDigits: 0,
+    },
+    taxMode: '',
+    taxRoundingMode: '',
+    taxCalculationMode: '',
+    inventoryMode: '',
+    cartState: '',
+    shippingMode: '',
+    shipping: [],
+    itemShippingAddresses: [],
+    directDiscounts: [],
+    refusedGifts: [],
+    origin: '',
+    createdAt: '',
+    lastModifiedAt: '',
   },
 };
 
