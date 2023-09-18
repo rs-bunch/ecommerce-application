@@ -1,6 +1,9 @@
 import ElementHTML from './product-card.html';
 import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import { productCard } from '../../styles/styles';
+import type { RootState, AppDispatch } from '../Store/store';
+import { changeLocation } from '../Store/slices/locationSlice';
+import { addLineItem } from '../Store/slices/cartSlice';
 
 export default class ProductCard extends HTMLElement {
   private $element: HTMLElement | null;
@@ -15,6 +18,10 @@ export default class ProductCard extends HTMLElement {
 
   private $productDesc: HTMLElement | null;
 
+  private $cartBtn: HTMLElement | null;
+
+  private addItem: (() => void) | undefined;
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -25,6 +32,14 @@ export default class ProductCard extends HTMLElement {
     this.$productBrand = this.$element.querySelector('#product-brand');
     this.$productPrice = this.$element.querySelector('#product-price');
     this.$productDesc = this.$element.querySelector('#product-desc');
+    this.$cartBtn = this.$element.querySelector('#cart-btn');
+
+    this.$cartBtn?.addEventListener('click', (e) => {
+      if (this.addItem) {
+        this.addItem();
+      }
+      e.stopPropagation();
+    });
 
     if (!this.shadowRoot) return;
     if (this.$element) {
@@ -64,5 +79,24 @@ export default class ProductCard extends HTMLElement {
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
     this.render();
+  }
+
+  // redux state change observer
+  private mapStateToProps(oldState: RootState, newState: RootState): void {
+    const { location, productList } = newState;
+    const { products } = productList;
+
+    if (location !== undefined) {
+      this.attributeChangedCallback('location', '', String(location));
+    }
+  }
+
+  // redux dispath action
+  private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
+    return {
+      changeLocation: () => dispatch(changeLocation({ location: 'main' })),
+      addItem: () =>
+        dispatch(addLineItem({ productId: '936b0434-84d5-4036-8545-f25a621e5021', quantity: 1, variantId: 1 })),
+    };
   }
 }

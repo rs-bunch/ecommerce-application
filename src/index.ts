@@ -24,10 +24,14 @@ import ProductPage from './components/ProductsPage/ProductsPage';
 import Breadcrumb from './components/BreadcrumbNavigation/BreadcrumbNavigation';
 import AboutUs from './components/AboutUs/AboutUs';
 import CartItem from './components/Cart/CartItem/CartItem';
+import ProductCard from './components/ProductCard/ProductCard';
 
 document.adoptedStyleSheets = [bootstrap];
 
 const router: Router = new Router(store);
+
+connect(ProductCard, store);
+customElements.define('product-card', ProductCard);
 
 customElements.define('breadcrumb-nav', Breadcrumb);
 
