@@ -2,7 +2,9 @@
   <div class="item__container">
     <div class="item__col item__col-1">
       <div class="item__card card">
-        <div id="image" class="card__image"></div>
+        <div class="card__image-container">
+          <img id="image" class="card__image" src="/src/assets/images/placeholders/placeholder-105x120.png" alt="product-image">
+        </div>
         <div class="card__content">
           <div id="title" class="card__title">Default Title of Item</div>
           <div class="card__color">Color: <span id="color">Default</span></div>
@@ -13,10 +15,7 @@
     <div class="item__col item__col-2">
       <div class="item__title">Price</div>
       <span class="item__dotes"></span>
-      <div class="item__price price">
-        <div id="old-price" class="price__value_old">$00.00</div>
-        <div id="current-price" class="price__value">$00.00</div>
-      </div>
+      <div id="item-prices" class="item__prices prices"></div>
     </div>
     <div class="item__col item__col-3">
       <div class="item__title">Count</div>
@@ -35,9 +34,7 @@
     <div class="item__col item__col-5">
       <div class="item__title">Subtotal</div>
       <span class="item__dotes"></span>
-      <div class="item__price price">
-        <div id="subtotal-price" class="price__value">$00.00</div>
-      </div>
+      <div id="subtotal-price" class="item__price price"></div>
     </div>
     <div class="item__col item__col-6">
       <div id="action-button" role="button" class="item__action">

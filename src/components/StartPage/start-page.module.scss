@@ -10,7 +10,19 @@
   width: 50%;
 }
 
+.promo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include media-tablet {
+    flex-direction: row;
+  }
+}
+
 .categories {
+  display: flex;
+  align-items: center;
   padding: 20px 22px;
   position: relative;
   font-weight: 600;
@@ -25,6 +37,17 @@
     height: 30px;
     border-radius: 10px;
     left: 5px;
+  }
+}
+
+.promo {
+  margin-left: 0;
+  font-size: 28px;
+  color: $color-brand-main;
+  margin-bottom: 0.5rem;
+  
+  @include media-tablet {
+    margin-left: 20px;
   }
 }
 

@@ -3,7 +3,14 @@ import locationSlice from './slices/locationSlice';
 import productSlice from './slices/productSlice';
 import productListSlice from './slices/productListSlice';
 import authSlice, { logout, updateCustomer, updatePassword } from './slices/authSlice';
-import cartSlice, { activeCart } from './slices/cartSlice';
+import cartSlice, {
+  deleteCart,
+  activeCart,
+  changeLineItemQuantity,
+  removeLineItem,
+  addDiscountCode,
+  removeDiscountCode,
+} from './slices/cartSlice';
 // import tokenSlice from './tokenSlice';
 // import { TokenState } from '../../dto/types';
 import authMiddleware from './middlewares/authMiddleware';
@@ -33,5 +40,20 @@ const logoutBindAction = bindActionCreators(logout, store.dispatch);
 const updateCustomerBindAction = bindActionCreators(updateCustomer, store.dispatch);
 const updatePasswordBindAction = bindActionCreators(updatePassword, store.dispatch);
 const activeCartBindAction = bindActionCreators(activeCart, store.dispatch);
+const changeLineItemQuantityBindAction = bindActionCreators(changeLineItemQuantity, store.dispatch);
+const removeLineItemBindAction = bindActionCreators(removeLineItem, store.dispatch);
+const deleteCartBindAction = bindActionCreators(deleteCart, store.dispatch);
+const addDiscountCodeBindAction = bindActionCreators(addDiscountCode, store.dispatch);
+const removeDiscountCodeBindAction = bindActionCreators(removeDiscountCode, store.dispatch);
 
-export { activeCartBindAction, logoutBindAction, updateCustomerBindAction, updatePasswordBindAction };
+export {
+  changeLineItemQuantityBindAction,
+  activeCartBindAction,
+  logoutBindAction,
+  updateCustomerBindAction,
+  updatePasswordBindAction,
+  removeLineItemBindAction,
+  deleteCartBindAction,
+  addDiscountCodeBindAction,
+  removeDiscountCodeBindAction,
+};
