@@ -5,7 +5,7 @@ import type {
   MyCartUpdate,
   MyCartUpdateAction,
 } from '@commercetools/platform-sdk';
-import { updateCart } from '../../Api/rest/me';
+import { updateCart, deleteCart, createCart } from '../../Api/rest/me';
 import { LineItemPayload } from '../../../dto/types';
 import type { RootState } from '../store';
 import { notifyError, notifyInfo } from '../../../utils/notify/notify';
@@ -92,6 +92,78 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
         };
         store.dispatch(updateCartState(payload));
         notifyInfo('Item quantity changed!').showToast();
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+
+  if (action.type === 'cart/deleteCart') {
+    deleteCart({ id, version })
+      .then(() => createCart())
+      .then((response) => response.body)
+      .then((cart) => {
+        const payload = {
+          inProgress: false,
+          error: '',
+          cart,
+        };
+        store.dispatch(updateCartState(payload));
+        notifyInfo('Cart was deleted!').showToast();
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+
+  if (action.type === 'cart/addDiscountCode') {
+    const addDiscountCodeAction: MyCartUpdateAction = {
+      action: 'addDiscountCode',
+      code: `${action.payload.code}`,
+    };
+
+    const myCartUpdate: MyCartUpdate = {
+      actions: [addDiscountCodeAction],
+      version,
+    };
+
+    updateCart({ id, options: myCartUpdate })
+      .then((response) => {
+        const payload = {
+          inProgress: false,
+          error: '',
+          cart: response.body,
+        };
+        store.dispatch(updateCartState(payload));
+        notifyInfo('Discount Code Added!').showToast();
+      })
+      .catch((error) => {
+        notifyError(String(error.message)).showToast();
+      });
+  }
+
+  if (action.type === 'cart/removeDiscountCode') {
+    const removeDiscountCodeAction: MyCartUpdateAction = {
+      action: 'removeDiscountCode',
+      discountCode: { typeId: 'discount-code', id: `${action.payload.id}` },
+    };
+
+    const myCartUpdate: MyCartUpdate = {
+      actions: [removeDiscountCodeAction],
+      version,
+    };
+
+    console.log(myCartUpdate);
+
+    updateCart({ id, options: myCartUpdate })
+      .then((response) => {
+        const payload = {
+          inProgress: false,
+          error: '',
+          cart: response.body,
+        };
+        store.dispatch(updateCartState(payload));
+        notifyInfo('Discount Code Removed!').showToast();
       })
       .catch((error) => {
         notifyError(String(error.message)).showToast();

@@ -77,6 +77,18 @@ const cartSlice = createSlice({
     clearCart(state) {
       Object.assign(state, initialState);
     },
+
+    deleteCart(state) {
+      Object.assign(state, {});
+    },
+
+    addDiscountCode(state, action: PayloadAction<{ code: string }>) {
+      Object.assign(state, {});
+    },
+
+    removeDiscountCode(state, action: PayloadAction<{ id: string }>) {
+      Object.assign(state, {});
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -93,6 +105,15 @@ const cartSlice = createSlice({
 });
 
 export { activeCart };
-export const { initCart, updateCartState, clearCart, addLineItem, removeLineItem, changeLineItemQuantity } =
-  cartSlice.actions;
+export const {
+  addDiscountCode,
+  removeDiscountCode,
+  initCart,
+  updateCartState,
+  clearCart,
+  deleteCart,
+  addLineItem,
+  removeLineItem,
+  changeLineItemQuantity,
+} = cartSlice.actions;
 export default cartSlice;

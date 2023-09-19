@@ -348,5 +348,21 @@
   font-weight: 500;
   font-size: 16px;
 }
-.discount__button { }
-.footer__button { }
+// .discount__button { }
+// .footer__button { }
+
+.remove-discount {
+  display: none;
+  column-gap: 10px;
+
+  @media (hover: hover) {
+    & span:nth-child(2):hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    &:hover {
+      color: #8A33FD;
+    }
+  }
+}
