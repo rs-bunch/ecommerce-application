@@ -117,7 +117,6 @@ export default class ProductList extends HTMLElement {
     }
     if (productList.id) this.renderNavigation(productList.id as string);
     if (products) {
-      console.log('products render');
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);
     }
   }

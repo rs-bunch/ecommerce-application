@@ -14,7 +14,7 @@ const getCategoryProductList = (
   categoryId: string,
   page: number
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> => {
-  console.log('products fetch');
+  console.log('products fetch', PAGE_SIZE);
   return apiRoot
     .productProjections()
     .search()
