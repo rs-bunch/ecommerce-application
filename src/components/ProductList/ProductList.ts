@@ -4,7 +4,6 @@ import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import type { RootState, AppDispatch } from '../Store/store';
 import { changeLocation } from '../Store/slices/locationSlice';
 import { getProducts } from '../Store/slices/productListSlice';
-// import ProductCard from '../ProductCard/ProductCard';
 import productsContainer from './product-list.module.scss';
 import { getCategoriesPath } from '../Api/rest/productList';
 import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
@@ -38,8 +37,6 @@ export default class ProductList extends HTMLElement {
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
 
   private renderProductCards(productsData: ProductProjection[]): void {
-    // console.log(productsData, 'render');
-
     if (!this.shadowRoot) return;
     const cards = this.querySelectorAll('[slot="cards-slot"]');
     for (let i = 0; i < cards.length; i += 1) {
@@ -86,7 +83,6 @@ export default class ProductList extends HTMLElement {
         card.setAttribute('data-price', `${price}$`);
       }
       if (this.cartState?.cart) {
-        // id => productId
         const lineItemId = this.cartState.cart.lineItems.find((item) => item.productId === id)?.id || null;
         card.setAttribute('added-to-cart', `${lineItemId ? 'true' : 'false'}`);
       }
@@ -111,7 +107,6 @@ export default class ProductList extends HTMLElement {
 
     const { location, productList } = newState;
     const { products } = productList;
-    // console.log('productList', productList);
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));
     }

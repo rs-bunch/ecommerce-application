@@ -28,8 +28,6 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
       version,
     };
 
-    console.log('myCartUpdate', myCartUpdate);
-
     updateCart({ id, options: myCartUpdate })
       .then((response) => {
         const payload = {
@@ -152,8 +150,6 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
       actions: [removeDiscountCodeAction],
       version,
     };
-
-    console.log(myCartUpdate);
 
     updateCart({ id, options: myCartUpdate })
       .then((response) => {

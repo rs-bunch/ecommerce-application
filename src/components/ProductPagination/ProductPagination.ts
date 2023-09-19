@@ -81,7 +81,6 @@ export default class ProductsFilter extends HTMLElement {
       const currentPage = Number(searchParams.get('page'));
 
       if (this.$pageNumber) this.$pageNumber.textContent = `${currentPage + 1}`;
-      console.log(totalPages, currentPage);
 
       if (currentPage === 0 && totalPages === 0) {
         if (!this.$prevBtn?.classList.contains('disabled')) {
@@ -123,27 +122,6 @@ export default class ProductsFilter extends HTMLElement {
           this.$lastBtn?.classList.add('disabled');
         }
       }
-
-      // if (currentPage === 0 && currentPage === totalPages) {
-      //   this.$prevBtn?.classList.toggle('disabled');
-      //   this.$firstBtn?.classList.toggle('disabled');
-      //   this.$nextBtn?.classList.toggle('disabled');
-      //   this.$lastBtn?.classList.toggle('disabled');
-      // } else if (currentPage === 0) {
-      //   this.$prevBtn?.classList.toggle('disabled');
-      //   this.$firstBtn?.classList.toggle('disabled');
-      //   if (this.$nextBtn?.classList.contains('disabled')) {
-      //     this.$nextBtn?.classList.toggle('disabled');
-      //     this.$lastBtn?.classList.toggle('disabled');
-      //   }
-      // } else if (currentPage === totalPages) {
-      //   this.$nextBtn?.classList.toggle('disabled');
-      //   this.$lastBtn?.classList.toggle('disabled');
-      //   if (this.$prevBtn?.classList.contains('disabled')) {
-      //     this.$prevBtn?.classList.toggle('disabled');
-      //     this.$firstBtn?.classList.toggle('disabled');
-      //   }
-      // }
     }
   }
 
@@ -161,8 +139,3 @@ export default class ProductsFilter extends HTMLElement {
     }
   }
 }
-
-/* 
-Проверить граничное значение
-Отключить переход если страница = последняя страница - 1
-*/
