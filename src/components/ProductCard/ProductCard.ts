@@ -1,12 +1,14 @@
+import { LineItem } from '@commercetools/platform-sdk';
 import ElementHTML from './product-card.html';
-import { createElementFromHTML } from '../../utils/createElementFromHTML';
+import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { productCard } from '../../styles/styles';
 import type { RootState, AppDispatch } from '../Store/store';
 import { changeLocation } from '../Store/slices/locationSlice';
 import { addLineItem } from '../Store/slices/cartSlice';
+import type { LineItemPayload } from '../../dto/types';
 
 export default class ProductCard extends HTMLElement {
-  private $element: HTMLElement | null;
+  private $element: DocumentFragment;
 
   private $productImage: HTMLElement | null;
 
@@ -20,12 +22,14 @@ export default class ProductCard extends HTMLElement {
 
   private $cartBtn: HTMLElement | null;
 
-  private addItem: (() => void) | undefined;
+  private addLineItem: ((payload: LineItemPayload) => void) | undefined;
+
+  private productId = '';
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this.$element = createElementFromHTML(ElementHTML);
+    this.$element = createFragmentFromHTML(ElementHTML);
 
     this.$productImage = this.$element.querySelector('#product-image');
     this.$productName = this.$element.querySelector('#product-name');
@@ -35,12 +39,12 @@ export default class ProductCard extends HTMLElement {
     this.$cartBtn = this.$element.querySelector('#cart-btn');
 
     this.$cartBtn?.addEventListener('click', (e) => {
-      if (this.addItem) {
-        this.addItem();
-      }
+      if (this.addLineItem) this.addLineItem({ productId: this.productId, quantity: 1, variantId: 1 });
       e.stopPropagation();
     });
+  }
 
+  public connectedCallback(): void {
     if (!this.shadowRoot) return;
     if (this.$element) {
       this.shadowRoot?.appendChild(this.$element);
@@ -48,37 +52,37 @@ export default class ProductCard extends HTMLElement {
     }
   }
 
-  private render(): void {
-    const imageUrl = this.getAttribute('data-image');
-    const name = this.getAttribute('data-name');
-    const brand = this.getAttribute('data-brand');
-    const price = this.getAttribute('data-price');
-    const urlLink = this.getAttribute('data-link');
-    if (!this.$productPrice) return;
-    const discounted = this.$productPrice.getAttribute('data-discount');
-    const desc = this.getAttribute('data-desc');
-
-    if (this.$productImage) {
-      if (urlLink) this.$productImage.setAttribute('data-href', `/product/${urlLink}`);
-      this.$productImage.style.backgroundImage = `url("${imageUrl}")`;
+  public attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
+    switch (attributeName) {
+      case 'data-name':
+        if (this.$productName) this.$productName.textContent = newValue;
+        break;
+      case 'data-brand':
+        if (this.$productBrand) this.$productBrand.textContent = newValue;
+        break;
+      case 'data-discount':
+        this.$productPrice?.classList.add('product-card__price_discounted');
+        break;
+      case 'data-desc':
+        if (this.$productDesc) this.$productDesc.textContent = newValue;
+        break;
+      case 'data-price':
+        if (this.$productPrice) this.$productPrice.textContent = newValue;
+        break;
+      case 'data-image':
+        if (this.$productImage) this.$productImage.style.backgroundImage = `url("${newValue}")`;
+        break;
+      case 'data-link':
+        this.productId = newValue;
+        if (this.$productImage) this.$productImage.setAttribute('data-href', `/product/${newValue}`);
+        break;
+      case 'added-to-cart':
+        if (this.$cartBtn && newValue === 'true') this.$cartBtn.style.display = 'none';
+        if (this.$cartBtn && newValue === 'false') this.$cartBtn.style.display = '';
+        break;
+      default:
+        break;
     }
-    if (this.$productName) this.$productName.textContent = name;
-    if (this.$productBrand) this.$productBrand.textContent = brand;
-    if (this.$productPrice) this.$productPrice.textContent = price;
-    if (discounted) this.$productPrice?.classList.add('product-card__price_discounted');
-    if (this.$productDesc) this.$productDesc.textContent = desc;
-  }
-
-  public connectedCallback(): void {
-    this.render();
-  }
-
-  public static get observedAttributes(): string[] {
-    return ['data-image', 'data-name', 'data-brand', 'data-price', 'data-discount', 'data-desc'];
-  }
-
-  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-    this.render();
   }
 
   // redux state change observer
@@ -89,14 +93,33 @@ export default class ProductCard extends HTMLElement {
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));
     }
+
+    if (oldState?.cart && oldState.cart.cart.version !== newState.cart.cart.version) {
+      const lineItemId =
+        newState.cart.cart.lineItems.find((item: LineItem) => item.productId === this.productId)?.id || null;
+      if (lineItemId) this.attributeChangedCallback('added-to-cart', '', 'true');
+      if (!lineItemId) this.attributeChangedCallback('added-to-cart', '', 'false');
+    }
   }
 
   // redux dispath action
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       changeLocation: () => dispatch(changeLocation({ location: 'main' })),
-      addItem: () =>
-        dispatch(addLineItem({ productId: '936b0434-84d5-4036-8545-f25a621e5021', quantity: 1, variantId: 1 })),
+      addLineItem: (payload: LineItemPayload) => dispatch(addLineItem(payload)),
     };
+  }
+
+  public static get observedAttributes(): string[] {
+    return [
+      'data-image',
+      'data-name',
+      'data-brand',
+      'data-price',
+      'data-discount',
+      'data-desc',
+      'data-link',
+      'added-to-cart',
+    ];
   }
 }
