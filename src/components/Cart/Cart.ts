@@ -141,7 +141,10 @@ export default class Cart extends HTMLElement {
       });
 
       if (this.$subtotalPrice) {
-        const subtotalPrice = cartState.cart.lineItems.reduce((acc, el) => acc + Number(el.price.value.centAmount), 0);
+        const subtotalPrice = cartState.cart.lineItems.reduce(
+          (acc, el) => acc + Number(el.price.value.centAmount) * Number(el.quantity),
+          0
+        );
         this.$subtotalPrice.innerText = `$${(subtotalPrice / 100).toFixed(2)}`;
       }
 
