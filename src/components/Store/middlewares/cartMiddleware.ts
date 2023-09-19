@@ -151,8 +151,6 @@ const cartMiddleware: Middleware<Promise<Dispatch>> = (store) => (next) => (acti
       version,
     };
 
-    console.log(myCartUpdate);
-
     updateCart({ id, options: myCartUpdate })
       .then((response) => {
         const payload = {

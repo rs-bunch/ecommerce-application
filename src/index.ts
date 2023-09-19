@@ -19,14 +19,19 @@ import ProductDetails from './components/ProductDetails/ProductDetails';
 import LoadingPage from './components/LoadingPage/LoadingPage';
 import ProductList from './components/ProductList/ProductList';
 import ProductsFilter from './components/ProductsFilter/ProductsFilter';
+import ProductPagination from './components/ProductPagination/ProductPagination';
 import ProductPage from './components/ProductsPage/ProductsPage';
 import Breadcrumb from './components/BreadcrumbNavigation/BreadcrumbNavigation';
 import AboutUs from './components/AboutUs/AboutUs';
 import CartItem from './components/Cart/CartItem/CartItem';
+import ProductCard from './components/ProductCard/ProductCard';
 
 document.adoptedStyleSheets = [bootstrap];
 
 const router: Router = new Router(store);
+
+connect(ProductCard, store);
+customElements.define('product-card', ProductCard);
 
 customElements.define('breadcrumb-nav', Breadcrumb);
 
@@ -71,6 +76,9 @@ customElements.define('product-list', ProductList);
 
 connect(ProductsFilter, store);
 customElements.define('products-filter', ProductsFilter);
+
+connect(ProductPagination, store);
+customElements.define('product-pagination', ProductPagination);
 
 connect(ProductPage, store);
 customElements.define('product-page', ProductPage);

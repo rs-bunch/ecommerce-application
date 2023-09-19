@@ -10,7 +10,6 @@ import {
   getSortedProducts,
   getFilteredProducts,
   getFilteredSortedProducts,
-  // getSearchedProducts,
   getSearchedProductsTotal,
   getSortedProductsTotal,
   getFilteredProductsTotal,
@@ -97,33 +96,25 @@ class Router {
           payload.location = 'error';
           break;
         }
-        // Insert
 
-        if (!urlParams.size) {
+        if (urlParams.size <= 1) {
           payload.location = 'products';
+          const page = urlParams.get('page');
           this.store.dispatch(
             getProducts({
-              // categoryId: `categories.id:subtree("${categoriesId}")`,
               categoryId: categoriesId,
+              page: Number(page) ?? 0,
             })
           );
         } else {
           payload.location = 'products';
+
+          const page = urlParams.get('page');
           const sort = urlParams.get('sort');
           const order = urlParams.get('order');
           const priceRange = urlParams.get('price');
           const color = urlParams.get('color');
           const size = urlParams.get('size');
-
-          // const search = urlParams.get('text.en');
-          // if (search) {
-          //   this.store.dispatch(
-          //     getSearchedProducts({
-          //       categoryId: categoriesId,
-          //       text: search,
-          //     })
-          //   );
-          // }
 
           const filter = [];
 
@@ -137,6 +128,7 @@ class Router {
                 categoryId: categoriesId,
                 filter,
                 sort: `${sort} ${order}`,
+                page: Number(page) ?? 0,
               })
             );
           } else if (filter.length) {
@@ -144,6 +136,7 @@ class Router {
               getFilteredProducts({
                 categoryId: categoriesId,
                 criteria: filter,
+                page: Number(page) ?? 0,
               })
             );
           } else if (sort && order) {
@@ -151,16 +144,16 @@ class Router {
               getSortedProducts({
                 categoryId: categoriesId,
                 criteria: `${sort} ${order}`,
+                page: Number(page) ?? 0,
               })
             );
           }
         }
-
-        // this.store.dispatch(getProducts({ categoryId: categoriesId }));
         break;
       }
       case 'search': {
         payload.location = 'search';
+        const page = urlParams.get('page');
         const search = urlParams.get('text.en');
 
         const sort = urlParams.get('sort');
@@ -181,6 +174,7 @@ class Router {
               text: search,
               filter,
               sort: `${sort} ${order}`,
+              page: Number(page) ?? 0,
             })
           );
         } else if (search && filter.length) {
@@ -188,6 +182,7 @@ class Router {
             getFilteredProductsTotal({
               text: search,
               criteria: filter,
+              page: Number(page) ?? 0,
             })
           );
         } else if (search && sort) {
@@ -195,12 +190,14 @@ class Router {
             getSortedProductsTotal({
               text: search,
               sort: `${sort} ${order}`,
+              page: Number(page) ?? 0,
             })
           );
         } else if (search) {
           this.store.dispatch(
             getSearchedProductsTotal({
               text: search,
+              page: Number(page) ?? 0,
             })
           );
         }
