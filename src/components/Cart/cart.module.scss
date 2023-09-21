@@ -296,8 +296,18 @@
 
 // .total__row-title { }
 // .total__row-content { }
-// .total__action { }
+.total__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
 .total__button {
+  position: absolute;
+}
+
+.total__clear {
   color: #FFFFFF;
   border-color: #8A33FD;
   background: #8A33FD;
@@ -306,6 +316,20 @@
     &:hover {
       border-color: #8A33FDB6;
       background: #8A33FDB6;
+    }
+  }
+}
+
+.total__confirm {
+  display: none;
+  color: #FFFFFF;
+  border-color: #fd3333;
+  background: #fd3333;
+  transition: .2s ease;
+  @media (hover: hover) {
+    &:hover {
+      border-color: #f61111;
+      background: #f61111;
     }
   }
 }

@@ -55,6 +55,8 @@ export default class Cart extends HTMLElement {
 
   private $clearCart: HTMLButtonElement | null;
 
+  private $confirmClear: HTMLButtonElement | null;
+
   private $couponInput: HTMLInputElement | null;
 
   private $applyCouponButton: HTMLButtonElement | null;
@@ -78,11 +80,21 @@ export default class Cart extends HTMLElement {
     this.$clearCart = this.$element.querySelector('#clear-cart');
     this.$clearCart?.addEventListener('click', () => this.clearCartHandle());
 
+    this.$confirmClear = this.$element.querySelector('#confirm-clear');
+    this.$confirmClear?.addEventListener('click', () => this.confirmClearHandle());
+
     this.$applyCouponButton = this.$element.querySelector('#apply-coupon');
     this.$applyCouponButton?.addEventListener('click', () => this.applyCouponHandler());
 
     this.$removeDiscount = this.$element.querySelector('#remove-discount');
     this.$removeDiscount?.addEventListener('click', () => this.removeDiscountHandler());
+
+    document.addEventListener('click', (e) => {
+      if (e.composedPath()[0] !== this.$clearCart && e.composedPath()[0] !== this.$confirmClear) {
+        if (this.$clearCart) this.$clearCart.style.display = 'block';
+        if (this.$confirmClear) this.$confirmClear.style.display = 'none';
+      }
+    });
   }
 
   private applyCouponHandler(): void {
@@ -95,6 +107,11 @@ export default class Cart extends HTMLElement {
   }
 
   private clearCartHandle(): void {
+    if (this.$clearCart) this.$clearCart.style.display = 'none';
+    if (this.$confirmClear) this.$confirmClear.style.display = 'block';
+  }
+
+  private confirmClearHandle(): void {
     deleteCartBindAction();
   }
 
@@ -130,10 +147,8 @@ export default class Cart extends HTMLElement {
   private render(cartState: CartState): void {
     if (this.$cartItems) this.$cartItems.innerHTML = '';
 
-    // if (cartState.cart.discountCodes.length) {
-    //   this.discountId = cartState.cart.discountCodes[0].discountCode.id;
-    //   if (this.$removeDiscount) this.$removeDiscount.style.display = 'flex';
-    // }
+    if (this.$clearCart) this.$clearCart.style.display = 'block';
+    if (this.$confirmClear) this.$confirmClear.style.display = 'none';
 
     if (cartState.cart.lineItems.length) {
       cartState.cart.lineItems.forEach((lineItem) => {
