@@ -64,6 +64,8 @@ export default class ShopHeader extends HTMLElement {
 
   public $womenSide: Element | null | undefined;
 
+  public $cartCounter: HTMLSpanElement | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -90,6 +92,7 @@ export default class ShopHeader extends HTMLElement {
     this.$menSide = this.$sideBar?.querySelector('.link__men');
     this.$womenSide = this.$sideBar?.querySelector('.link__women');
     this.$dropdownNav = this.$element?.querySelector('.dropdown-nav_main');
+    this.$cartCounter = this.$element?.querySelector('#cart-counter');
     this.$dropdownNavSide = createElement('dropdown-nav', 'dropdown-nav_side', []) as DropdownNav;
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
@@ -146,6 +149,10 @@ export default class ShopHeader extends HTMLElement {
       toCloseDropdownNav.includes(newState.location.location)
     )
       this.$dropdownNav?.setAttribute('category', 'none');
+
+    if (oldState?.cart?.cart?.version !== newState.cart.cart.version) {
+      if (this.$cartCounter) this.$cartCounter.textContent = `${newState.cart.cart.totalLineItemQuantity || 0}`;
+    }
   }
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {

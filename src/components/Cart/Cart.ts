@@ -22,7 +22,7 @@ type CreateElementFromObjOptions = {
   children?: CreateElementFromObjOptions[];
 };
 
-const createElementFomObj = (options: CreateElementFromObjOptions): HTMLElement => {
+const createElementFromObj = (options: CreateElementFromObjOptions): HTMLElement => {
   const $element = document.createElement(options.tag);
 
   if (options?.classList) $element.classList.add(...options.classList);
@@ -31,7 +31,7 @@ const createElementFomObj = (options: CreateElementFromObjOptions): HTMLElement 
     Object.entries(options.attributes).forEach(([key, value]) => $element.setAttribute(key, value));
 
   if (options?.children?.length)
-    options.children.forEach((childElementOptions) => $element.appendChild(createElementFomObj(childElementOptions)));
+    options.children.forEach((childElementOptions) => $element.appendChild(createElementFromObj(childElementOptions)));
 
   return $element;
 };
@@ -54,6 +54,8 @@ export default class Cart extends HTMLElement {
   private $loginMessage: HTMLElement | null;
 
   private $clearCart: HTMLButtonElement | null;
+
+  private $confirmClear: HTMLButtonElement | null;
 
   private $couponInput: HTMLInputElement | null;
 
@@ -78,11 +80,21 @@ export default class Cart extends HTMLElement {
     this.$clearCart = this.$element.querySelector('#clear-cart');
     this.$clearCart?.addEventListener('click', () => this.clearCartHandle());
 
+    this.$confirmClear = this.$element.querySelector('#confirm-clear');
+    this.$confirmClear?.addEventListener('click', () => this.confirmClearHandle());
+
     this.$applyCouponButton = this.$element.querySelector('#apply-coupon');
     this.$applyCouponButton?.addEventListener('click', () => this.applyCouponHandler());
 
     this.$removeDiscount = this.$element.querySelector('#remove-discount');
     this.$removeDiscount?.addEventListener('click', () => this.removeDiscountHandler());
+
+    document.addEventListener('click', (e) => {
+      if (e.composedPath()[0] !== this.$clearCart && e.composedPath()[0] !== this.$confirmClear) {
+        if (this.$clearCart) this.$clearCart.style.display = 'block';
+        if (this.$confirmClear) this.$confirmClear.style.display = 'none';
+      }
+    });
   }
 
   private applyCouponHandler(): void {
@@ -95,6 +107,11 @@ export default class Cart extends HTMLElement {
   }
 
   private clearCartHandle(): void {
+    if (this.$clearCart) this.$clearCart.style.display = 'none';
+    if (this.$confirmClear) this.$confirmClear.style.display = 'block';
+  }
+
+  private confirmClearHandle(): void {
     deleteCartBindAction();
   }
 
@@ -112,8 +129,8 @@ export default class Cart extends HTMLElement {
                 ? lineItem.variant.images[0].url
                 : '/assets/images/placeholder-105x120.png'
             }`,
-            size: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Size')?.value}` || 'Deafult',
-            color: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Color')?.value}` || 'Deafult',
+            size: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Size')?.value}` || 'Default',
+            color: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Color')?.value}` || 'Default',
             quantity: `${lineItem.quantity}`,
             'regular-price': `${lineItem.price.value.centAmount}`,
             'discounted-price': `${lineItem.price.discounted?.value.centAmount || ''}`,
@@ -123,17 +140,15 @@ export default class Cart extends HTMLElement {
       ],
     };
 
-    const $lineRow = createElementFomObj(lineRowOptions);
+    const $lineRow = createElementFromObj(lineRowOptions);
     return $lineRow;
   }
 
   private render(cartState: CartState): void {
     if (this.$cartItems) this.$cartItems.innerHTML = '';
 
-    // if (cartState.cart.discountCodes.length) {
-    //   this.discountId = cartState.cart.discountCodes[0].discountCode.id;
-    //   if (this.$removeDiscount) this.$removeDiscount.style.display = 'flex';
-    // }
+    if (this.$clearCart) this.$clearCart.style.display = 'block';
+    if (this.$confirmClear) this.$confirmClear.style.display = 'none';
 
     if (cartState.cart.lineItems.length) {
       cartState.cart.lineItems.forEach((lineItem) => {
@@ -213,3 +228,5 @@ export default class Cart extends HTMLElement {
     return ['name'];
   }
 }
+
+export { createElementFromObj };
