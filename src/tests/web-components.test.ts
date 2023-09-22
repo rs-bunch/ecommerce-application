@@ -5,7 +5,7 @@
 import 'whatwg-fetch';
 import '../styles/vars.scss';
 import '../styles/mixins.scss';
-import Cart from '../components/Cart/Cart';
+import Cart, { createElementFromObj } from '../components/Cart/Cart';
 import FavouriteItems from '../components/FavouriteItems/FavouriteItems';
 import ShopHeader from '../components/Header/Header';
 import CustomOverlay from '../components/Overlay/Overlay';
@@ -14,6 +14,7 @@ import StartPage from '../components/StartPage/StartPage';
 import LoginForm from '../components/LoginForm/LoginForm';
 import TestUtils from './utils/test-utils';
 import Page404 from '../components/Page404/Page404';
+import CartItem from '../components/Cart/CartItem/CartItem';
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -38,6 +39,7 @@ customElements.define('favourite-items', FavouriteItems);
 customElements.define('cart-element', Cart);
 customElements.define('account-element', ProfilePage);
 customElements.define('error-element', Page404);
+customElements.define('cart-item', CartItem);
 
 describe('Cart element tests', () => {
   it('Shadow root has cart element', async () => {
@@ -162,5 +164,56 @@ describe('Menu Carsd tests', () => {
     const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
     const element: HTMLElement | null = shadowRoot.querySelector('.menu');
     expect(element).toBeTruthy();
+  });
+});
+
+describe('Cart item tests', () => {
+  it('Shadow root has cart-item element', async () => {
+    const customElement = await TestUtils.render('cart-item');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.item');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('Breadcrumb element tests', () => {
+  it('Shadow root has breadcrumb-element element', async () => {
+    const customElement = await TestUtils.render('breadcrumb-element');
+    const { shadowRoot } = customElement as { shadowRoot: ShadowRoot };
+    const element: HTMLElement | null = shadowRoot.querySelector('.breadcrumb');
+    expect(element).toBeTruthy();
+  });
+});
+
+describe('CreateElementFromObj', () => {
+  const obj = {
+    tag: 'div',
+    attributes: {
+      id: 'id00000',
+    },
+    children: [
+      {
+        tag: 'cart-item',
+        attributes: {
+          id: 'id12345',
+          name: 'name',
+          image: '/assets/images/placeholder-105x120.png',
+          size: 'Default',
+          color: 'Default',
+          quantity: '1',
+        },
+      },
+    ],
+  };
+  it('Should create a HTMLElement', async () => {
+    const customElement = await createElementFromObj(obj);
+    expect(customElement.getAttribute('id')).toBe('id00000');
+    expect(customElement.querySelector('#id12345')?.getAttribute('image')).toBe(
+      '/assets/images/placeholder-105x120.png'
+    );
+    expect(customElement.querySelector('#id12345')?.getAttribute('size')).toBe('Default');
+    expect(customElement.querySelector('#id12345')?.getAttribute('color')).toBe('Default');
+    expect(customElement.querySelector('#id12345')?.getAttribute('name')).toBe('name');
+    expect(customElement.querySelector('#id12345')?.getAttribute('quantity')).toBe('1');
   });
 });

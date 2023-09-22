@@ -22,7 +22,7 @@ type CreateElementFromObjOptions = {
   children?: CreateElementFromObjOptions[];
 };
 
-const createElementFomObj = (options: CreateElementFromObjOptions): HTMLElement => {
+const createElementFromObj = (options: CreateElementFromObjOptions): HTMLElement => {
   const $element = document.createElement(options.tag);
 
   if (options?.classList) $element.classList.add(...options.classList);
@@ -31,7 +31,7 @@ const createElementFomObj = (options: CreateElementFromObjOptions): HTMLElement 
     Object.entries(options.attributes).forEach(([key, value]) => $element.setAttribute(key, value));
 
   if (options?.children?.length)
-    options.children.forEach((childElementOptions) => $element.appendChild(createElementFomObj(childElementOptions)));
+    options.children.forEach((childElementOptions) => $element.appendChild(createElementFromObj(childElementOptions)));
 
   return $element;
 };
@@ -129,8 +129,8 @@ export default class Cart extends HTMLElement {
                 ? lineItem.variant.images[0].url
                 : '/assets/images/placeholder-105x120.png'
             }`,
-            size: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Size')?.value}` || 'Deafult',
-            color: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Color')?.value}` || 'Deafult',
+            size: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Size')?.value}` || 'Default',
+            color: `${lineItem.variant.attributes?.find((attr) => attr.name === 'Color')?.value}` || 'Default',
             quantity: `${lineItem.quantity}`,
             'regular-price': `${lineItem.price.value.centAmount}`,
             'discounted-price': `${lineItem.price.discounted?.value.centAmount || ''}`,
@@ -140,7 +140,7 @@ export default class Cart extends HTMLElement {
       ],
     };
 
-    const $lineRow = createElementFomObj(lineRowOptions);
+    const $lineRow = createElementFromObj(lineRowOptions);
     return $lineRow;
   }
 
@@ -228,3 +228,5 @@ export default class Cart extends HTMLElement {
     return ['name'];
   }
 }
+
+export { createElementFromObj };
