@@ -11,8 +11,6 @@ import cartSlice, {
   addDiscountCode,
   removeDiscountCode,
 } from './slices/cartSlice';
-// import tokenSlice from './tokenSlice';
-// import { TokenState } from '../../dto/types';
 import authMiddleware from './middlewares/authMiddleware';
 import initMiddleware from './middlewares/initMiddleware';
 import cartMiddleware from './middlewares/cartMiddleware';
@@ -23,7 +21,6 @@ const rootReducer = combineReducers({
   product: productSlice.reducer,
   productList: productListSlice.reducer,
   cart: cartSlice.reducer,
-  // token: tokenSlice.reducer,
 });
 
 const store = configureStore({

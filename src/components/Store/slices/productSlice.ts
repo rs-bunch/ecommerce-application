@@ -1,4 +1,3 @@
-import { ProductData } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ProductState } from '../../../dto/types';
 

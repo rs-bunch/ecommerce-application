@@ -1,7 +1,6 @@
-import { ProductData } from '@commercetools/platform-sdk';
 import { initLocation } from '../components/Store/slices/locationSlice';
 import { selectProduct, selectProductVariant } from '../components/Store/slices/productSlice';
-import { initAuth, updateAuth, clearAuth } from '../components/Store/slices/authSlice';
+import { updateAuth, clearAuth } from '../components/Store/slices/authSlice';
 import store from '../components/Store/store';
 import LocalStorageMock from './mocks/LocalStorageMock';
 

@@ -1,11 +1,6 @@
 import { CustomerToken, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import {
-  Client,
-  ClientBuilder,
-  type AuthMiddlewareOptions,
-  type HttpMiddlewareOptions,
-} from '@commercetools/sdk-client-v2';
+import { ClientBuilder, type AuthMiddlewareOptions, type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 
 const PROJECT_KEY = process.env.CTP_PROJECT_KEY || '';
 const CLIENT_SECRET = process.env.CTP_CLIENT_SECRET || '';
@@ -43,6 +38,3 @@ const credentialFlowCtpClientApiRoot = (options?: CustomerToken): ByProjectKeyRe
 };
 
 export { credentialFlowCtpClientApiRoot };
-
-// const ctpClientCredentialFlow = getCredentialFlowCtpClient();
-// const apiRoot = createApiBuilderFromCtpClient(ctpClientCredentialFlow).withProjectKey({ projectKey: PROJECT_KEY });

@@ -1,5 +1,3 @@
-import type { TextValidator } from '../../dto/types';
-
 // Length
 const hasMinimunLength = (value: string, length: number): Error | void => {
   if (value.length < length)

@@ -31,7 +31,6 @@
   
   @include media-laptop {
     width: 295px;
-    // padding-right: 20px;
     margin-bottom: 0;
   }
 }
@@ -43,7 +42,6 @@
   color: #3C4242;
   margin-bottom: 20px;
 }
-// .profile__block { }
 
 .profile__personal {
   flex-grow: 1;
@@ -85,17 +83,3 @@
     grid-template-columns: 1fr 1fr;
   }
 }
-
-// .breadcrumbs {
-//   display: flex;
-//   column-gap: 15px;
-// }
-
-// .breadcrumbs__link {
-//   font: medium 18px 'Causten';
-//   color: #807D7E;
-
-//   &.disabled {
-//     color: #3C4242;
-//   }
-// }

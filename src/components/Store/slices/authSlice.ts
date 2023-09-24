@@ -82,9 +82,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // initAuth(state) {
-    //   Object.assign(state, {});
-    // },
     initAuth(state: AuthState) {
       Object.assign(state, {});
     },
@@ -116,15 +113,6 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state) => {
         Object.assign(state, initialState);
       })
-      // .addCase(login.pending, (state) => {
-      //   Object.assign(state, { inProgress: true });
-      // })
-      // .addCase(login.fulfilled, (state, action) => {
-      //   Object.assign(state, { inProgress: false }, action.payload);
-      // })
-      // .addCase(login.rejected, (state) => {
-      //   Object.assign(state, initialState);
-      // })
       .addCase(updateCustomer.pending, (state) => {
         Object.assign(state, { inProgress: true });
       })
