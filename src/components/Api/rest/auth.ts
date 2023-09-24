@@ -35,8 +35,4 @@ const updateCustomerPassword = (payload: CustomerChangePassword): Promise<Client
   return apiRoot.customers().password().post({ body: payload }).execute();
 };
 
-// const addAddress = (payload: { id: string; query: CustomerUpdate }): Promise<ClientResponse<Customer>> => {
-//   return apiRoot.customers().withId({ ID: payload.id }).post({ body: payload.query }).execute();
-// };
-
 export { getCustomerByToken, getToken, createCustomer, loginCustomer, updateCustomerById, updateCustomerPassword };

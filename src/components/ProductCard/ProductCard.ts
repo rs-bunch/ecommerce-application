@@ -87,8 +87,7 @@ export default class ProductCard extends HTMLElement {
 
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
-    const { location, productList } = newState;
-    const { products } = productList;
+    const { location } = newState;
 
     if (location !== undefined) {
       this.attributeChangedCallback('location', '', String(location));

@@ -17,12 +17,6 @@ export default class Breadcrumb extends HTMLElement {
     if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [styleshhet];
   }
 
-  private disconnectedCallback(): void {}
-
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
-
-  private adoptedCallback(): void {}
-
   private static get observedAttributes(): string[] {
     return ['name'];
   }

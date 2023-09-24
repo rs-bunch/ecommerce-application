@@ -1,7 +1,6 @@
 import type { Customer } from '@commercetools/platform-sdk';
 import ElementHTML from './profile-page.html';
 import stylesheet from './profile-page.module.scss';
-// import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { RootState, AppDispatch } from '../Store/store';
 import MenuCard from './MenuCard/MenuCard';

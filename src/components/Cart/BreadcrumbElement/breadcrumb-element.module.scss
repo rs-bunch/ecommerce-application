@@ -24,12 +24,6 @@
   }
 }
 
-// .breadcrumb__link:has(+ slot[name=link]::slotted(*):empty)::after {
-//   content: ">";
-//   padding: 0 10px;
-//   cursor: auto;
-// }
-
 ::slotted(*) {  
   font-family: "Causten";
   font-weight: 500;  

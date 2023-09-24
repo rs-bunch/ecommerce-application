@@ -222,7 +222,6 @@ export default class ShopHeader extends HTMLElement {
     if ($searchIcon) {
       $searchIcon.addEventListener('click', () => {
         const { value } = $input;
-        // if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
         if (value) window.location.href = `${window.location.origin}/search?text.en=${value}`;
       });
 

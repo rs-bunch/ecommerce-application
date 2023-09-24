@@ -95,7 +95,6 @@ export default class ProductsFilter extends HTMLElement {
 
       const val = this.$priceRange.value;
       if (+val === 0) return;
-      const location = `${window.location.origin}${window.location.pathname}`;
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.set('price', `${Number(val) * 100}`);
 

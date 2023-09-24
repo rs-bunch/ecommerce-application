@@ -32,10 +32,6 @@ export default class ProductList extends HTMLElement {
     }
   }
 
-  public connectedCallback(): void {}
-
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
-
   private renderProductCards(productsData: ProductProjection[]): void {
     if (!this.shadowRoot) return;
     const cards = this.querySelectorAll('[slot="cards-slot"]');
@@ -105,11 +101,8 @@ export default class ProductList extends HTMLElement {
       this.cartState = newState.cart;
     }
 
-    const { location, productList } = newState;
+    const { productList } = newState;
     const { products } = productList;
-    if (location !== undefined) {
-      this.attributeChangedCallback('location', '', String(location));
-    }
     if (productList.id) this.renderNavigation(productList.id as string);
     if (products) {
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);

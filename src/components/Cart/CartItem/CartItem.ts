@@ -1,11 +1,9 @@
 import ElementHTML from './cart-item.html';
 import stylesheet from './cart-item.module.scss';
 import createFragmentFromHTML from '../../../utils/createFragmentFromHTML';
-import { RootState, AppDispatch, changeLineItemQuantityBindAction, removeLineItemBindAction } from '../../Store/store';
-// import { action } from '../Store/actoinSlice';
+import { changeLineItemQuantityBindAction, removeLineItemBindAction } from '../../Store/store';
 
 export default class extends HTMLElement {
-  // webcomponent-redux callback action
   private action: ((payload: { [I: string]: string }) => void) | undefined;
 
   private $element: DocumentFragment;
@@ -118,16 +116,6 @@ export default class extends HTMLElement {
       default:
         break;
     }
-  }
-
-  // redux state change observer
-  private mapStateToProps(oldState: RootState, newState: RootState): void {}
-
-  // redux dispath action
-  private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
-    return {
-      // action: (payload: { data: string }) => dispatch(action(payload)),
-    };
   }
 
   private adoptedCallback(): void {}

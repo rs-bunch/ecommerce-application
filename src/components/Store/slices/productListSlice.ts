@@ -1,16 +1,15 @@
-import { createSlice, PayloadAction, createAsyncThunk, AsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   getCategoryProductList,
   getSortedCategoryProductList,
   getFilteredCategoryProductList,
   getFilteredSortedCategoryProductList,
-  // getSearchProductList,
   getSearchProductListTotal,
   getSortedProductList,
   getFilteredProductList,
   getFilteredSortedProductList,
 } from '../../Api/rest/productList';
-import { notifyError, notifyInfo } from '../../../utils/notify/notify';
+import { notifyError } from '../../../utils/notify/notify';
 import { ProductListState } from '../../../dto/types';
 
 const getProducts = createAsyncThunk('/products/getall/', async (payload: { categoryId: string; page: number }) => {
@@ -43,7 +42,6 @@ const getSortedProducts = createAsyncThunk(
 const getFilteredProducts = createAsyncThunk(
   '/products/getfiltered/',
   async (payload: { categoryId: string; criteria: string[]; page: number }) => {
-    console.log('filter', payload);
     return getFilteredCategoryProductList(
       `categories.id:subtree("${payload.categoryId}")`,
       payload.criteria,
@@ -178,15 +176,6 @@ const productListSlice = createSlice({
     ) => {
       Object.assign(state, { id: null });
     },
-    // [getSearchedProducts.fulfilled.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-    //   Object.assign(state, payload);
-    // },
-    // [getSearchedProducts.pending.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-    //   Object.assign(state, { id: null, products: null });
-    // },
-    // [getSearchedProducts.rejected.type]: (state: ProductListState, { payload }: PayloadAction<ProductListState>) => {
-    //   Object.assign(state, { id: null });
-    // },
     [getSearchedProductsTotal.fulfilled.type]: (
       state: ProductListState,
       { payload }: PayloadAction<ProductListState>
@@ -262,7 +251,6 @@ export {
   getSortedProducts,
   getFilteredProducts,
   getFilteredSortedProducts,
-  // getSearchedProducts,
   getSearchedProductsTotal,
   getSortedProductsTotal,
   getFilteredProductsTotal,

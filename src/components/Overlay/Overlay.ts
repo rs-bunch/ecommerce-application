@@ -1,8 +1,6 @@
-import { Dispatch } from 'redux';
 import ElementHTML from './overlay.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './overlay.module.scss';
-import { RootState } from '../Store/store';
 
 export default class CustomOverlay extends HTMLElement {
   public $element: HTMLElement | null;
@@ -29,14 +27,6 @@ export default class CustomOverlay extends HTMLElement {
     if (attributeName === 'active') {
       this.style.display = newValue === 'true' ? '' : 'none';
     }
-  }
-
-  private mapStateToProps(oldState: RootState, newState: RootState): void {}
-
-  private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
-    return {
-      action: () => dispatch({ type: 'ACTION' }),
-    };
   }
 
   private adoptedCallback(): void {}

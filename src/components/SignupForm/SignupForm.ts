@@ -237,7 +237,6 @@ export default class extends HTMLElement {
     const { location } = newState.location;
     const { id } = newState.auth;
     if (location !== undefined) {
-      // this.$form?.querySelectorAll('input, select, button').forEach((el) => el.setAttribute('disabled', ''));
       this.attributeChangedCallback('location', '', String(location));
     }
     if (id && location === 'signup') {
