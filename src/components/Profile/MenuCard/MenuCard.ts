@@ -16,7 +16,7 @@ export default class extends HTMLElement {
     this.$firstName = this.$element.querySelector('#first-name');
     this.$logout = this.$element.querySelector('#logout');
 
-    this.$logout?.addEventListener('click', (e) => this.handleLogout(e));
+    this.$logout?.addEventListener('click', () => this.handleLogout());
   }
 
   private connectedCallback(): void {
@@ -37,8 +37,7 @@ export default class extends HTMLElement {
     return ['first-name'];
   }
 
-  private handleLogout(e: Event): void {
-    if (e.target instanceof HTMLElement && e.target.closest('li')) console.log(e.target);
+  private handleLogout(): void {
     logoutBindAction();
   }
 }

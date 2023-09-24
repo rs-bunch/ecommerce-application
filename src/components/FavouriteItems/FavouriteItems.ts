@@ -1,4 +1,3 @@
-import { Dispatch } from 'redux';
 import ElementHTML from './favourite-items.html';
 import stylesheet from './favourite-items.module.scss';
 import { bootstrap } from '../../styles/styles';
@@ -36,13 +35,6 @@ export default class FavouriteItems extends HTMLElement {
     if (!oldState) return;
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
-  }
-
-  // redux dispath action
-  private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
-    return {
-      action: () => dispatch({ type: 'ACTION' }),
-    };
   }
 
   private adoptedCallback(): void {}

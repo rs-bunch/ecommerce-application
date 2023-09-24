@@ -1,18 +1,18 @@
-import { DiscountedPrice, Image, Price, ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import { Cart, DiscountedPrice, Image, Price, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
-import type { RootState } from '../Store/store';
+import type { AppDispatch, RootState } from '../Store/store';
 import ElementHTML from './product-details.html';
 import stylesheet from './product-details.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { removeAllChildNodes } from '../../utils/removeAllChildNodes';
 import { createElement } from '../../utils/createElement';
-import { ProductState } from '../../dto/types';
+import { LineItemPayload, ProductState } from '../../dto/types';
 import store from '../Store/store';
-import { selectProductVariant } from '../Store/productSlice';
+import { selectProductVariant } from '../Store/slices/productSlice';
 import Carousel from './Carousel/Carousel';
 import ImageModal from './ImageModal/ImageModal';
-import { getCategoriesPath } from '../Api/productList';
-import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
+import { getCategoriesPath } from '../Api/rest/productList';
+import { addLineItem, removeLineItem } from '../Store/slices/cartSlice';
 
 const LOCALE_STRING = 'en-US';
 
@@ -61,6 +61,16 @@ export default class ProductDetails extends HTMLElement {
 
   private $modalContainer: HTMLElement | null;
 
+  private productState: ProductState | undefined;
+
+  private $addToCartButton: HTMLButtonElement | null;
+
+  private $removeFromCartButton: HTMLButtonElement | null;
+
+  private addLineItem: ((payload: LineItemPayload) => void) | undefined;
+
+  private removeLineItem: ((payload: { lineItemId: string }) => void) | undefined;
+
   constructor() {
     super();
     this.$element = createFragmentFromHTML(ElementHTML);
@@ -92,6 +102,26 @@ export default class ProductDetails extends HTMLElement {
       L: this.$btnSizeL,
       XL: this.$btnSizeXL,
     };
+
+    this.$addToCartButton = this.$element.querySelector('#add-to-cart');
+    this.$addToCartButton?.addEventListener('click', () => this.addToCartHandler());
+
+    this.$removeFromCartButton = this.$element.querySelector('#remove-from-cart');
+    this.$removeFromCartButton?.addEventListener('click', () => this.removeFromCartHandler());
+  }
+
+  private addToCartHandler(): void {
+    const payload: LineItemPayload = {
+      productId: `${this.productState?.productId}`,
+      variantId: this.productState?.variantId || 1,
+      quantity: 1,
+    };
+    if (this.addLineItem) this.addLineItem(payload);
+  }
+
+  private removeFromCartHandler(): void {
+    if (this.productState?.lineItemId && this.removeLineItem)
+      this.removeLineItem({ lineItemId: this.productState.lineItemId });
   }
 
   private connectedCallback(): void {
@@ -106,11 +136,11 @@ export default class ProductDetails extends HTMLElement {
     this.carousel.closeModal();
     if (attributeName === 'product') {
       if (newValue.product && oldValue.product !== newValue.product) this.updateProductDetails(newValue.product);
-      else if (newValue.id && oldValue.id !== newValue.id) {
+      else if (newValue.variantId && oldValue.variantId !== newValue.variantId) {
         const data =
-          newValue.id === 1
+          newValue.variantId === 1
             ? newValue.product?.masterVariant
-            : newValue.product?.variants.find((e) => e.id === newValue.id);
+            : newValue.product?.variants.find((variant) => variant.id === newValue.variantId);
         if (data && data.prices) this.updatePrices(data.prices[0], data.prices[0].discounted);
         if (data && data.images?.length) {
           this.carousel.updateImages(data.images, { carouselName: 'productCarousel', isModal: false });
@@ -133,10 +163,36 @@ export default class ProductDetails extends HTMLElement {
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
     if (!oldState) return;
-    if (oldState.product !== newState.product)
+    if (
+      oldState.product !== newState.product ||
+      oldState.cart.cart.lineItems.length !== newState.cart.cart.lineItems.length
+    ) {
+      this.productState = { ...newState.product };
+
+      const lineItemId = this.getLineItemId(newState.product.productId, newState.cart.cart);
+      if (lineItemId) {
+        Object.assign(this.productState, { lineItemId });
+        if (this.$addToCartButton) this.$addToCartButton.style.display = 'none';
+        if (this.$removeFromCartButton) this.$removeFromCartButton.style.display = '';
+      }
+
+      if (!lineItemId) {
+        if (this.$addToCartButton) this.$addToCartButton.style.display = '';
+        if (this.$removeFromCartButton) this.$removeFromCartButton.style.display = 'none';
+      }
+
       this.attributeChangedCallback('product', oldState.product, newState.product);
+    }
     if (oldState.location !== newState.location)
       this.style.display = newState.location.location === 'product' ? '' : 'none';
+  }
+
+  // redux dispath action
+  private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
+    return {
+      addLineItem: (payload: LineItemPayload) => dispatch(addLineItem(payload)),
+      removeLineItem: (payload: { lineItemId: string }) => dispatch(removeLineItem(payload)),
+    };
   }
 
   private static get observedAttributes(): string[] {
@@ -200,7 +256,7 @@ export default class ProductDetails extends HTMLElement {
         if (attr.name === 'Size') {
           this.sizeBtns[attr.value]?.classList.add('shown');
           this.sizeBtns[attr.value]?.addEventListener('click', (event: Event) => {
-            store.dispatch(selectProductVariant({ id: variant.id }));
+            store.dispatch(selectProductVariant({ variantId: variant.id }));
             Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
             if (event.target instanceof HTMLElement) event.target.classList.add('selected');
           });
@@ -210,7 +266,7 @@ export default class ProductDetails extends HTMLElement {
     data.masterVariant.attributes?.forEach((attr: { name: string; value: string }) => {
       if (attr.name === 'Size') this.sizeBtns[attr.value]?.classList.add('shown', 'selected');
       this.sizeBtns[attr.value]?.addEventListener('click', (event: Event) => {
-        store.dispatch(selectProductVariant({ id: data.masterVariant.id }));
+        store.dispatch(selectProductVariant({ variantId: data.masterVariant.id }));
         Object.values(this.sizeBtns).forEach((btn) => btn?.classList.remove('selected'));
         if (event.target instanceof HTMLElement) event.target.classList.add('selected');
       });
@@ -231,9 +287,21 @@ export default class ProductDetails extends HTMLElement {
 
   private async updateCategoriesPath(id: string): Promise<void> {
     this.$productPath?.querySelector('breadcrumb-nav')?.remove();
+    this.$productPath?.querySelector('breadcrumb-element')?.remove();
+    const $breadcrumbElement = document.createElement('breadcrumb-element');
     getCategoriesPath(id, LOCALE_STRING).then((res) => {
-      const breadcrumb = new Breadcrumb(res, 'productDetails');
-      this.$productPath?.append(breadcrumb);
+      res.forEach((category) => {
+        const $link = document.createElement('span');
+        $link.setAttribute('slot', 'link');
+        $link.setAttribute('data-href', `/products/${category.id}`);
+        $link.innerText = category.name;
+        $breadcrumbElement.appendChild($link);
+      });
     });
+    this.$productPath?.append($breadcrumbElement);
+  }
+
+  private getLineItemId(productId: string, cart: Cart): string | null {
+    return cart.lineItems.find((item) => item.productId === productId)?.id || null;
   }
 }

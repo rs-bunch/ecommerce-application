@@ -1,5 +1,6 @@
-import { ClientBuilder, type AuthMiddlewareOptions, type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import { type AuthMiddlewareOptions, type HttpMiddlewareOptions, ClientBuilder } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { tokenCache } from './tokenCache/tokenCache';
 
 const PROJECT_KEY = process.env.CTP_PROJECT_KEY || '';
 const CLIENT_SECRET = process.env.CTP_CLIENT_SECRET || '';
@@ -17,6 +18,7 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
   },
   scopes: [SCOPES],
   fetch,
+  tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -27,9 +29,9 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 const ctpClient = new ClientBuilder()
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // logging
+  .withLoggerMiddleware()
   .build();
 
 const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey: PROJECT_KEY });
 
-export { ctpClient, apiRoot };
+export { apiRoot };

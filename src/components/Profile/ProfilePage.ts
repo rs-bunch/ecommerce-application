@@ -1,14 +1,13 @@
 import type { Customer } from '@commercetools/platform-sdk';
 import ElementHTML from './profile-page.html';
 import stylesheet from './profile-page.module.scss';
-// import { bootstrap } from '../../styles/styles';
 import createFragmentFromHTML from '../../utils/createFragmentFromHTML';
 import { RootState, AppDispatch } from '../Store/store';
 import MenuCard from './MenuCard/MenuCard';
 import AddressCard from './AddressCard/AddressCard';
 import ContactCard from './ContactCard/ContactCard';
 import AddressModal from './AddressModal/AddressModal';
-import { changeLocation } from '../Store/locationSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 
 customElements.define('menu-card', MenuCard);
 customElements.define('address-card', AddressCard);

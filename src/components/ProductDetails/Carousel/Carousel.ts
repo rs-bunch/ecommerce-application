@@ -51,14 +51,6 @@ export default class Carousel extends HTMLElement {
     this.initArrowBtns();
   }
 
-  private connectedCallback(): void {}
-
-  private disconnectedCallback(): void {}
-
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
-
-  private adoptedCallback(): void {}
-
   private initArrowBtns(): void {
     this.$btnPrev?.addEventListener('click', this.bindedSlidePrev);
     this.$btnNext?.addEventListener('click', this.bindedSlideNext);

@@ -15,22 +15,23 @@ import ProfilePage from './components/Profile/ProfilePage';
 import AuthPage from './components/AuthPage/AuthPage';
 import SignupForm from './components/SignupForm/SignupForm';
 import LoginForm from './components/LoginForm/LoginForm';
-import LocalStorage from './components/LocalStorage/LocalStorage';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import LoadingPage from './components/LoadingPage/LoadingPage';
 import ProductList from './components/ProductList/ProductList';
 import ProductsFilter from './components/ProductsFilter/ProductsFilter';
+import ProductPagination from './components/ProductPagination/ProductPagination';
 import ProductPage from './components/ProductsPage/ProductsPage';
 import Breadcrumb from './components/BreadcrumbNavigation/BreadcrumbNavigation';
+import AboutUs from './components/AboutUs/AboutUs';
+import CartItem from './components/Cart/CartItem/CartItem';
+import ProductCard from './components/ProductCard/ProductCard';
 
 document.adoptedStyleSheets = [bootstrap];
 
-const localStoarge = new LocalStorage();
-const router: Router = new Router(store, localStoarge);
+const router: Router = new Router(store);
 
-window.addEventListener('beforeunload', () => {
-  localStoarge.saveState(store.getState());
-});
+connect(ProductCard, store);
+customElements.define('product-card', ProductCard);
 
 customElements.define('breadcrumb-nav', Breadcrumb);
 
@@ -76,5 +77,14 @@ customElements.define('product-list', ProductList);
 connect(ProductsFilter, store);
 customElements.define('products-filter', ProductsFilter);
 
+connect(ProductPagination, store);
+customElements.define('product-pagination', ProductPagination);
+
 connect(ProductPage, store);
 customElements.define('product-page', ProductPage);
+
+connect(AboutUs, store);
+customElements.define('about-us', AboutUs);
+
+connect(CartItem, store);
+customElements.define('cart-item', CartItem);

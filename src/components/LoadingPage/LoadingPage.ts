@@ -1,4 +1,3 @@
-import { Dispatch } from 'redux';
 import stylesheet from './loading-page.module.scss';
 import { bootstrap } from '../../styles/styles';
 import { RootState } from '../Store/store';
@@ -35,13 +34,6 @@ export default class LoadingPage extends HTMLElement {
     if (!oldState) return;
     if (oldState.location.location !== newState.location.location)
       this.attributeChangedCallback('location', oldState.location.location, newState.location.location);
-  }
-
-  // redux dispath action
-  private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
-    return {
-      action: () => dispatch({ type: 'ACTION' }),
-    };
   }
 
   private adoptedCallback(): void {}

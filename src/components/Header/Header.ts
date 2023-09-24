@@ -4,12 +4,14 @@ import SideBarHTML from './side-bar.html';
 import createNodeFromHtml from '../../utils/createNodeFromHtml';
 import stylesheet from './header.module.scss';
 import store, { RootState } from '../Store/store';
-import { logout } from '../Store/authSlice';
-import { changeLocation } from '../Store/locationSlice';
+import { logout } from '../Store/slices/authSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 import DropdownNav from './DropdownNav/DropdownNav';
 import { createElement } from '../../utils/createElement';
 
 customElements.define('dropdown-nav', DropdownNav);
+
+const toCloseDropdownNav = ['main', 'error', 'signup', 'login', 'favourites', 'about-us'];
 
 export default class ShopHeader extends HTMLElement {
   public $element: HTMLElement | null;
@@ -62,6 +64,8 @@ export default class ShopHeader extends HTMLElement {
 
   public $womenSide: Element | null | undefined;
 
+  public $cartCounter: HTMLSpanElement | null | undefined;
+
   constructor() {
     super();
     this.node = createNodeFromHtml(ElementHTML);
@@ -88,6 +92,7 @@ export default class ShopHeader extends HTMLElement {
     this.$menSide = this.$sideBar?.querySelector('.link__men');
     this.$womenSide = this.$sideBar?.querySelector('.link__women');
     this.$dropdownNav = this.$element?.querySelector('.dropdown-nav_main');
+    this.$cartCounter = this.$element?.querySelector('#cart-counter');
     this.$dropdownNavSide = createElement('dropdown-nav', 'dropdown-nav_side', []) as DropdownNav;
     this.bindedCloseMenu = this.closeMenu.bind(this);
     this.initButtons();
@@ -141,9 +146,13 @@ export default class ShopHeader extends HTMLElement {
       this.attributeChangedCallback('firstName', oldState.auth.firstName || null, newState.auth.firstName || null);
     if (
       oldState.location.location !== newState.location.location &&
-      ['main', 'error', 'signup', 'login', 'favourites'].includes(newState.location.location)
+      toCloseDropdownNav.includes(newState.location.location)
     )
       this.$dropdownNav?.setAttribute('category', 'none');
+
+    if (oldState?.cart?.cart?.version !== newState.cart.cart.version) {
+      if (this.$cartCounter) this.$cartCounter.textContent = `${newState.cart.cart.totalLineItemQuantity || 0}`;
+    }
   }
 
   private mapDispatchToProps(dispatch: Dispatch): { [index: string]: () => ReturnType<Dispatch> } {
@@ -213,7 +222,6 @@ export default class ShopHeader extends HTMLElement {
     if ($searchIcon) {
       $searchIcon.addEventListener('click', () => {
         const { value } = $input;
-        // if (value) window.location.href = `${window.location.origin}${window.location.pathname}?text.en="${value}"`;
         if (value) window.location.href = `${window.location.origin}/search?text.en=${value}`;
       });
 

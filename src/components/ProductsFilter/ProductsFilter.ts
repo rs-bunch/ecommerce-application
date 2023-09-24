@@ -2,8 +2,17 @@ import elementHTML from './products-filter.html';
 import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import productsFilter from './products-filter.module.scss';
 import type { RootState, AppDispatch } from '../Store/store';
-import { changeLocation } from '../Store/locationSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 import { bootstrap } from '../../styles/styles';
+
+function dumpPage(searchParams: URLSearchParams): void {
+  // Dump page number when filtering
+  let page = searchParams.get('page');
+  if (page) {
+    page = '0';
+    searchParams.set('page', page);
+  }
+}
 
 export default class ProductsFilter extends HTMLElement {
   private $element: HTMLElement | null;
@@ -34,7 +43,10 @@ export default class ProductsFilter extends HTMLElement {
         const val = check.textContent;
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('size', `${val}`);
-        window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+
+        dumpPage(searchParams);
+
+        window.location.search = searchParams.toString();
       });
     });
 
@@ -44,7 +56,10 @@ export default class ProductsFilter extends HTMLElement {
         const val = (check as HTMLElement).dataset.color;
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('color', `${val}`);
-        window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+
+        dumpPage(searchParams);
+
+        window.location.search = searchParams.toString();
       });
     });
 
@@ -80,10 +95,12 @@ export default class ProductsFilter extends HTMLElement {
 
       const val = this.$priceRange.value;
       if (+val === 0) return;
-      const location = `${window.location.origin}${window.location.pathname}`;
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.set('price', `${Number(val) * 100}`);
-      window.location.href = `${location}?${urlParams.toString()}`;
+
+      dumpPage(urlParams);
+
+      window.location.search = urlParams.toString();
     });
   }
 

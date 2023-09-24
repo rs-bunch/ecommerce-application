@@ -16,14 +16,6 @@ export default class ImageModal extends HTMLElement {
     if (this.shadowRoot) this.shadowRoot.adoptedStyleSheets = [bootstrap, stylesheet];
   }
 
-  private connectedCallback(): void {}
-
-  private disconnectedCallback(): void {}
-
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
-
-  private adoptedCallback(): void {}
-
   private static get observedAttributes(): string[] {
     return ['name'];
   }

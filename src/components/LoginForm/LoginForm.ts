@@ -5,10 +5,10 @@ import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import { validateEmail } from '../../utils/validation/validateEmail';
 import { validatePassword } from '../../utils/validation/validatePassword';
 
-import { login } from '../Store/authSlice';
+import { login } from '../Store/slices/authSlice';
 import type { RootState, AppDispatch } from '../Store/store';
 
-import { changeLocation } from '../Store/locationSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 
 export default class LoginForm extends HTMLElement {
   private $element: HTMLElement | null;

@@ -1,22 +1,20 @@
 import type { Store } from '../Store/store';
-import { initLocation, changeLocation } from '../Store/locationSlice';
-import { initAuth } from '../Store/authSlice';
-import type LocalStorage from '../LocalStorage/LocalStorage';
-import { getProductDetailsById } from '../Api/product';
+import { initLocation, changeLocation } from '../Store/slices/locationSlice';
+import { initAuth } from '../Store/slices/authSlice';
+import { getProductDetailsById } from '../Api/rest/product';
 import { notifyError } from '../../utils/notify/notify';
-import { selectProduct } from '../Store/productSlice';
+import { selectProduct } from '../Store/slices/productSlice';
 
 import {
   getProducts,
   getSortedProducts,
   getFilteredProducts,
   getFilteredSortedProducts,
-  // getSearchedProducts,
   getSearchedProductsTotal,
   getSortedProductsTotal,
   getFilteredProductsTotal,
   getFilteredSortedProductsTotal,
-} from '../Store/productListSlice';
+} from '../Store/slices/productListSlice';
 
 const location: { [index: string]: string } = {
   '/': 'main',
@@ -31,17 +29,17 @@ const location: { [index: string]: string } = {
   '/products': 'products',
   '/search': 'search',
   '/404': 'error',
+  '/about-us': 'about-us',
 };
 
 class Router {
   private store;
 
-  constructor(store: Store, localStorage: LocalStorage) {
+  constructor(store: Store) {
     this.store = store;
 
     window.addEventListener('DOMContentLoaded', () => {
-      const localState = localStorage.loadState();
-      if (localState) this.store.dispatch(initAuth(localState.auth));
+      this.store.dispatch(initAuth());
       this.handleLocation('INIT_LOCATION');
     });
 
@@ -51,7 +49,8 @@ class Router {
 
     document.addEventListener('click', (e) => {
       const eventPathArr = e.composedPath();
-      if (eventPathArr.find((el) => el instanceof HTMLAnchorElement)) e.preventDefault();
+      const anchor = eventPathArr.find((el) => el instanceof HTMLAnchorElement);
+      if (anchor instanceof HTMLAnchorElement && !anchor.getAttribute('outer-link')) e.preventDefault();
       const target = eventPathArr.find((el) => el instanceof HTMLElement && el.dataset.href);
       if (target instanceof HTMLElement) {
         window.history.pushState({}, '', String(target.dataset.href));
@@ -81,7 +80,12 @@ class Router {
           payload.location = 'error';
         });
         if (response && response.statusCode === 200) {
-          this.store.dispatch(selectProduct({ product: response.body.masterData.current }));
+          const productState = {
+            productId,
+            product: response.body.masterData.current,
+            variantId: response.body.masterData.current.masterVariant.id,
+          };
+          this.store.dispatch(selectProduct(productState));
           break;
         }
         break;
@@ -92,33 +96,25 @@ class Router {
           payload.location = 'error';
           break;
         }
-        // Insert
 
-        if (!urlParams.size) {
+        if (urlParams.size <= 1) {
           payload.location = 'products';
+          const page = urlParams.get('page');
           this.store.dispatch(
             getProducts({
-              // categoryId: `categories.id:subtree("${categoriesId}")`,
               categoryId: categoriesId,
+              page: Number(page) ?? 0,
             })
           );
         } else {
           payload.location = 'products';
+
+          const page = urlParams.get('page');
           const sort = urlParams.get('sort');
           const order = urlParams.get('order');
           const priceRange = urlParams.get('price');
           const color = urlParams.get('color');
           const size = urlParams.get('size');
-
-          // const search = urlParams.get('text.en');
-          // if (search) {
-          //   this.store.dispatch(
-          //     getSearchedProducts({
-          //       categoryId: categoriesId,
-          //       text: search,
-          //     })
-          //   );
-          // }
 
           const filter = [];
 
@@ -132,6 +128,7 @@ class Router {
                 categoryId: categoriesId,
                 filter,
                 sort: `${sort} ${order}`,
+                page: Number(page) ?? 0,
               })
             );
           } else if (filter.length) {
@@ -139,6 +136,7 @@ class Router {
               getFilteredProducts({
                 categoryId: categoriesId,
                 criteria: filter,
+                page: Number(page) ?? 0,
               })
             );
           } else if (sort && order) {
@@ -146,16 +144,16 @@ class Router {
               getSortedProducts({
                 categoryId: categoriesId,
                 criteria: `${sort} ${order}`,
+                page: Number(page) ?? 0,
               })
             );
           }
         }
-
-        // this.store.dispatch(getProducts({ categoryId: categoriesId }));
         break;
       }
       case 'search': {
         payload.location = 'search';
+        const page = urlParams.get('page');
         const search = urlParams.get('text.en');
 
         const sort = urlParams.get('sort');
@@ -176,6 +174,7 @@ class Router {
               text: search,
               filter,
               sort: `${sort} ${order}`,
+              page: Number(page) ?? 0,
             })
           );
         } else if (search && filter.length) {
@@ -183,6 +182,7 @@ class Router {
             getFilteredProductsTotal({
               text: search,
               criteria: filter,
+              page: Number(page) ?? 0,
             })
           );
         } else if (search && sort) {
@@ -190,12 +190,14 @@ class Router {
             getSortedProductsTotal({
               text: search,
               sort: `${sort} ${order}`,
+              page: Number(page) ?? 0,
             })
           );
         } else if (search) {
           this.store.dispatch(
             getSearchedProductsTotal({
               text: search,
+              page: Number(page) ?? 0,
             })
           );
         }
@@ -203,7 +205,7 @@ class Router {
       }
 
       default:
-        payload.location = location[locationPath];
+        payload.location = location[locationPath] || location['/404'];
     }
     if (type === 'INIT_LOCATION') this.store.dispatch(initLocation(payload));
     if (type === 'CHANGE_LOCATION') this.store.dispatch(changeLocation(payload));

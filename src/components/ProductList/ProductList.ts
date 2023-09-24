@@ -2,16 +2,14 @@ import { ProductProjection, ProductProjectionPagedSearchResponse } from '@commer
 import ElementHTML from './product-list.html';
 import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import type { RootState, AppDispatch } from '../Store/store';
-import { changeLocation } from '../Store/locationSlice';
-import { getProducts } from '../Store/productListSlice';
-import ProductCard from '../ProductCard/ProductCard';
+import { changeLocation } from '../Store/slices/locationSlice';
+import { getProducts } from '../Store/slices/productListSlice';
 import productsContainer from './product-list.module.scss';
-import { getCategoriesPath } from '../Api/productList';
+import { getCategoriesPath } from '../Api/rest/productList';
 import Breadcrumb from '../BreadcrumbNavigation/BreadcrumbNavigation';
+import { CartState } from '../../dto/types';
 
 const LOCALE_STRING = 'en-US';
-
-customElements.define('product-card', ProductCard);
 
 export default class ProductList extends HTMLElement {
   private $element: HTMLElement | null;
@@ -19,6 +17,8 @@ export default class ProductList extends HTMLElement {
   private changeLocation: (() => void) | undefined;
 
   private getProducts: ((payload: { categoryId: string }) => void) | undefined;
+
+  private cartState: CartState | undefined;
 
   constructor() {
     super();
@@ -32,13 +32,7 @@ export default class ProductList extends HTMLElement {
     }
   }
 
-  public connectedCallback(): void {}
-
-  private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {}
-
   private renderProductCards(productsData: ProductProjection[]): void {
-    console.log(productsData, 'render');
-
     if (!this.shadowRoot) return;
     const cards = this.querySelectorAll('[slot="cards-slot"]');
     for (let i = 0; i < cards.length; i += 1) {
@@ -73,6 +67,7 @@ export default class ProductList extends HTMLElement {
       card.setAttribute('data-link', id);
       card.setAttribute('data-image', imageUrl);
       card.setAttribute('data-name', name);
+
       if (brand) card.setAttribute('data-brand', brand);
 
       if (discount) {
@@ -82,6 +77,10 @@ export default class ProductList extends HTMLElement {
         if (priceField) priceField.setAttribute('data-discount', `${price}$`);
       } else {
         card.setAttribute('data-price', `${price}$`);
+      }
+      if (this.cartState?.cart) {
+        const lineItemId = this.cartState.cart.lineItems.find((item) => item.productId === id)?.id || null;
+        card.setAttribute('added-to-cart', `${lineItemId ? 'true' : 'false'}`);
       }
 
       this.append(card);
@@ -98,15 +97,14 @@ export default class ProductList extends HTMLElement {
 
   // redux state change observer
   private mapStateToProps(oldState: RootState, newState: RootState): void {
-    const { location, productList } = newState;
-    const { products } = productList;
-    console.log('productList', productList);
-    if (location !== undefined) {
-      this.attributeChangedCallback('location', '', String(location));
+    if (oldState?.cart && oldState.cart.cart.version !== newState.cart.cart.version) {
+      this.cartState = newState.cart;
     }
+
+    const { productList } = newState;
+    const { products } = productList;
     if (productList.id) this.renderNavigation(productList.id as string);
     if (products) {
-      console.log('products', products);
       this.renderProductCards((products as ProductProjectionPagedSearchResponse).results);
     }
   }
@@ -115,7 +113,7 @@ export default class ProductList extends HTMLElement {
   private mapDispatchToProps(dispatch: AppDispatch): { [index: string]: ReturnType<AppDispatch> } {
     return {
       changeLocation: () => dispatch(changeLocation({ location: 'main' })),
-      getProducts: (payload: { categoryId: string }) => dispatch(getProducts(payload)),
+      getProducts: (payload: { categoryId: string; page: number }) => dispatch(getProducts(payload)),
     };
   }
 }

@@ -158,7 +158,6 @@ export default class extends HTMLElement {
 
   private attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void {
     if (attributeName === 'type' && this.$title) {
-      console.log('type: ', newValue);
       switch (newValue) {
         case 'new':
           this.$title.innerText = 'Add New Address';
@@ -174,7 +173,6 @@ export default class extends HTMLElement {
     }
 
     if (attributeName === 'address-type') {
-      console.log('customer.key', this.customer?.key);
       switch (newValue) {
         case 'shipping':
           if (this.$billingField) this.$billingField.style.display = 'none';

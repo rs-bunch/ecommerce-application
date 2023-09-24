@@ -1,0 +1,129 @@
+.about-us {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+}
+
+.about-us__title {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.about-us__title-text {
+  padding: 20px 22px;
+  position: relative;
+  font-family: 'Core Sans C';
+  align-self: flex-start;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background-color: $color-brand-main;
+    width: 6px;
+    height: 30px;
+    border-radius: 10px;
+    left: 5px;
+  }
+  &.about-us__title-text_small {
+    &::before {
+      content: '';
+      height: 22px;
+      left: 5px;
+    }
+  }
+}
+
+.about-us__rs-img {
+  height: 50px;
+  cursor: pointer;
+}
+
+.about-us__text {
+  color: $color-light;
+  font-family: Causten;
+  font-weight: 400;
+  font-size: 16px;
+  text-align: justify;
+  margin: 10px 0 0 0;
+  &.about-us__text_contibutions {
+    font-weight: 600;
+    align-self: start;
+    margin: 0 0 2px 0;
+  }
+}
+
+
+.about-us__team {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  @media screen and (min-width: $tablet-width) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: $laptop-width) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: $desktop-width) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.team__member-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.team__member{
+  width: 230px;
+}
+
+.member__photo {
+  width: 230px;
+}
+
+.member__name,
+.member__role,
+.member__bio {
+  font-family: Causten;
+  text-align: center;
+  padding-top: 5px 0;
+  margin: 0;
+}
+
+.member__name {
+  font-weight: 600;
+  font-size: 18px;
+  color: $color-dark;
+}
+
+.member__role {
+  font-weight: 600;
+  font-size: 14px;
+  color: $color-light;
+}
+
+.member__bio {
+  text-align: justify;
+  font-weight: 500;
+  font-size: 14px;
+  color: $color-light;
+}
+
+.member__github {
+  color: $color-dark;
+  transition: all ease-in-out .3s;
+  @media (hover: hover) {
+    &:hover {
+    color: #8A33FD;
+    }
+  }
+}

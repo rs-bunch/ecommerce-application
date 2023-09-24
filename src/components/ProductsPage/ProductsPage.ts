@@ -2,7 +2,7 @@ import elementHTML from './products-page.html';
 import { createElementFromHTML } from '../../utils/createElementFromHTML';
 import productPage from './products-page.module.scss';
 import type { RootState, AppDispatch } from '../Store/store';
-import { changeLocation } from '../Store/locationSlice';
+import { changeLocation } from '../Store/slices/locationSlice';
 
 export default class ProductPage extends HTMLElement {
   private $element: HTMLElement | null;
