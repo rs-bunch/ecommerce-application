@@ -97,13 +97,13 @@ class Router {
           break;
         }
 
-        if (urlParams.size <= 1) {
+        if (urlParams.size === 0 || (urlParams.size === 1 && urlParams.get('page'))) {
           payload.location = 'products';
           const page = urlParams.get('page');
           this.store.dispatch(
             getProducts({
               categoryId: categoriesId,
-              page: Number(page) ?? 0,
+              page: Number(page),
             })
           );
         } else {
