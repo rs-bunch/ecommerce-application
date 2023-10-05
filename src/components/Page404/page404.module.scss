@@ -1,0 +1,20 @@
+.page404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.page404__button {
+  display: flex;
+  width: 167px;
+  padding: 16px 20px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: #8a33fd;
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+}

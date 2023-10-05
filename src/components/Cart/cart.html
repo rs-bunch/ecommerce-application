@@ -1,0 +1,84 @@
+<div class="container-fluid cart">
+  <div class="wrapper">
+    <div class="cart__header">
+      <div class="cart__breadcrumb">
+        <breadcrumb-element>
+          <span slot="link">Cart</span>
+        </breadcrumb-element>
+      </div>
+      <div id="cart-auth" class="cart__auth">
+        <span>Please fill in the fields below and click place order to complete your purchase!</span>
+        <span id="login-message">Already registered? <a class="cart__link" data-href="/login" href="/login">Please login here</a></span>
+      </div>
+    </div>
+  </div>
+  <div id="cart-list" class="cart__list list">
+    <div class="list__header">
+      <div class="wrapper">
+        <div class="list__container">
+          <div class="list__col list__col-1">Poduct Details</div>
+          <div class="list__col list__col-2">Price</div>
+          <div class="list__col list__col-3">Quantity</div>
+          <div class="list__col list__col-4">Shipping</div>
+          <div class="list__col list__col-5">Subtotal</div>
+          <div class="list__col list__col-6">Action</div>
+        </div>
+      </div>
+    </div>
+    <div class="list__content">
+      <div class="wrapper">
+        <div class="list__rows" id="cart-items"></div>
+      </div>
+    </div>
+    <div class="list__footer footer">
+      <div class="wrapper">
+        <div class="footer__container">
+          <div class="list__discount discount">
+            <div class="discount__title">Discount Codes</div>
+            <div class="discount__subtitle">Enter your coupon code if you have one</div>
+            <div class="discount__coupon coupon">
+              <input type="text" class="coupon__input" id="coupon-input">
+              <button class="coupon__button" id="apply-coupon">Apply Coupon</button>
+            </div>
+            <button data-href="/products/94038ccd-10f8-4ccc-a616-cfa5438bcc9a" class="discount__button footer__button" id="discount-button">Continue Shopping</button>
+          </div>
+          <div class="list__total total">
+            <div class="total__container">
+              <div class="total__content">
+                <div class="total__row">
+                  <div class="total__row-title">Total</div>
+                  <div id="subtotal-price" class="total__row-content">$000.00</div>
+                </div>
+                <div class="total__row">
+                  <div class="total__row-title">Shipping</div>
+                  <div id="shipping-price" class="total__row-content">$0.00</div>
+                </div>
+                <div class="total__row total__row-grand">
+                  <div class="total__row-title">After Discounts</div>
+                  <div id="total-price" class="total__row-content">$000.00</div>
+                </div>
+                <span class="remove-discount" id="remove-discount"><span>x</span><span>Remove discount</span></span>
+              </div>
+            </div>
+            <div class="total__container">
+              <div class="total__action">
+                <button id="clear-cart" class="total__button total__clear footer__button">Clear Shopping Cart</button>
+                <button id="confirm-clear" class="total__button total__confirm footer__button">Confirm Action</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="cart-empty" class="cart__empty empty">
+    <div class="empty__image-container">
+      <img class="empty__image" src="../../assets/images/empty-cart.png" alt="empty-image">
+    </div>
+    <div class="empty__content">
+      <div class="empty__title">Your cart is empty and sad :&#40;</div>
+      <div class="empty__subtitle">Add something to make it happy!</div>
+    </div>
+    <button data-href="/products/94038ccd-10f8-4ccc-a616-cfa5438bcc9a" class="discount__button footer__button" id="empty-button">Continue Shopping</button>
+  </div>
+</div>
